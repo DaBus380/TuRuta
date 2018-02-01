@@ -9,63 +9,58 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
+using Orleans.Providers;
+using Orleans.Hosting;
+using Orleans.Runtime.Host;
+using Orleans;
+using Orleans.AzureUtils;
+using Orleans.Extensions;
+using Orleans.Runtime.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace TuRuta.Orleans
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
-
+        private ISiloHost silo;
         public override void Run()
         {
             Trace.TraceInformation("TuRuta.Orleans is running");
 
-            try
-            {
-                this.RunAsync(this.cancellationTokenSource.Token).Wait();
-            }
-            finally
-            {
-                this.runCompleteEvent.Set();
-            }
+            RunAsync().Wait();
         }
 
         public override bool OnStart()
         {
-            // Establecer el número máximo de conexiones simultáneas
-            ServicePointManager.DefaultConnectionLimit = 12;
-
-            // Para obtener información sobre cómo administrar los cambios de configuración
-            // consulte el tema de MSDN en https://go.microsoft.com/fwlink/?LinkId=166357.
-
-            bool result = base.OnStart();
 
             Trace.TraceInformation("TuRuta.Orleans has been started");
 
-            return result;
+            return base.OnStart();
         }
 
         public override void OnStop()
         {
             Trace.TraceInformation("TuRuta.Orleans is stopping");
 
-            this.cancellationTokenSource.Cancel();
-            this.runCompleteEvent.WaitOne();
+            silo.StopAsync().Wait();
 
             base.OnStop();
 
             Trace.TraceInformation("TuRuta.Orleans has stopped");
         }
 
-        private async Task RunAsync(CancellationToken cancellationToken)
+        private async Task RunAsync()
         {
-            // TODO: Reemplazar lo siguiente por su propia lógica.
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Trace.TraceInformation("Working");
-                await Task.Delay(1000);
-            }
+            var config = AzureSilo.DefaultConfiguration();
+            config.AddAzureTableStorageProvider("Storage");
+            config.AddAzureQueueStreamProviderV2("Queues");
+
+            var builder = new SiloHostBuilder()
+                .UseConfiguration(config)
+                .ConfigureLogging(logging => logging.AddConsole());
+
+            silo = builder.Build();
+            await silo.StartAsync();
         }
     }
 }

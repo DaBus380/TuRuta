@@ -288,3 +288,4 @@ __pycache__/
 *.xsd.cs
 /src/TuRuta/TuRuta.Web/appsettings.Development.json
 /src/TuRuta/TuRuta.Web/appsettings.json
+/src/TuRuta/TuRutaServices/ServiceConfiguration.Cloud.cscfg

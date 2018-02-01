@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-beta3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj" />
     <ProjectReference Include="..\TuRuta.Orleans.Interfaces\TuRuta.Orleans.Interfaces.csproj" />
   </ItemGroup>
