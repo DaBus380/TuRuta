@@ -39,7 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TuRuta.Ingestor\TuRuta.Ingestor.csproj">
       <Name>TuRuta.Ingestor</Name>
-      <Project>{4e5ffd5b-0f8a-433a-966e-3498c2f20313}</Project>
+      <Project>{7b6ba26e-31ce-4896-b195-3be169996265}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
       <RoleName>TuRuta.Ingestor</RoleName>
@@ -47,7 +47,7 @@
     </ProjectReference>
     <ProjectReference Include="..\TuRuta.Orleans\TuRuta.Orleans.csproj">
       <Name>TuRuta.Orleans</Name>
-      <Project>{0ee1b917-5646-4383-98fc-23ad61161de0}</Project>
+      <Project>{f0868c37-6727-4a5c-acbf-62b432f4e161}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
       <RoleName>TuRuta.Orleans</RoleName>

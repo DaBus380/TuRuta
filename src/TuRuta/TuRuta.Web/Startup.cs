@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TuRuta.Web.Services;
+using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web
 {
@@ -22,6 +24,10 @@ namespace TuRuta.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var isRunning = Configuration.GetValue<bool>("ORLEANS_RUNNING");
+            
+            services.AddSingleton<IConfigService, MockConfigService>();
+            
             services
                 .AddMvc(options => options.RespectBrowserAcceptHeader = true)
                 .AddXmlSerializerFormatters()

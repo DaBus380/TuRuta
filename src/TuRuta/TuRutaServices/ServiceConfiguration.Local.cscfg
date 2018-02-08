@@ -4,12 +4,16 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
     </ConfigurationSettings>
   </Role>
   <Role name="TuRuta.Ingestor">
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+	  <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
+	  <Setting name="QueueConnectionString" value="Endpoint=sb://dabus680.servicebus.windows.net/;SharedAccessKeyName=ServiceAccessKey;SharedAccessKey=MNGcuuB6cwZpxGUMfIkYY3JvI0r0aamZX16Ll9oAlQE=" />
+	  <Setting name="QueueName" value="ingestor" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

@@ -9,58 +9,44 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
-using Orleans.Providers;
-using Orleans.Hosting;
 using Orleans.Runtime.Host;
-using Orleans;
-using Orleans.AzureUtils;
-using Orleans.Extensions;
+using Orleans.Providers;
 using Orleans.Runtime.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace TuRuta.Orleans
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private ISiloHost silo;
+        private AzureSilo silo;
+
         public override void Run()
         {
             Trace.TraceInformation("TuRuta.Orleans is running");
 
-            RunAsync().Wait();
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+
+            var config = AzureSilo.DefaultConfiguration();
+            config.AddAzureTableStorageProvider();
+            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
+
+            silo = new AzureSilo();
+            var isGood = silo.Start(config);
+            if (isGood)
+            {
+                silo.Run();
+            }
         }
 
         public override bool OnStart()
-        {
-
-            Trace.TraceInformation("TuRuta.Orleans has been started");
-
-            return base.OnStart();
-        }
+            => base.OnStart();
 
         public override void OnStop()
         {
             Trace.TraceInformation("TuRuta.Orleans is stopping");
 
-            silo.StopAsync().Wait();
-
             base.OnStop();
 
             Trace.TraceInformation("TuRuta.Orleans has stopped");
-        }
-
-        private async Task RunAsync()
-        {
-            var config = AzureSilo.DefaultConfiguration();
-            config.AddAzureTableStorageProvider("Storage");
-            config.AddAzureQueueStreamProviderV2("Queues");
-
-            var builder = new SiloHostBuilder()
-                .UseConfiguration(config)
-                .ConfigureLogging(logging => logging.AddConsole());
-
-            silo = builder.Build();
-            await silo.StartAsync();
         }
     }
 }
