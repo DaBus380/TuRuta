@@ -3,11 +3,15 @@
   <WorkerRole name="TuRuta.Orleans" vmsize="Small">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+		<Setting name="DataConnectionString" />
     </ConfigurationSettings>
   </WorkerRole>
   <WorkerRole name="TuRuta.Ingestor" vmsize="Small">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+		<Setting name="DataConnectionString" />
+		<Setting name="QueueConnectionString" />
+		<Setting name="QueueName" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>
