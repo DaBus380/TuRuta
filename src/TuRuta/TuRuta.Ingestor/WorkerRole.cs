@@ -102,7 +102,7 @@ namespace TuRuta.Ingestor
             
             var messageOptions = new MessageHandlerOptions(OnError)
             {
-                MaxConcurrentCalls = 5,
+                MaxConcurrentCalls = Environment.ProcessorCount,
                 AutoComplete = false
             };
 
@@ -113,7 +113,7 @@ namespace TuRuta.Ingestor
 
         private Task OnError(ExceptionReceivedEventArgs args)
         {
-            Console.WriteLine(args.Exception.Message);
+            Trace.TraceError(args.Exception.Message);
 
             return Task.CompletedTask;
         }
