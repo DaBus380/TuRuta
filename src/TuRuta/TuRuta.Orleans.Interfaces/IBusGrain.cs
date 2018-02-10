@@ -5,7 +5,7 @@ using Orleans;
 
 namespace TuRuta.Orleans.Interfaces
 {
-    public interface ITestGrain : IGrainWithGuidKey
+    public interface IBusGrain : IGrainWithGuidKey
     {
     }
 }
