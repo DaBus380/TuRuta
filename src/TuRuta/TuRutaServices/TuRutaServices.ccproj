@@ -37,9 +37,17 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TuRuta.Ingestor\TuRuta.Ingestor.csproj">
+      <Name>TuRuta.Ingestor</Name>
+      <Project>{7b6ba26e-31ce-4896-b195-3be169996265}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>TuRuta.Ingestor</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\TuRuta.Orleans\TuRuta.Orleans.csproj">
       <Name>TuRuta.Orleans</Name>
-      <Project>{0ee1b917-5646-4383-98fc-23ad61161de0}</Project>
+      <Project>{f0868c37-6727-4a5c-acbf-62b432f4e161}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
       <RoleName>TuRuta.Orleans</RoleName>
@@ -47,9 +55,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="TuRuta.IngestorContent\" />
     <Folder Include="TuRuta.OrleansContent\" />
   </ItemGroup>
   <ItemGroup>
+    <DiagnosticsConfiguration Include="TuRuta.IngestorContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="TuRuta.OrleansContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
