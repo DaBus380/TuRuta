@@ -2,29 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using PubNubMessaging;
-using PubNubMessaging.Core;
 using Newtonsoft.Json;
 using TuRuta.Orleans.Grains.Services.Interfaces;
+using PubnubApi;
 
 namespace TuRuta.Orleans.Grains.Services
 {
     public class PubNubClientUpdate : IClientUpdate
     {
-        
-        Pubnub pubnub = new Pubnub("","");
+        private Pubnub pubnub;
 
-        private bool Sent(object update)
+        public PubNubClientUpdate()
         {
-            var json = JsonConvert.SerializeObject(update);
-            return pubnub.Publish<object>(
-                channel: "client",
-                message: update,
-                userCallback: null,
-				errorCallback: null);
+            pubnub = new Pubnub(new PNConfiguration
+            {
+                SubscribeKey = "",
+                PublishKey = ""
+            });
         }
 
-		public Task<bool> SentUpdate(object update)
-			=> Task.FromResult(Sent(update));
+        private void Sent(object update)
+        {
+            pubnub.Publish()
+                .Channel("client")
+                .Message(update)
+                .Sync();
+        }
+
+		public Task SentUpdate(object update)
+			=> Task.Run(() => Sent(update));
     }
 }

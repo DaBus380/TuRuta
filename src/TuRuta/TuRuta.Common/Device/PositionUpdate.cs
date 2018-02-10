@@ -5,6 +5,7 @@ using TuRuta.Common.Enums;
 
 namespace TuRuta.Common.Device
 {
+    [Serializable]
     public class PositionUpdate
     {
         public double Latitude { get; set; }

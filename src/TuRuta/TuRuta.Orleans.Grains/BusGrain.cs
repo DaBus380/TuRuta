@@ -9,17 +9,18 @@ using TuRuta.Orleans.Grains.Services;
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Common.Device;
 using TuRuta.Orleans.Grains.States;
+using Orleans.Providers;
 
 namespace TuRuta.Orleans.Grains
 {
+    [StorageProvider(ProviderName = "AzureTableStore")]
     [ImplicitStreamSubscription("Buses")]
     public class BusGrain : Grain<BusState>, IBusGrain
     {
-        IAsyncStream<PositionUpdate> injestionStream;
+        private IAsyncStream<PositionUpdate> injestionStream;
+		private IClientUpdate clientUpdate;
+		private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
 
-		IClientUpdate clientUpdate;
-
-		Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
         public async override Task OnActivateAsync()
         {
 			clientUpdate = new PubNubClientUpdate();
@@ -36,12 +37,9 @@ namespace TuRuta.Orleans.Grains
 				State.CurrentLatitude = message.Latitude;
 				State.CurrentLongitude = message.Longitude;
 
-				var hasSent = await sentTask;
-				if (!hasSent)
-				{
-					notSentUpdates.Enqueue(message);
-				}
+				await sentTask;
 			});
+
             await base.OnActivateAsync();
         }
     }

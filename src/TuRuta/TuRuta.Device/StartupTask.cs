@@ -13,6 +13,7 @@ using Windows.Devices.Gpio;
 using TuRuta.Device.Configuration;
 using TuRuta.Common.Device;
 using TuRuta.Common.Enums;
+using TuRuta.Common.ViewModels;
 
 namespace TuRuta.Device
 {
@@ -34,6 +35,16 @@ namespace TuRuta.Device
         {
             var blinker = Blink();
             var config = await configurationClient.GetConfig();
+
+            /*
+            var config = new BusConfigVM()
+            {
+                BusId = Guid.NewGuid(),
+                QueueName = "ingestor",
+                ServiceBusConnectionString = "Endpoint=sb://dabus680.servicebus.windows.net/;SharedAccessKeyName=ServiceAccessKey;SharedAccessKey=8JPdmf7SNKbsMGVUe8rPVs2hUshf7k15ybIVBxyv2CU="
+            };
+            */
+
             BusId = config.BusId;
 
             queue = new QueueClient(config.ServiceBusConnectionString, config.QueueName);
