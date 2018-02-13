@@ -4,12 +4,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Orleans;
 using Orleans.Streams;
+using Orleans.Providers;
+
 using TuRuta.Orleans.Grains.Services.Interfaces;
 using TuRuta.Orleans.Grains.Services;
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Common.Device;
+using TuRuta.Common.StreamObjects;
 using TuRuta.Orleans.Grains.States;
-using Orleans.Providers;
 
 namespace TuRuta.Orleans.Grains
 {
@@ -28,10 +30,10 @@ namespace TuRuta.Orleans.Grains
             injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
             await injestionStream.SubscribeAsync(async (message, token) =>
             {
-				var sentTask = clientUpdate.SentUpdate(new {
-					latitude = message.Latitude,
-					longitude = message.Longitude,
-					busId = this.GetPrimaryKey()
+				var sentTask = clientUpdate.SentUpdate(new ClientBusUpdate {
+					Latitude = message.Latitude,
+					Longitude = message.Longitude,
+					BusId = this.GetPrimaryKey()
 				});
 
 				State.CurrentLatitude = message.Latitude;

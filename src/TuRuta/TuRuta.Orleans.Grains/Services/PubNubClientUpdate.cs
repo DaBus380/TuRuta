@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TuRuta.Orleans.Grains.Services.Interfaces;
 using PubnubApi;
+
+using TuRuta.Common.StreamObjects;
+using TuRuta.Orleans.Grains.Services.Interfaces;
 
 namespace TuRuta.Orleans.Grains.Services
 {
@@ -21,7 +23,7 @@ namespace TuRuta.Orleans.Grains.Services
             });
         }
 
-        private void Sent(object update)
+        private void Sent(ClientBusUpdate update)
         {
             pubnub.Publish()
                 .Channel("client")
@@ -29,7 +31,7 @@ namespace TuRuta.Orleans.Grains.Services
                 .Sync();
         }
 
-		public Task SentUpdate(object update)
+		public Task SentUpdate(ClientBusUpdate update)
 			=> Task.Run(() => Sent(update));
     }
 }
