@@ -11,5 +11,9 @@ namespace TuRuta.Orleans.Interfaces
         Task<Guid> GetId(string name);
 
         Task SetName(string name, Guid Id);
+
+        Task<IEnumerable<string>> GetAllKeys();
+
+        Task<IEnumerable<Guid>> GetAllValues();
     }
 }

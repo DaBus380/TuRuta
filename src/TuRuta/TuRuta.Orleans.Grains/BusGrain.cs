@@ -21,28 +21,42 @@ namespace TuRuta.Orleans.Grains
     {
         private IAsyncStream<PositionUpdate> injestionStream;
 		private IClientUpdate clientUpdate;
+        private IAsyncStream<object> RouteStream;
 		private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
+        private IDistanceCalculator distanceCalculator;
 
         public async override Task OnActivateAsync()
         {
 			clientUpdate = new PubNubClientUpdate();
-            var streamProvider = GetStreamProvider("StreamProvider");
-            injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
-            await injestionStream.SubscribeAsync(async (message, token) =>
-            {
-				var sentTask = clientUpdate.SentUpdate(new ClientBusUpdate {
-					Latitude = message.Latitude,
-					Longitude = message.Longitude,
-					BusId = this.GetPrimaryKey()
-				});
+            distanceCalculator = new HavesineDistanceCalculator();
 
-				State.CurrentLatitude = message.Latitude;
-				State.CurrentLongitude = message.Longitude;
-
-				await sentTask;
-			});
+            await GetStreams();
 
             await base.OnActivateAsync();
+        }
+
+        private async Task GetStreams()
+        {
+            var streamProvider = GetStreamProvider("StreamProvider");
+            injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
+            await injestionStream.SubscribeAsync(NewPositionReceived);
+
+            RouteStream = streamProvider.GetStream<object>(State.RouteId, "Rutas");
+        }
+        
+        private async Task NewPositionReceived(PositionUpdate message, StreamSequenceToken token)
+        {
+            var sentTask = clientUpdate.SentUpdate(new ClientBusUpdate
+            {
+                Latitude = message.Latitude,
+                Longitude = message.Longitude,
+                BusId = this.GetPrimaryKey()
+            });
+
+            State.CurrentLatitude = message.Latitude;
+            State.CurrentLongitude = message.Longitude;
+
+            await sentTask;
         }
     }
 }
