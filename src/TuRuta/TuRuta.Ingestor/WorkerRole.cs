@@ -16,20 +16,16 @@ using Orleans;
 using Orleans.Runtime.Host;
 using Orleans.Runtime.Configuration;
 using Orleans.Streams;
-using Microsoft.Extensions.Logging;
-
 using TuRuta.Common.Device;
-using TuRuta.Orleans.Interfaces;
 
 namespace TuRuta.Ingestor
 {
     public class WorkerRole : RoleEntryPoint
     {
         private QueueClient QueueClient;
-        private int attempsBeforeFailing = 5;
+        private int attempsBeforeFailing = 2;
         private IStreamProvider streamProvider;
         private ManualResetEvent CompletedEvent = new ManualResetEvent(false);
-        private IClusterClient client;
 
         public override void Run()
         {
@@ -63,24 +59,17 @@ namespace TuRuta.Ingestor
 
         private async Task RunAsync()
         {
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
             var config = AzureClient.DefaultConfiguration();
-            config.AddAzureQueueStreamProviderV2("StreamProvider");
+            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
 
             int attemps = 0;
             while (true)
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(10));
-
-                    var builder = new ClientBuilder()
-                        .UseConfiguration(config)
-                        .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
-                        .ConfigureLogging(logger => logger.AddConsole());
-
-                    client = builder.Build();
-
-                    await client.Connect();
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    AzureClient.Initialize(config);
                     Trace.TraceInformation("Orleans is initialized");
                     break;
                 }
@@ -100,9 +89,9 @@ namespace TuRuta.Ingestor
 
             while (true)
             {
-                if (client.GetStreamProviders().Count() != 0)
+                if (GrainClient.GetStreamProviders().Count() != 0)
                 {
-                    streamProvider = client.GetStreamProvider("StreamProvider");
+                    streamProvider = GrainClient.GetStreamProvider("StreamProvider");
                     break;
                 }
 

@@ -12,42 +12,31 @@ using Microsoft.WindowsAzure.Storage;
 using Orleans.Runtime.Host;
 using Orleans.Providers;
 using Orleans.Runtime.Configuration;
-using Orleans.Hosting;
-using TuRuta.Orleans.Grains;
-using Orleans;
-using Microsoft.Extensions.Logging;
 
 namespace TuRuta.Orleans
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private ManualResetEvent CompletedEvent = new ManualResetEvent(false);
+        private AzureSilo silo;
 
         public override void Run()
         {
             Trace.TraceInformation("TuRuta.Orleans is running");
-            
+
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+
             var config = AzureSilo.DefaultConfiguration();
             config.AddAzureTableStorageProvider();
-            config.AddAzureQueueStreamProviderV2("StreamProvider");
+            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
             config.AddMemoryStorageProvider("PubSubStore");
-            config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
 
-            config.Globals.ClusterId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
-
-            var builder = new SiloHostBuilder()
-                .UseConfiguration(config)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
-                .ConfigureLogging(logging => logging.AddConsole());
-
-            var host = builder.Build();
-            Start(host).GetAwaiter().GetResult();
-
-            CompletedEvent.WaitOne();
+            silo = new AzureSilo();
+            var isGood = silo.Start(config);
+            if (isGood)
+            {
+                silo.Run();
+            }
         }
-
-        private Task Start(ISiloHost host)
-            => host.StartAsync();
 
         public override bool OnStart()
             => base.OnStart();
