@@ -14,8 +14,8 @@ using TuRuta.Common.Models;
 
 namespace TuRuta.Orleans.Grains
 {
-	[StorageProvider(ProviderName = "AzureTableStore")]
-	[ImplicitStreamSubscription("Rutas")]
+    [ImplicitStreamSubscription("Rutas")]
+    [StorageProvider(ProviderName = "AzureTableStore")]
 	public class RutaGrain : Grain<RutaState>, IRutaGrain
     {
 		private IAsyncStream<Object> injestionStreamParada;
@@ -29,6 +29,7 @@ namespace TuRuta.Orleans.Grains
 		{
 			var streamProvider = GetStreamProvider("StreamProvider");
 			injestionStreamParada = streamProvider.GetStream<Object>(this.GetPrimaryKey(), "Rutas");
+                
 			await base.OnActivateAsync();
 		}
     }

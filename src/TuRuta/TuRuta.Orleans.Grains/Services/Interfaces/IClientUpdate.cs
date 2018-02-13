@@ -9,6 +9,6 @@ namespace TuRuta.Orleans.Grains.Services.Interfaces
 {
     interface IClientUpdate
     {
-        Task SentUpdate(ClientBusUpdate update);
+        Task<bool> SentUpdate(ClientBusUpdate update);
     }
 }

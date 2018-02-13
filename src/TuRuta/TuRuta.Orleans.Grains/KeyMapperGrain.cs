@@ -11,30 +11,25 @@ using TuRuta.Orleans.Interfaces;
 namespace TuRuta.Orleans.Grains
 {
     [StorageProvider(ProviderName = "AzureTableStore")]
-    public class KeyMapperGrain : Grain<Dictionary<string, Guid>>, IKeyMapperGrain
+    public class KeyMapperGrain : Grain<Dictionary<string, string>>, IKeyMapperGrain
     {
         public Task<IEnumerable<string>> GetAllKeys()
             => Task.FromResult(State.Keys.AsEnumerable());
 
-        public Task<IEnumerable<Guid>> GetAllValues()
+        public Task<IEnumerable<string>> GetAllValues()
             => Task.FromResult(State.Values.AsEnumerable());
 
-        public async Task<Guid> GetId(string name)
+        public Task<string> GetId(string name)
         {
             if(State.TryGetValue(name, out var Id))
             {
-                return Id;
+                return Task.FromResult(Id);
             }
 
-            var newId = Guid.NewGuid();
-            State.Add(name, newId);
-
-            await WriteStateAsync();
-
-            return newId;
+            return Task.FromResult(default(string));
         }
 
-        public Task SetName(string name, Guid Id)
+        public Task SetName(string name, string Id)
         {
             State.Add(name, Id);
             return WriteStateAsync();
