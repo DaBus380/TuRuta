@@ -7,10 +7,10 @@ using TuRuta.Orleans.Interfaces;
 namespace TuRuta.Orleans.Grains.States
 {
 	[Serializable]
-    public class RutaState
+    public class RouteState
     {
-		public List<Parada> AllParadas { get; set; }
-		public string Nombre { get; set; }
-		public List<IBusGrain> AllBuses { get; set; }
+		public List<Stop> Stops { get; set; }
+		public string Name { get; set; }
+		public List<IBusGrain> Buses { get; set; }
     }
 }
