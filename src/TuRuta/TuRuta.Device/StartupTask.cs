@@ -90,7 +90,14 @@ namespace TuRuta.Device
 
             var message = MessageBuilder(positionUpdate);
 
-            await queue.SendAsync(message);
+            try
+            {
+                await queue.SendAsync(message);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private Message MessageBuilder(PositionUpdate obj)

@@ -31,7 +31,11 @@ namespace TuRuta.Orleans.Grains
 
         public async override Task OnActivateAsync()
         {
-			clientUpdate = new PubNubClientUpdate();
+            Paradas = new List<Parada>();
+            var configClient = new ConfigClient();
+            var config = await configClient.GetPubnubConfig();
+
+			clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
             distanceCalculator = new HavesineDistanceCalculator();
 
             var routeGrain = GrainFactory.GetGrain<IRutaGrain>(State.RouteId);
@@ -59,7 +63,7 @@ namespace TuRuta.Orleans.Grains
                     message.Longitude,
                     parada.Longitude), Parada: parada))
                 .OrderByDescending(tuple => tuple.Distance)
-                .First().Parada;
+                .FirstOrDefault().Parada;
 
         private async Task NewPositionReceived(PositionUpdate message, StreamSequenceToken token)
         {

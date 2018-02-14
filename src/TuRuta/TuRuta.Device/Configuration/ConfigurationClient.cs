@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-using TuRuta.Common.ViewModels;
+using TuRuta.Common.ViewModels.ConfigVMs;
 
 namespace TuRuta.Device.Configuration
 {
@@ -15,7 +15,7 @@ namespace TuRuta.Device.Configuration
     {
         private HttpClient httpClient = new HttpClient()
         {
-            BaseAddress = new Uri("https://3f3d1f78.ngrok.io")
+            BaseAddress = new Uri("https://4cd8389b.ngrok.io")
         };
 
         public async Task<BusConfigVM> GetConfig()

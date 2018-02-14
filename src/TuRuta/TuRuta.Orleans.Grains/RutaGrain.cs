@@ -18,17 +18,15 @@ namespace TuRuta.Orleans.Grains
     [StorageProvider(ProviderName = "AzureTableStore")]
 	public class RutaGrain : Grain<RutaState>, IRutaGrain
     {
-		private IAsyncStream<Object> injestionStreamParada;
+		private IAsyncStream<object> injestionStreamParada;
 
-		public Task<List<Parada>> AllParadas()
-		{
-			return Task.FromResult(State.AllParadas);
-		}
+        public Task<List<Parada>> AllParadas()
+            => Task.FromResult(State.AllParadas);
 
-		public async override Task OnActivateAsync()
+        public async override Task OnActivateAsync()
 		{
 			var streamProvider = GetStreamProvider("StreamProvider");
-			injestionStreamParada = streamProvider.GetStream<Object>(this.GetPrimaryKey(), "Rutas");
+			injestionStreamParada = streamProvider.GetStream<object>(this.GetPrimaryKey(), "Rutas");
                 
 			await base.OnActivateAsync();
 		}

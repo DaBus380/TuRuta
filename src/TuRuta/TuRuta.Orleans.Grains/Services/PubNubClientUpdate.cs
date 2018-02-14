@@ -13,9 +13,9 @@ namespace TuRuta.Orleans.Grains.Services
     {
         private Pubnub pubnub;
 
-        public PubNubClientUpdate()
+        public PubNubClientUpdate(string subKey, string pubKey)
         {
-            pubnub = new Pubnub("","");
+            pubnub = new Pubnub(pubKey, subKey);
         }
 
         private bool Sent(ClientBusUpdate update)

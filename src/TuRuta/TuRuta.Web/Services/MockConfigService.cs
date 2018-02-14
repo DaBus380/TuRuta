@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TuRuta.Common.ViewModels;
+
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Common.ViewModels.ConfigVMs;
 
 namespace TuRuta.Web.Services
 {
@@ -12,10 +13,15 @@ namespace TuRuta.Web.Services
     {
         private readonly string QueueName;
         private readonly string ServiceBusConnectionString;
+        private readonly string PubnubSub;
+        private readonly string PubnubPub;
+
         public MockConfigService(IConfiguration configuration)
         {
-            QueueName = configuration.GetValue<string>("QueueName");
-            ServiceBusConnectionString = configuration.GetValue<string>("QueueConnectionString");
+            QueueName = configuration.GetValue<string>(nameof(QueueName));
+            ServiceBusConnectionString = configuration.GetValue<string>(nameof(ServiceBusConnectionString));
+            PubnubSub = configuration.GetValue<string>(nameof(PubnubSub));
+            PubnubPub = configuration.GetValue<string>(nameof(PubnubPub));
         }
 
         public Task<BusConfigVM> GetConfig(string macAddress)
@@ -24,6 +30,13 @@ namespace TuRuta.Web.Services
                 BusId = Guid.NewGuid(),
                 QueueName = QueueName,
                 ServiceBusConnectionString = ServiceBusConnectionString
+            });
+
+        public Task<PubnubConfig> GetPubnub()
+            => Task.FromResult(new PubnubConfig
+            {
+                PubKey = PubnubPub,
+                SubKey = PubnubSub
             });
     }
 }
