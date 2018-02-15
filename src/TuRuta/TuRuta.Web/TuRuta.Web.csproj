@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="1.5.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj" />
-    <ProjectReference Include="..\TuRuta.Orleans.Interfaces\TuRuta.Orleans.Interfaces.csproj" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
