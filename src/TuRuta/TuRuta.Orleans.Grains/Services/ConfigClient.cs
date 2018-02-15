@@ -14,7 +14,7 @@ namespace TuRuta.Orleans.Grains.Services
     {
         HttpClient httpClient = new HttpClient()
         {
-            BaseAddress = new Uri("https://dcc345d1.ngrok.io")
+            BaseAddress = new Uri("https://270c767f.ngrok.io")
         };
 
         public async Task<PubnubConfig> GetPubnubConfig()
