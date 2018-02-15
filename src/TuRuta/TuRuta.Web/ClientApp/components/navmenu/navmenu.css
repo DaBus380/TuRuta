@@ -6,7 +6,7 @@
 .main-nav li a.router-link-active,
 .main-nav li a.router-link-active:hover,
 .main-nav li a.router-link-active:focus {
-    background-color: #4189C7;
+    background-color: #41A9C7;
     color: white;
 }
 
