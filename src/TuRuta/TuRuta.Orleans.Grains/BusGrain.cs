@@ -19,15 +19,15 @@ namespace TuRuta.Orleans.Grains
 {
     [StorageProvider(ProviderName = "AzureTableStore")]
     [ImplicitStreamSubscription("Buses")]
-    public class BusGrain : Grain<BusState>, IBusGrain
+    public class BusGrain : Grain<BusState>, IBusGrain, IAsyncObserver<PositionUpdate>
     {
-        private IAsyncStream<PositionUpdate> injestionStream;
-		private IClientUpdate clientUpdate;
+        private IClientUpdate clientUpdate;
         private IAsyncStream<object> RouteStream;
-		private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
+        private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
         private IDistanceCalculator distanceCalculator;
         private IEnumerable<Parada> Paradas;
         private Parada NextStop;
+        private StreamSubscriptionHandle<PositionUpdate> handler;
 
         public async override Task OnActivateAsync()
         {
@@ -35,7 +35,7 @@ namespace TuRuta.Orleans.Grains
             var configClient = new ConfigClient();
             var config = await configClient.GetPubnubConfig();
 
-			clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
+            clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
             distanceCalculator = new HavesineDistanceCalculator();
 
             var routeGrain = GrainFactory.GetGrain<IRutaGrain>(State.RouteId);
@@ -46,11 +46,16 @@ namespace TuRuta.Orleans.Grains
             await base.OnActivateAsync();
         }
 
+        public override Task OnDeactivateAsync()
+        {
+            return handler.UnsubscribeAsync();
+        }
+
         private async Task GetStreams()
         {
             var streamProvider = GetStreamProvider("StreamProvider");
-            injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
-            await injestionStream.SubscribeAsync(NewPositionReceived);
+            var injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
+            handler = await injestionStream.SubscribeAsync(this);
 
             RouteStream = streamProvider.GetStream<object>(State.RouteId, "Rutas");
         }
@@ -65,7 +70,7 @@ namespace TuRuta.Orleans.Grains
                 .OrderByDescending(tuple => tuple.Distance)
                 .FirstOrDefault().Parada;
 
-        private async Task NewPositionReceived(PositionUpdate message, StreamSequenceToken token)
+        private async Task NewPositionReceived(PositionUpdate message)
         {
             NextStop = GetClosest(message);
 
@@ -87,5 +92,11 @@ namespace TuRuta.Orleans.Grains
                 notSentUpdates.Enqueue(message);
             }
         }
+
+        public Task OnNextAsync(PositionUpdate item, StreamSequenceToken token = null)
+            => NewPositionReceived(item);
+
+        public Task OnCompletedAsync() => throw new NotImplementedException();
+        public Task OnErrorAsync(Exception ex) => throw new NotImplementedException();
     }
 }

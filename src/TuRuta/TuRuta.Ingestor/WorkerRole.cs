@@ -17,13 +17,14 @@ using Orleans.Runtime.Host;
 using Orleans.Runtime.Configuration;
 using Orleans.Streams;
 using TuRuta.Common.Device;
+using TuRuta.Orleans.Interfaces;
 
 namespace TuRuta.Ingestor
 {
     public class WorkerRole : RoleEntryPoint
     {
         private QueueClient QueueClient;
-        private int attempsBeforeFailing = 2;
+        private int attempsBeforeFailing = 6;
         private IStreamProvider streamProvider;
         private ManualResetEvent CompletedEvent = new ManualResetEvent(false);
 
@@ -61,15 +62,26 @@ namespace TuRuta.Ingestor
         {
             var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
             var config = AzureClient.DefaultConfiguration();
-            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
-
+            config.ClusterId = deploymentId;
+            config.GatewayProvider = ClientConfiguration.GatewayProviderType.AzureTable;
+            config.DataConnectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
+            config.AddAzureQueueStreamProviderV2("StreamProvider", RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+            
             int attemps = 0;
             while (true)
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                    AzureClient.Initialize(config);
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+
+                    var builder = new ClientBuilder()
+                        .ConfigureApplicationParts(
+                        parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
+                        .UseConfiguration(config);
+
+                    var client = builder.Build();
+
+                    await client.Connect();
                     Trace.TraceInformation("Orleans is initialized");
                     break;
                 }
