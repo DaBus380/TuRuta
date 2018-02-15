@@ -74,7 +74,12 @@ namespace TuRuta.Orleans.Grains
                 Latitude = message.Latitude,
                 Longitude = message.Longitude,
                 BusId = this.GetPrimaryKey(),
-                NextStop = NextStop
+                NextStop = new Parada
+                {
+                    Latitude = 123.43,
+                    Longitude = 45.32,
+                    Name = "Plaza Galerias"
+                }
             });
 
             State.CurrentLatitude = message.Latitude;
