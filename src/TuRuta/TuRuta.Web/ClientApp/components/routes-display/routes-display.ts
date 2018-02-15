@@ -39,7 +39,7 @@ export default class RoutesDisplayComponent extends Vue {
             busId: "2001",
             nextStop: {
                 stopId: "3002",
-                name: "Plaza Galerías",
+                name: "Plaza Galerias",
                 latitude: 2,
                 longitude: -2
             }
