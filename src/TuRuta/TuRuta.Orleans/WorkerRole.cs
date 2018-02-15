@@ -28,6 +28,7 @@ namespace TuRuta.Orleans
             var config = AzureSilo.DefaultConfiguration();
             config.AddAzureTableStorageProvider();
             config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
+            config.AddMemoryStorageProvider("PubSubStore");
 
             silo = new AzureSilo();
             var isGood = silo.Start(config);

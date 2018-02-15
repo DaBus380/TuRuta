@@ -13,6 +13,7 @@ using Windows.Devices.Gpio;
 using TuRuta.Device.Configuration;
 using TuRuta.Common.Device;
 using TuRuta.Common.Enums;
+using TuRuta.Common.ViewModels;
 
 namespace TuRuta.Device
 {
@@ -34,6 +35,7 @@ namespace TuRuta.Device
         {
             var blinker = Blink();
             var config = await configurationClient.GetConfig();
+
             BusId = config.BusId;
 
             queue = new QueueClient(config.ServiceBusConnectionString, config.QueueName);
@@ -88,7 +90,14 @@ namespace TuRuta.Device
 
             var message = MessageBuilder(positionUpdate);
 
-            await queue.SendAsync(message);
+            try
+            {
+                await queue.SendAsync(message);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private Message MessageBuilder(PositionUpdate obj)

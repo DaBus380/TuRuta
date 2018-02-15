@@ -3,19 +3,19 @@
   <WorkerRole name="TuRuta.Orleans" vmsize="Small">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
-      <Setting name="DataConnectionString" />
+		<Setting name="DataConnectionString" />
     </ConfigurationSettings>
-    <Endpoints>
-      <InternalEndpoint name="OrleansSiloEndpoint" protocol="tcp" port="11111" />
-      <InternalEndpoint name="OrleansProxyEndpoint" protocol="tcp" port="30000" />
-    </Endpoints>
+	<Endpoints>
+		<InternalEndpoint name="OrleansSiloEndpoint" protocol="tcp" port="11111" />
+		<InternalEndpoint name="OrleansProxyEndpoint" protocol="tcp" port="30000" />
+	</Endpoints>
   </WorkerRole>
   <WorkerRole name="TuRuta.Ingestor" vmsize="Small">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
-	  <Setting name="DataConnectionString" />
-	  <Setting name="QueueConnectionString" />
-	  <Setting name="QueueName" />
+		<Setting name="DataConnectionString" />
+		<Setting name="QueueConnectionString" />
+		<Setting name="QueueName" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>
