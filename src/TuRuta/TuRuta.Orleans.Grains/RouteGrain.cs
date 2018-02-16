@@ -14,20 +14,21 @@ using TuRuta.Common.Models;
 
 namespace TuRuta.Orleans.Grains
 {
-    [ImplicitStreamSubscription("Rutas")]
-    [StorageProvider(ProviderName = "AzureTableStore")]
-	public class RutaGrain : Grain<RutaState>, IRutaGrain
+	[StorageProvider(ProviderName = "AzureTableStore")]
+	[ImplicitStreamSubscription("Routes")]
+	public class RouteGrain : Grain<RouteState>, IRouteGrain
     {
-		private IAsyncStream<object> injestionStreamParada;
+		private IAsyncStream<Object> injestionStream;
 
-        public Task<List<Parada>> AllParadas()
-            => Task.FromResult(State.AllParadas);
+		public Task<List<Stop>> Stops()
+		{
+			return Task.FromResult(State.Stops);
+		}
 
-        public async override Task OnActivateAsync()
+		public async override Task OnActivateAsync()
 		{
 			var streamProvider = GetStreamProvider("StreamProvider");
-			injestionStreamParada = streamProvider.GetStream<object>(this.GetPrimaryKey(), "Rutas");
-                
+			injestionStream = streamProvider.GetStream<Object>(this.GetPrimaryKey(), "Routes");
 			await base.OnActivateAsync();
 		}
     }
