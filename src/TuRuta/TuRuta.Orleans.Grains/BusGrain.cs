@@ -26,20 +26,20 @@ namespace TuRuta.Orleans.Grains
         private IAsyncStream<object> RouteStream;
 		private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
         private IDistanceCalculator distanceCalculator;
-        private IEnumerable<Parada> Paradas;
-        private Parada NextStop;
+        private IEnumerable<Stop> Paradas;
+        private Stop NextStop;
 
         public async override Task OnActivateAsync()
         {
-            Paradas = new List<Parada>();
+            Paradas = new List<Stop>();
             var configClient = new ConfigClient();
             var config = await configClient.GetPubnubConfig();
 
 			clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
             distanceCalculator = new HavesineDistanceCalculator();
 
-            var routeGrain = GrainFactory.GetGrain<IRutaGrain>(State.RouteId);
-            Paradas = await routeGrain.AllParadas();
+            var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
+            Paradas = await routeGrain.Stops();
 
             await GetStreams();
 
@@ -55,7 +55,7 @@ namespace TuRuta.Orleans.Grains
             RouteStream = streamProvider.GetStream<object>(State.RouteId, "Rutas");
         }
 
-        private Parada GetClosest(PositionUpdate message)
+        private Stop GetClosest(PositionUpdate message)
             => Paradas.Select(
                 parada => (Distance: distanceCalculator.GetDistance(
                     message.Latitude,
@@ -74,7 +74,7 @@ namespace TuRuta.Orleans.Grains
                 Latitude = message.Latitude,
                 Longitude = message.Longitude,
                 BusId = this.GetPrimaryKey(),
-                NextStop = new Parada
+                NextStop = new Stop
                 {
                     Latitude = 123.43,
                     Longitude = 45.32,
