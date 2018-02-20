@@ -336,6 +336,10 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj">
+      <Project>{c56f973f-f7a5-4ecc-97db-6ef6694c06d2}</Project>
+      <Name>TuRuta.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuRuta.Orleans.Grains\TuRuta.Orleans.Grains.csproj">
       <Project>{4e9e642a-8513-4158-9ef9-ae45038f927e}</Project>
       <Name>TuRuta.Orleans.Grains</Name>

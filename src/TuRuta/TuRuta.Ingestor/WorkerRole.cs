@@ -16,8 +16,10 @@ using Orleans;
 using Orleans.Runtime.Host;
 using Orleans.Runtime.Configuration;
 using Orleans.Streams;
+
 using TuRuta.Common.Device;
 using TuRuta.Orleans.Interfaces;
+using TuRuta.Common.Logger;
 
 namespace TuRuta.Ingestor
 {
@@ -82,6 +84,7 @@ namespace TuRuta.Ingestor
                     var builder = new ClientBuilder()
                         .ConfigureApplicationParts(
                         parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
+                        .ConfigureLogging(logging => logging.AddAllTraceLoggers())
                         .UseConfiguration(testConfig);
 
                     client = builder.Build();
