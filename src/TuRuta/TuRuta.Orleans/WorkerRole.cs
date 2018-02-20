@@ -36,15 +36,6 @@ namespace TuRuta.Orleans
             {
                 resetEvent.Set();
             }
-
-            /*
-            silo = new AzureSilo();
-            var isGood = silo.Start(config);
-            if (isGood)
-            {
-                silo.Run();
-            }
-            */
         }
 
         public override bool OnStart()
@@ -84,12 +75,99 @@ namespace TuRuta.Orleans
 
             var builder = new SiloHostBuilder()
                 .UseConfiguration(config)
-                .ConfigureLogging(logging => logging.AddConsole())
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddProvider(new TraceLoggerProvider((_, level) => level == Microsoft.Extensions.Logging.LogLevel.Trace));
+                })
                 .ConfigureApplicationParts(
                 parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences());
 
             var siloBuilted = builder.Build();
             await siloBuilted.StartAsync();
+        }
+    }
+
+    class TraceLoggerProvider : ILoggerProvider
+    {
+        private readonly Func<string, Microsoft.Extensions.Logging.LogLevel, bool> _filter;
+
+        public TraceLoggerProvider(
+            Func<string, Microsoft.Extensions.Logging.LogLevel, bool>  filter)
+        {
+            _filter = filter;
+        }
+
+        public ILogger CreateLogger(string categoryName) => new TraceLogger(categoryName, _filter);
+
+        public void Dispose() { }
+    }
+
+    class TraceLogger : ILogger
+    {
+        private string _categoryName;
+        private Func<string, Microsoft.Extensions.Logging.LogLevel, bool> _filter;
+
+        public TraceLogger(string categoryName, Func<string, Microsoft.Extensions.Logging.LogLevel, bool> filter)
+        {
+            _filter = filter;
+            _categoryName = categoryName;
+        }
+
+        public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
+            => (_filter == null || _filter(_categoryName, logLevel)); 
+
+        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            var message = formatter(state, exception);
+            switch (logLevel)
+            {
+                case Microsoft.Extensions.Logging.LogLevel.Trace:
+                    Trace.TraceInformation(message);
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Debug:
+                    Trace.TraceError(message);
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Information:
+                    Trace.TraceInformation(message);
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Warning:
+                    Trace.TraceWarning(message);
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Error:
+                    Trace.TraceError(message);
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Critical:
+                    Trace.TraceError(message);
+                    break;
+                default:
+                    break;
+            }
+
+            if (!IsEnabled(logLevel))
+            {
+                return;
+            }
+
+            if(formatter == null)
+            {
+                throw new ArgumentNullException(nameof(formatter));
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
+            message = $"{logLevel}: {message}";
+
+            if(exception != null)
+            {
+                message += Environment.NewLine + Environment.NewLine + exception.ToString();
+            }
+
+            Trace.WriteLine(message);
         }
     }
 }
