@@ -61,21 +61,18 @@ namespace TuRuta.Orleans
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
             var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
             var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
-
-            var config = AzureSilo.DefaultConfiguration();
+            
+            var config = new ClusterConfiguration();
+            config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
             config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
-            //config.AddSimpleMessageStreamProvider("StreamProvider");
-            //config.AddMemoryStorageProvider("AzureTableStore");
-            config.AddMemoryStorageProvider("PubSubStore");
             config.Defaults.HostNameOrIPAddress = siloEndpoint.Address.ToString();
             config.Defaults.Port = siloEndpoint.Port;
             config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
-            
+            config.Globals.ClusterId = deploymentId;
+            config.Globals.DataConnectionString = connectionString;
+            config.AddMemoryStorageProvider("PubSubStore");
             config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
             config.AddAzureTableStorageProvider(connectionString: connectionString);
-            
-
-            config.Globals.ClusterId = deploymentId;
 
             var builder = new SiloHostBuilder()
                 .UseConfiguration(config)
