@@ -56,23 +56,7 @@ namespace TuRuta.Orleans
 
         private async Task RunAsync()
         {
-
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
-            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
-            var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
-            var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
-            
-            var config = new ClusterConfiguration();
-            config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
-            config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
-            config.Defaults.HostNameOrIPAddress = siloEndpoint.Address.ToString();
-            config.Defaults.Port = siloEndpoint.Port;
-            config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
-            config.Globals.ClusterId = deploymentId;
-            config.Globals.DataConnectionString = connectionString;
-            config.AddMemoryStorageProvider("PubSubStore");
-            config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
-            config.AddAzureTableStorageProvider(connectionString: connectionString);
+            var config = LoadConfiguration();
 
             var builder = new SiloHostBuilder()
                 .UseConfiguration(config)
@@ -82,6 +66,28 @@ namespace TuRuta.Orleans
 
             silo = builder.Build();
             await silo.StartAsync();
+        }
+
+        private ClusterConfiguration LoadConfiguration()
+        {
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
+            var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
+            var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
+
+            var config = new ClusterConfiguration();
+            config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
+            config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
+            config.Defaults.HostNameOrIPAddress = siloEndpoint.Address.ToString();
+            config.Defaults.Port = siloEndpoint.Port;
+            config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
+            config.Globals.ClusterId = deploymentId;
+            config.Globals.DataConnectionString = connectionString;
+            config.AddAzureTableStorageProvider("PubSubStore", connectionString: connectionString);
+            config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
+            config.AddAzureTableStorageProvider(connectionString: connectionString);
+
+            return config;
         }
     }
 }
