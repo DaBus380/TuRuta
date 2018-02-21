@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using Orleans;
 using Orleans.Streams;
 using Orleans.Providers;
-using System.Linq;
 
 using TuRuta.Orleans.Grains.Services.Interfaces;
 using TuRuta.Orleans.Grains.Services;
@@ -19,7 +18,7 @@ namespace TuRuta.Orleans.Grains
 {
     [StorageProvider(ProviderName = "AzureTableStore")]
     [ImplicitStreamSubscription("Buses")]
-    public class BusGrain : Grain<BusState>, IBusGrain
+    public class BusGrain : Grain<BusState>, IBusGrain, IAsyncObserver<PositionUpdate>
     {
         private IAsyncStream<PositionUpdate> injestionStream;
 		private IClientUpdate clientUpdate;
@@ -50,7 +49,7 @@ namespace TuRuta.Orleans.Grains
         {
             var streamProvider = GetStreamProvider("StreamProvider");
             injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
-            await injestionStream.SubscribeAsync(NewPositionReceived);
+            await injestionStream.SubscribeAsync(this);
 
             RouteStream = streamProvider.GetStream<object>(State.RouteId, "Rutas");
         }
@@ -65,7 +64,7 @@ namespace TuRuta.Orleans.Grains
                 .OrderByDescending(tuple => tuple.Distance)
                 .FirstOrDefault().Parada;
 
-        private async Task NewPositionReceived(PositionUpdate message, StreamSequenceToken token)
+        private async Task NewPositionReceived(PositionUpdate message)
         {
             NextStop = GetClosest(message);
 
@@ -92,5 +91,12 @@ namespace TuRuta.Orleans.Grains
                 notSentUpdates.Enqueue(message);
             }
         }
+
+        public Task OnNextAsync(PositionUpdate item, StreamSequenceToken token = null)
+            => NewPositionReceived(item);
+
+        public Task OnCompletedAsync() => Task.CompletedTask;
+
+        public Task OnErrorAsync(Exception ex) => throw ex;
     }
 }
