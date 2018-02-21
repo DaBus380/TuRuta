@@ -6,35 +6,37 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
 using Orleans.Runtime.Host;
 using Orleans.Providers;
 using Orleans.Runtime.Configuration;
+using Orleans.Hosting;
+using Microsoft.Extensions.Logging;
+using Orleans;
+using System.Text;
+
+using TuRuta.Orleans.Grains;
+using TuRuta.Common.Logger;
 
 namespace TuRuta.Orleans
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private AzureSilo silo;
+        private ISiloHost silo;
+        private ManualResetEvent resetEvent = new ManualResetEvent(false);
 
         public override void Run()
         {
             Trace.TraceInformation("TuRuta.Orleans is running");
-
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
-
-            var config = AzureSilo.DefaultConfiguration();
-            config.AddAzureTableStorageProvider();
-            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
-            config.AddMemoryStorageProvider("PubSubStore");
-
-            silo = new AzureSilo();
-            var isGood = silo.Start(config);
-            if (isGood)
+            try
             {
-                silo.Run();
+                RunAsync().Wait();
+
+                resetEvent.WaitOne();
+            }
+            finally
+            {
+                resetEvent.Set();
             }
         }
 
@@ -45,9 +47,47 @@ namespace TuRuta.Orleans
         {
             Trace.TraceInformation("TuRuta.Orleans is stopping");
 
+            silo.StopAsync().Wait();
+
             base.OnStop();
 
             Trace.TraceInformation("TuRuta.Orleans has stopped");
+        }
+
+        private async Task RunAsync()
+        {
+            var config = LoadConfiguration();
+
+            var builder = new SiloHostBuilder()
+                .UseConfiguration(config)
+                .ConfigureLogging(logging => logging.AddAllTraceLoggers())
+                .ConfigureApplicationParts(
+                parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences());
+
+            silo = builder.Build();
+            await silo.StartAsync();
+        }
+
+        private ClusterConfiguration LoadConfiguration()
+        {
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
+            var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
+            var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
+
+            var config = new ClusterConfiguration();
+            config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
+            config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
+            config.Defaults.HostNameOrIPAddress = siloEndpoint.Address.ToString();
+            config.Defaults.Port = siloEndpoint.Port;
+            config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
+            config.Globals.ClusterId = deploymentId;
+            config.Globals.DataConnectionString = connectionString;
+            config.AddAzureTableStorageProvider("PubSubStore", connectionString: connectionString);
+            config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
+            config.AddAzureTableStorageProvider(connectionString: connectionString);
+
+            return config;
         }
     }
 }
