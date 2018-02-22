@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace TuRuta.Orleans.Interfaces
 {
-    public interface IRutaGrain : IGrainWithGuidKey
+    public interface IRouteGrain : IGrainWithGuidKey
     {
-		Task<List<Parada>> AllParadas();
+		Task<List<Stop>> Stops();
     }
 }
