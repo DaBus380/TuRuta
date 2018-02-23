@@ -4,6 +4,7 @@
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
       <Setting name="DataConnectionString" />
+		<Setting name="IsDevelopment" />
     </ConfigurationSettings>
     <Endpoints>
       <InternalEndpoint name="OrleansSiloEndpoint" protocol="tcp" port="11111" />
@@ -16,6 +17,7 @@
 	  <Setting name="DataConnectionString" />
 	  <Setting name="QueueConnectionString" />
 	  <Setting name="QueueName" />
+		<Setting name="IsDevelopment" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>
