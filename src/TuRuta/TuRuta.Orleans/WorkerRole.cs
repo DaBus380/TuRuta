@@ -74,6 +74,7 @@ namespace TuRuta.Orleans
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
             var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
             var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
+            var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
 
             var config = new ClusterConfiguration();
             config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
@@ -83,9 +84,19 @@ namespace TuRuta.Orleans
             config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
             config.Globals.ClusterId = deploymentId;
             config.Globals.DataConnectionString = connectionString;
-            config.AddAzureTableStorageProvider("PubSubStore", connectionString: connectionString);
-            config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
-            config.AddAzureTableStorageProvider(connectionString: connectionString);
+
+            if (isDevelopment)
+            {
+                config.AddMemoryStorageProvider("AzureTableStore");
+                config.AddMemoryStorageProvider("PubSubStore");
+                config.AddSimpleMessageStreamProvider("StreamProvider");
+            }
+            else
+            {
+                config.AddAzureTableStorageProvider("PubSubStore", connectionString: connectionString);
+                config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
+                config.AddAzureTableStorageProvider(connectionString: connectionString);
+            }
 
             return config;
         }

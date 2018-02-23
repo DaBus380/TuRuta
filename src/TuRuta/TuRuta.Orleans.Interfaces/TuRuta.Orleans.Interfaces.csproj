@@ -13,4 +13,8 @@
     <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="2.0.1" />
+  </ItemGroup>
+
 </Project>

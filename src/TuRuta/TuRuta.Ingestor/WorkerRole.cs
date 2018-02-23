@@ -64,16 +64,23 @@ namespace TuRuta.Ingestor
         private async Task RunAsync()
         {
             var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+            var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
 
-            var testConfig = new ClientConfiguration()
+            var config = new ClientConfiguration()
             {
                 GatewayProvider = ClientConfiguration.GatewayProviderType.AzureTable,
                 DataConnectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"),
                 ClusterId = deploymentId
             };
-            //testConfig.AddSimpleMessageStreamProvider("StreamProvider");
-            testConfig.AddAzureQueueStreamProviderV2("StreamProvider", RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
-            
+            if (isDevelopment)
+            {
+                config.AddSimpleMessageStreamProvider("StreamProvider");
+            }
+            else
+            {
+                config.AddAzureQueueStreamProviderV2("StreamProvider", RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+            }
+
             int attemps = 0;
             while (true)
             {
@@ -85,7 +92,7 @@ namespace TuRuta.Ingestor
                         .ConfigureApplicationParts(
                         parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
                         .ConfigureLogging(logging => logging.AddAllTraceLoggers())
-                        .UseConfiguration(testConfig);
+                        .UseConfiguration(config);
 
                     client = builder.Build();
 
