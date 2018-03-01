@@ -115,37 +115,46 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Clustering.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Clustering.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Clustering.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Clustering.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Clustering.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.CodeGeneration, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.2.0.0-beta3\lib\netstandard2.0\Orleans.CodeGeneration.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.2.0.0-rc1\lib\netstandard2.0\Orleans.CodeGeneration.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.2.0.0-beta3\lib\netstandard2.0\Orleans.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Core.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.Abstractions.2.0.0-beta3\lib\netstandard2.0\Orleans.Core.Abstractions.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.Abstractions.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Orleans.Core.Legacy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.Core.Legacy.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.Legacy.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Hosting.AzureCloudServices, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Hosting.AzureCloudServices.2.0.0-beta3\lib\netstandard2.0\Orleans.Hosting.AzureCloudServices.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Hosting.AzureCloudServices.2.0.0-rc1\lib\netstandard2.0\Orleans.Hosting.AzureCloudServices.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Persistence.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Persistence.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Persistence.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Persistence.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Persistence.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Reminders.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Reminders.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Reminders.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Reminders.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Reminders.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Runtime, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.2.0.0-beta3\lib\netstandard2.0\Orleans.Runtime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Orleans.Runtime.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.Runtime.Abstractions.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Orleans.Runtime.Legacy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.Runtime.Legacy.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.Legacy.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Statistics.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Orleans.Statistics.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Statistics.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Streaming.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Streaming.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Streaming.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Streaming.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Streaming.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="OrleansProviders, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.2.0.0-beta3\lib\netstandard2.0\OrleansProviders.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.2.0.0-rc1\lib\netstandard2.0\OrleansProviders.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext">

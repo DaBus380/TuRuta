@@ -1,25 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 using Orleans;
-using Orleans.Runtime.Host;
-using Orleans.Runtime.Configuration;
 using Orleans.Streams;
+using Orleans.Runtime.Configuration;
+using Orleans.Hosting;
 
 using TuRuta.Common.Device;
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Common.Logger;
+using Orleans.Providers;
+using Orleans.Providers.Streams.AzureQueue;
 
 namespace TuRuta.Ingestor
 {
@@ -61,25 +58,33 @@ namespace TuRuta.Ingestor
             Trace.TraceInformation("TuRuta.Ingestor has stopped");
         }
 
-        private async Task RunAsync()
+        private IClientBuilder GetClientBuilder()
         {
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
             var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
-            var config = new ClientConfiguration()
-            {
-                GatewayProvider = ClientConfiguration.GatewayProviderType.AzureTable,
-                DataConnectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"),
-                ClusterId = deploymentId
-            };
+            var builder = new ClientBuilder()
+                .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
+                .ConfigureCluster(cluster => cluster.ClusterId = deploymentId)
+                .ConfigureApplicationParts(
+                    parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
+                .ConfigureLogging(logging => logging.AddAllTraceLoggers());
+
             if (isDevelopment)
             {
-                config.AddSimpleMessageStreamProvider("StreamProvider");
+                builder.AddMemoryStreams<DefaultMemoryMessageBodySerializer>("StreamProvider");
             }
             else
             {
-                config.AddAzureQueueStreamProviderV2("StreamProvider", RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider");
             }
+
+            return builder;
+        } 
+
+        private async Task RunAsync()
+        {
 
             int attemps = 0;
             while (true)
@@ -87,14 +92,8 @@ namespace TuRuta.Ingestor
                 try
                 {
                     await Task.Delay(TimeSpan.FromSeconds(10));
-
-                    var builder = new ClientBuilder()
-                        .ConfigureApplicationParts(
-                        parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
-                        .ConfigureLogging(logging => logging.AddAllTraceLoggers())
-                        .UseConfiguration(config);
-
-                    client = builder.Build();
+                    
+                    client = GetClientBuilder().Build();
 
                     await client.Connect();
                     Trace.TraceInformation("Orleans is initialized");
@@ -114,15 +113,25 @@ namespace TuRuta.Ingestor
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("QueueConnectionString");
             var queueName = RoleEnvironment.GetConfigurationSettingValue("QueueName");
 
+            attemps = 0;
             while (true)
             {
-                if (client.GetStreamProviders().Count() != 0)
+                try
                 {
                     streamProvider = client.GetStreamProvider("StreamProvider");
                     break;
                 }
+                catch(Exception ex)
+                {
+                    if(attemps > 2)
+                    {
+                        break;
+                    }
 
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                    attemps++;
+                    Trace.TraceError($"Error: {ex.Message}");
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                }
             }
 
             QueueClient = new QueueClient(connectionString, queueName);
