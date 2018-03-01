@@ -56,11 +56,11 @@ namespace TuRuta.Orleans
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
             var builder = new SiloHostBuilder()
-                .Configure(config => config.ClusterId = deploymentId)
+                .Configure(config => config.ClusterId = "DaBus")
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
-                .ConfigureApplicationParts(
-                    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
+                //.ConfigureApplicationParts(
+                //    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)
