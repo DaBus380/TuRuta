@@ -5,12 +5,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using TuRuta.Common.ViewModels;
+using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web.Controllers
 {
     [Route("api/[controller]")]
     public class RoutesController : Controller
     {
+        private IRoutesService _routesService { get; }
+        public RoutesController(IRoutesService routesService)
+        {
+            _routesService = routesService;
+        }
+
+        [HttpPost]
+        public Task<RouteVM> Post()
+            => _routesService.Create("Holis");
+
         [HttpGet]
         public IEnumerable<RouteVM> Get()
         {

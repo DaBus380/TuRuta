@@ -66,7 +66,7 @@ namespace TuRuta.Ingestor
 
             var builder = new ClientBuilder()
                 .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
-                .ConfigureCluster(cluster => cluster.ClusterId = deploymentId)
+                .ConfigureCluster(cluster => cluster.ClusterId = "DaBus")
                 .ConfigureApplicationParts(
                     parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers());
