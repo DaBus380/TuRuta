@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Orleans.Runtime.Host;
-using Orleans.Providers;
 using Orleans.Runtime.Configuration;
 using Orleans.Hosting;
-using Microsoft.Extensions.Logging;
 using Orleans;
-using System.Text;
+using Orleans.Providers.Streams.AzureQueue;
 
 using TuRuta.Orleans.Grains;
 using TuRuta.Common.Logger;
+using Orleans.Configuration;
 
 namespace TuRuta.Orleans
 {
@@ -54,51 +47,46 @@ namespace TuRuta.Orleans
             Trace.TraceInformation("TuRuta.Orleans has stopped");
         }
 
-        private async Task RunAsync()
+        private ISiloHostBuilder GetHostBuilder()
         {
-            var config = LoadConfiguration();
+            var proxyPort = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint.Port;
+            var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
+            var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
             var builder = new SiloHostBuilder()
-                .UseConfiguration(config)
+                .Configure(config => config.ClusterId = deploymentId)
+                .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
                 .ConfigureApplicationParts(
-                parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences());
-
-            silo = builder.Build();
-            await silo.StartAsync();
-        }
-
-        private ClusterConfiguration LoadConfiguration()
-        {
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
-            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
-            var proxyEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint;
-            var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
-            var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
-
-            var config = new ClusterConfiguration();
-            config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
-            config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
-            config.Defaults.HostNameOrIPAddress = siloEndpoint.Address.ToString();
-            config.Defaults.Port = siloEndpoint.Port;
-            config.Defaults.ProxyGatewayEndpoint = proxyEndpoint;
-            config.Globals.ClusterId = deploymentId;
-            config.Globals.DataConnectionString = connectionString;
+                    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
+                .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)
             {
-                config.AddMemoryStorageProvider("AzureTableStore");
-                config.AddMemoryStorageProvider("PubSubStore");
-                config.AddSimpleMessageStreamProvider("StreamProvider");
+                builder
+                    .UseInMemoryReminderService()
+                    .AddMemoryGrainStorage("AzureTableStore")
+                    .AddMemoryGrainStorage("PubSubStore")
+                    .AddSimpleMessageStreamProvider("StreamProvider");
             }
             else
             {
-                config.AddAzureTableStorageProvider("PubSubStore", connectionString: connectionString);
-                config.AddAzureQueueStreamProviderV2("StreamProvider", connectionString: connectionString, clusterId: deploymentId);
-                config.AddAzureTableStorageProvider(connectionString: connectionString);
+                builder
+                    .UseAzureTableReminderService(connectionString)
+                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider")
+                    .AddAzureTableGrainStorage("AzureTableStore", options => options.UseJson = true)
+                    .AddAzureTableGrainStorage("PubSubStore", options => options.UseJson = true);
             }
 
-            return config;
+            return builder;
+        }
+
+        private async Task RunAsync()
+        {
+            silo = GetHostBuilder().Build();
+            await silo.StartAsync();
         }
     }
 }
