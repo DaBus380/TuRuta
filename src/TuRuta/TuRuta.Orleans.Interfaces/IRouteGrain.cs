@@ -10,5 +10,6 @@ namespace TuRuta.Orleans.Interfaces
     public interface IRouteGrain : IGrainWithGuidKey
     {
 		Task<List<Stop>> Stops();
+        Task<Guid> GetNearestBus(Point position);
     }
 }

@@ -56,7 +56,7 @@ namespace TuRuta.Web
                             throw ex;
                         }
 
-                        Thread.Sleep(TimeSpan.FromMinutes(3));
+                        Thread.Sleep(TimeSpan.FromSeconds(10));
                     }
                 }
 

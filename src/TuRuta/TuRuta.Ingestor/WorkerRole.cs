@@ -156,13 +156,13 @@ namespace TuRuta.Ingestor
 
         private async Task ProccessMessage(Message message, CancellationToken token)
         {
-            PositionUpdate Deserialize(byte[] data)
+            RouteBusUpdate Deserialize(byte[] data)
             {
                 var json = Encoding.UTF32.GetString(data);
-                return JsonConvert.DeserializeObject<PositionUpdate>(json);
+                return JsonConvert.DeserializeObject<RouteBusUpdate>(json);
             }
 
-            var stream = streamProvider.GetStream<PositionUpdate>(Guid.Parse(message.To), "Buses");
+            var stream = streamProvider.GetStream<RouteBusUpdate>(Guid.Parse(message.To), "Buses");
             await stream.OnNextAsync(Deserialize(message.Body));
 
             await QueueClient.CompleteAsync(message.SystemProperties.LockToken);

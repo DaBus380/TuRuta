@@ -6,10 +6,13 @@ using Orleans.Runtime.Configuration;
 using Orleans.Hosting;
 using Orleans;
 using Orleans.Providers.Streams.AzureQueue;
+using Microsoft.Extensions.DependencyInjection;
+using Orleans.Configuration;
 
 using TuRuta.Orleans.Grains;
 using TuRuta.Common.Logger;
-using Orleans.Configuration;
+using TuRuta.Orleans.Grains.Services.Interfaces;
+using TuRuta.Orleans.Grains.Services;
 
 namespace TuRuta.Orleans
 {
@@ -59,6 +62,13 @@ namespace TuRuta.Orleans
                 .Configure(config => config.ClusterId = "DaBus")
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
+                .UseServiceProviderFactory(services =>
+                {
+                    services.AddSingleton<IDistanceCalculator, HavesineDistanceCalculator>();
+                    services.AddSingleton<IConfigClient, ConfigClient>();
+
+                    return services.BuildServiceProvider();
+                })
                 //.ConfigureApplicationParts(
                 //    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);

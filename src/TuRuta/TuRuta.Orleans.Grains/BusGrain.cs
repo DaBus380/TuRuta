@@ -19,27 +19,33 @@ namespace TuRuta.Orleans.Grains
 {
     [StorageProvider(ProviderName = "AzureTableStore")]
     [ImplicitStreamSubscription("Buses")]
-    public class BusGrain : Grain<BusState>, IBusGrain, IAsyncObserver<PositionUpdate>
+    public class BusGrain : Grain<BusState>, IBusGrain, IAsyncObserver<RouteBusUpdate>
     {
-        private IAsyncStream<PositionUpdate> injestionStream;
-		private IClientUpdate clientUpdate;
-        private IAsyncStream<object> RouteStream;
-		private Queue<PositionUpdate> notSentUpdates = new Queue<PositionUpdate>();
-        private IDistanceCalculator distanceCalculator;
+        private IAsyncStream<RouteBusUpdate> injestionStream;
+        private IClientUpdate _clientUpdate;
+        private IAsyncStream<BusRouteUpdate> RouteStream;
+        private Queue<RouteBusUpdate> notSentUpdates = new Queue<RouteBusUpdate>();
+        private IDistanceCalculator _distanceCalculator;
         private IEnumerable<Stop> Paradas;
         private Stop NextStop;
+        private IConfigClient _configClient;
+
+        public BusGrain(
+            IDistanceCalculator distanceCalculator,
+            IConfigClient configClient)
+        {
+            _distanceCalculator = distanceCalculator;
+            _configClient = configClient;
+        }
 
         public async override Task OnActivateAsync()
         {
-            Paradas = new List<Stop>();
-            var configClient = new ConfigClient();
-            var config = await configClient.GetPubnubConfig();
+            var config = await _configClient.GetPubnubConfig();
 
-			clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
-            distanceCalculator = new HavesineDistanceCalculator();
+			_clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-            Paradas = await routeGrain.Stops();
+            Paradas = await routeGrain.Stops() ?? new List<Stop>();
 
             await GetStreams();
 
@@ -49,15 +55,15 @@ namespace TuRuta.Orleans.Grains
         private async Task GetStreams()
         {
             var streamProvider = GetStreamProvider("StreamProvider");
-            injestionStream = streamProvider.GetStream<PositionUpdate>(this.GetPrimaryKey(), "Buses");
+            injestionStream = streamProvider.GetStream<RouteBusUpdate>((this).GetPrimaryKey(), "Buses");
             await injestionStream.SubscribeAsync(this);
 
-            RouteStream = streamProvider.GetStream<object>(State.RouteId, "Rutas");
+            RouteStream = streamProvider.GetStream<BusRouteUpdate>(State.RouteId, "Routes");
         }
 
-        private Stop GetClosest(PositionUpdate message)
+        private Stop GetClosest(RouteBusUpdate message)
             => Paradas.Select(
-                parada => (Distance: distanceCalculator.GetDistance(
+                parada => (Distance: _distanceCalculator.GetDistance(
                     message.Latitude,
                     parada.Latitude,
                     message.Longitude,
@@ -65,27 +71,40 @@ namespace TuRuta.Orleans.Grains
                 .OrderByDescending(tuple => tuple.Distance)
                 .FirstOrDefault().Parada;
 
-        private async Task NewPositionReceived(PositionUpdate message)
+        private async Task NewPositionReceived(RouteBusUpdate message)
         {
             NextStop = GetClosest(message);
 
-            var sentTask = clientUpdate.SentUpdate(new ClientBusUpdate
+            var position = new Point
+            {
+                Latitude = message.Latitude,
+                Longitude = message.Longitude
+            };
+
+            var sentTask = _clientUpdate.SentUpdate(new ClientBusUpdate
             {
                 Latitude = message.Latitude,
                 Longitude = message.Longitude,
                 BusId = this.GetPrimaryKey(),
                 NextStop = new Stop
                 {
-                    Latitude = 123.43,
-                    Longitude = 45.32,
+                    Latitude = position.Latitude,
+                    Longitude = position.Longitude,
                     Name = "Plaza Galerias"
                 }
             });
 
             State.CurrentLatitude = message.Latitude;
             State.CurrentLongitude = message.Longitude;
+
+            var routeUpdate = RouteStream.OnNextAsync(new BusRouteUpdate
+            {
+                BusId = (this).GetPrimaryKey(),
+                Position = position
+            });
             
             var successful = await sentTask;
+            await routeUpdate;
 
             if (!successful)
             {
@@ -93,7 +112,7 @@ namespace TuRuta.Orleans.Grains
             }
         }
 
-        public Task OnNextAsync(PositionUpdate item, StreamSequenceToken token = null)
+        public Task OnNextAsync(RouteBusUpdate item, StreamSequenceToken token = null)
             => NewPositionReceived(item);
 
         public Task OnCompletedAsync() => Task.CompletedTask;
