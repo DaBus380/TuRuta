@@ -73,7 +73,7 @@ namespace TuRuta.Ingestor
 
             if (isDevelopment)
             {
-                builder.AddMemoryStreams<DefaultMemoryMessageBodySerializer>("StreamProvider");
+                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", options => options.ConnectionString = connectionString);
             }
             else
             {

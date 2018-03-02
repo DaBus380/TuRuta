@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using TuRuta.Orleans.Interfaces;
+using TuRuta.Common;
 using TuRuta.Common.ViewModels;
+using TuRuta.Orleans.Interfaces;
 using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web.Services

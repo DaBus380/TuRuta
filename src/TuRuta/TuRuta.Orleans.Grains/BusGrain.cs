@@ -13,6 +13,7 @@ using TuRuta.Common.Device;
 using TuRuta.Common.StreamObjects;
 using TuRuta.Orleans.Grains.States;
 using TuRuta.Common.Models;
+using Microsoft.Extensions.Logging;
 
 namespace TuRuta.Orleans.Grains
 {

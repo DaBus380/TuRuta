@@ -69,7 +69,7 @@ namespace TuRuta.Orleans
                     .UseInMemoryReminderService()
                     .AddMemoryGrainStorage("AzureTableStore")
                     .AddMemoryGrainStorage("PubSubStore")
-                    .AddSimpleMessageStreamProvider("StreamProvider");
+                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", config => config.ConnectionString = connectionString);
             }
             else
             {
