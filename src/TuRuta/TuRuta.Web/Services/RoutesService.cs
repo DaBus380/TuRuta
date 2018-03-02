@@ -23,8 +23,13 @@ namespace TuRuta.Web.Services
         {
             var Id = Guid.NewGuid();
 
+            var routeGrain = _clusterClient.GetGrain<IRouteGrain>(Id);
             var routeDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.RouteGrainName);
-            await routeDb.SetName(name, Id.ToString());
+
+            var setNameTask = routeDb.SetName(name, Id.ToString());
+            var addNameTask = routeGrain.SetName(name);
+
+            await Task.WhenAll(setNameTask, addNameTask);
 
             return default(RouteVM);
         }

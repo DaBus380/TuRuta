@@ -62,6 +62,12 @@ namespace TuRuta.Orleans.Grains
             return Task.CompletedTask;
         }
 
+        public Task SetName(string name)
+        {
+            State.Name = name;
+            return WriteStateAsync();
+        }
+
         public Task OnNextAsync(BusRouteUpdate item, StreamSequenceToken token = null)
             => UpdateBusPosition(item);
 
