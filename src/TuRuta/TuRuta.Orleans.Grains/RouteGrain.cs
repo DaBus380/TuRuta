@@ -81,6 +81,12 @@ namespace TuRuta.Orleans.Grains
 
             BusPositions.Add(busRouteUpdate.BusId, busRouteUpdate.Position);
 
+            var bus = GrainFactory.GetGrain<IBusGrain>(busRouteUpdate.BusId);
+            if (!State.Buses.Contains(bus))
+            {
+                State.Buses.Add(bus);
+            }
+
             return Task.CompletedTask;
         }
 
@@ -96,8 +102,10 @@ namespace TuRuta.Orleans.Grains
         public Task OnCompletedAsync() => Task.CompletedTask;
         public Task OnErrorAsync(Exception ex) => throw new NotImplementedException();
 
-        public Task<RouteVM> GetRouteVM()
+        public async Task<RouteVM> GetRouteVM()
         {
+            var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
+
             var vm = new RouteVM
             {
                 Id = this.GetPrimaryKey(),
@@ -111,7 +119,11 @@ namespace TuRuta.Orleans.Grains
                 .ToList()
             };
 
-            return Task.FromResult(vm);
+            var buses = await resultsTask;
+            vm.Buses = buses.ToList();
+
+
+            return vm;
         }
     }
 }

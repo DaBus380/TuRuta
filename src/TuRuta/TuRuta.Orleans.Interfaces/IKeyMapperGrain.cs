@@ -8,6 +8,8 @@ namespace TuRuta.Orleans.Interfaces
 {
     public interface IKeyMapperGrain : IGrainWithStringKey
     {
+        Task<List<string>> FindByKey(string id);
+
         Task<string> GetId(string name);
 
         Task SetName(string Id, string Name);
@@ -15,5 +17,11 @@ namespace TuRuta.Orleans.Interfaces
         Task<List<string>> GetAllKeys();
 
         Task<List<string>> GetAllValues();
+
+        Task<List<string>> FindByValue(string id);
+
+        Task RemoveKey(string key);
+
+        Task UpdateKey(string key, string value);
     }
 }

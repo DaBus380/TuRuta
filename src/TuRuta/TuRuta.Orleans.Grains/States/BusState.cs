@@ -8,8 +8,8 @@ namespace TuRuta.Orleans.Grains.States
 	[Serializable]
     public class BusState
     {
+        public string Plates { get; set; } = string.Empty;
         public Point Location { get; set; } = new Point();
         public Guid RouteId { get; set; }
-
 	}
 }

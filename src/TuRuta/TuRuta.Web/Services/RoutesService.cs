@@ -14,10 +14,12 @@ namespace TuRuta.Web.Services
 {
     public class RoutesService : IRoutesService
     {
+        private IKeyMapperGrain _routeDB;
         private IClusterClient _clusterClient { get; }
         public RoutesService(IClusterClient clusterClient)
         {
             _clusterClient = clusterClient;
+            _routeDB = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.RouteGrainName);
         }
 
         public async Task<RouteVM> Create(string name)
@@ -25,9 +27,8 @@ namespace TuRuta.Web.Services
             var Id = Guid.NewGuid();
 
             var routeGrain = _clusterClient.GetGrain<IRouteGrain>(Id);
-            var routeDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.RouteGrainName);
 
-            var setNameTask = routeDb.SetName(Id.ToString(), name);
+            var setNameTask = _routeDB.SetName(Id.ToString(), name);
             var addNameTask = routeGrain.SetName(name);
 
             await Task.WhenAll(setNameTask, addNameTask);
@@ -40,10 +41,7 @@ namespace TuRuta.Web.Services
         }
 
         public Task<List<string>> GetAllNames()
-        {
-            var routesDB = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.RouteGrainName);
-            return routesDB.GetAllValues();
-        }
+            => _routeDB.GetAllValues();
 
         public async Task<RouteVM> AddStops(Guid id, List<CreateStopVM> stops)
         {
@@ -60,5 +58,8 @@ namespace TuRuta.Web.Services
 
             return await routeGrain.GetRouteVM();
         }
+
+        public Task<List<string>> FindByName(string hint)
+            => _routeDB.FindByValue(hint);
     }
 }

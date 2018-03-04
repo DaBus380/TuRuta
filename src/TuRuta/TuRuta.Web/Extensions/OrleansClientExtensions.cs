@@ -49,6 +49,7 @@ namespace TuRuta.Web.Extensions
             }
 
             services.AddSingleton<IRoutesService, RoutesService>();
+            services.AddSingleton<IBusService, BusService>();
 
             return services;
         }

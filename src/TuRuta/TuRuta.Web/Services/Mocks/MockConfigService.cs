@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TuRuta.Web.Services.Interfaces;
 using TuRuta.Common.ViewModels.ConfigVMs;
 
-namespace TuRuta.Web.Services
+namespace TuRuta.Web.Services.Mocks
 {
     public class MockConfigService : IConfigService
     {

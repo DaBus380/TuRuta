@@ -18,8 +18,8 @@ namespace TuRuta.Web.Controllers
             _configService = configService;
         }
 
-        [HttpGet("{macAddress}")]
-        public async Task<BusConfigVM> Get(string macAddress)
+        [HttpGet("[action]/{macAddress}")]
+        public async Task<BusConfigVM> BusConfig(string macAddress)
             => await _configService.GetConfig(macAddress);
 
         [HttpGet("[action]")]

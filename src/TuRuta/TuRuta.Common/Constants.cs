@@ -6,7 +6,10 @@ namespace TuRuta.Common
 {
     public class Constants
     {
-        public static string RouteGrainName { get; set; } = "routes";
-        public static string BusGrainName { get; set; } = "buses";
+        public static string RouteGrainName { get; } = "routes";
+        public static string BusGrainName { get; } = "buses";
+        public static string BusConfigGrainName { get; } = "bus-config";
+        public static string BusPlatesGrainName { get; } = "bus-plate-relation";
+        public static string NoRouteConfiguredGrainName { get; } = "non-route-selected";
     }
 }

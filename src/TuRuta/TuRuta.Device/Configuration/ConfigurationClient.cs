@@ -20,7 +20,7 @@ namespace TuRuta.Device.Configuration
 
         public async Task<BusConfigVM> GetConfig()
         {
-            var result = await httpClient.GetAsync($"/api/config/{GetMac()}");
+            var result = await httpClient.GetAsync($"/api/config/busconfig/{GetMac()}");
             if (result.IsSuccessStatusCode)
             {
                 return JsonConvert.DeserializeObject<BusConfigVM>(await result.Content.ReadAsStringAsync());
