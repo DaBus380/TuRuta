@@ -64,10 +64,8 @@ namespace TuRuta.Orleans.Grains
         private Stop GetClosest(RouteBusUpdate message)
             => Paradas.Select(
                 parada => (Distance: _distanceCalculator.GetDistance(
-                    message.Latitude,
-                    parada.Latitude,
-                    message.Longitude,
-                    parada.Longitude), Parada: parada))
+                    message.Location,
+                    State.Location), Parada: parada))
                 .OrderByDescending(tuple => tuple.Distance)
                 .FirstOrDefault().Parada;
 
@@ -75,32 +73,23 @@ namespace TuRuta.Orleans.Grains
         {
             NextStop = GetClosest(message);
 
-            var position = new Point
-            {
-                Latitude = message.Latitude,
-                Longitude = message.Longitude
-            };
-
             var sentTask = _clientUpdate.SentUpdate(new ClientBusUpdate
             {
-                Latitude = message.Latitude,
-                Longitude = message.Longitude,
+                Location = message.Location,
                 BusId = this.GetPrimaryKey(),
                 NextStop = new Stop
                 {
-                    Latitude = position.Latitude,
-                    Longitude = position.Longitude,
+                    Location = message.Location,
                     Name = "Plaza Galerias"
                 }
             });
 
-            State.CurrentLatitude = message.Latitude;
-            State.CurrentLongitude = message.Longitude;
+            State.Location = message.Location;
 
             var routeUpdate = RouteStream.OnNextAsync(new BusRouteUpdate
             {
-                BusId = (this).GetPrimaryKey(),
-                Position = position
+                BusId = this.GetPrimaryKey(),
+                Position = message.Location
             });
             
             var successful = await sentTask;

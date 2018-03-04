@@ -13,11 +13,11 @@ namespace TuRuta.Orleans.Grains
     [StorageProvider(ProviderName = "AzureTableStore")]
     public class KeyMapperGrain : Grain<Dictionary<string, string>>, IKeyMapperGrain
     {
-        public Task<IEnumerable<string>> GetAllKeys()
-            => Task.FromResult(State.Keys.AsEnumerable());
+        public Task<List<string>> GetAllKeys()
+            => Task.FromResult(State.Keys.ToList());
 
-        public Task<IEnumerable<string>> GetAllValues()
-            => Task.FromResult(State.Values.AsEnumerable());
+        public Task<List<string>> GetAllValues()
+            => Task.FromResult(State.Values.ToList());
 
         public Task<string> GetId(string name)
         {
@@ -26,12 +26,22 @@ namespace TuRuta.Orleans.Grains
                 return Task.FromResult(Id);
             }
 
-            return Task.FromResult(default(string));
+            return Task.FromResult(string.Empty);
         }
 
-        public Task SetName(string name, string Id)
+        public Task SetName(string Id, string name)
         {
-            State.Add(name, Id);
+            if(string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(name))
+            {
+                return Task.CompletedTask;
+            }
+
+            if (State.ContainsValue(name))
+            {
+                return Task.CompletedTask;
+            }
+
+            State.Add(Id, name);
             return WriteStateAsync();
         }
     }

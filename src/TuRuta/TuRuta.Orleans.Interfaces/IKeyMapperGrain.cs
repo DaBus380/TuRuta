@@ -10,10 +10,10 @@ namespace TuRuta.Orleans.Interfaces
     {
         Task<string> GetId(string name);
 
-        Task SetName(string name, string Id);
+        Task SetName(string Id, string Name);
 
-        Task<IEnumerable<string>> GetAllKeys();
+        Task<List<string>> GetAllKeys();
 
-        Task<IEnumerable<string>> GetAllValues();
+        Task<List<string>> GetAllValues();
     }
 }
