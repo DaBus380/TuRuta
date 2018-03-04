@@ -42,8 +42,24 @@ namespace TuRuta.Web
             {
                 services.AddOrleans(Configuration, Env);
             }
-            
-            services.AddSingleton<IConfigService, MockConfigService>();
+            else
+            {
+                services.AddSingleton<IConfigService, MockConfigService>();
+            }
+
+            if (Env.IsDevelopment())
+            {
+                services.AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                    {
+                        Version = "v1",
+                        Title = "TuRuta API",
+                        Description = "You know waht to do",
+                        TermsOfService = "None"
+                    });
+                });
+            }
             
             services
                 .AddMvc(options => options.RespectBrowserAcceptHeader = true)
@@ -59,6 +75,11 @@ namespace TuRuta.Web
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true
+                });
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "TuRuta API v1");
                 });
             }
             else

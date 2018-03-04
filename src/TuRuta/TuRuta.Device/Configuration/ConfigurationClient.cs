@@ -15,7 +15,7 @@ namespace TuRuta.Device.Configuration
     {
         private HttpClient httpClient = new HttpClient()
         {
-            BaseAddress = new Uri("https://4cd8389b.ngrok.io")
+            BaseAddress = new Uri("http://localhost:56340")
         };
 
         public async Task<BusConfigVM> GetConfig()

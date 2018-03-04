@@ -21,6 +21,8 @@ namespace TuRuta.Web.Services
         private readonly string PubnubPub;
 
         private IClusterClient _clusterClient { get; }
+        private IKeyMapperGrain _configDb { get; }
+        private IKeyMapperGrain _noConfigDb { get; }
 
         public ConfigService(
             IClusterClient clusterClient,
@@ -32,12 +34,13 @@ namespace TuRuta.Web.Services
             PubnubPub = configuration.GetValue<string>(nameof(PubnubPub));
 
             _clusterClient = clusterClient;
+            _configDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.BusConfigGrainName);
+            _noConfigDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
         }
         
         public async Task<BusConfigVM> GetConfig(string macAddress)
         {
-            var configGrain = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.BusConfigGrainName);
-            var id = await configGrain.GetId(macAddress);
+            var id = await _configDb.GetId(macAddress);
             if(Guid.TryParse(id, out var ID))
             {
                 return new BusConfigVM
@@ -48,8 +51,13 @@ namespace TuRuta.Web.Services
                 };
             }
 
+            await _noConfigDb.SetName(macAddress, Guid.NewGuid().ToString());
+
             return default(BusConfigVM);
         }
+
+        public Task<List<string>> GetNoConfig()
+            => _noConfigDb.GetAllKeys();
 
         public Task<PubnubConfig> GetPubnub()
             => Task.FromResult(new PubnubConfig

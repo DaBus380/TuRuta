@@ -32,6 +32,13 @@ namespace TuRuta.Web.Services.Mocks
                 ServiceBusConnectionString = ServiceBusConnectionString
             });
 
+        public Task<List<string>> GetNoConfig()
+            => Task.FromResult(new List<string>()
+            {
+                "a",
+                "b"
+            });
+
         public Task<PubnubConfig> GetPubnub()
             => Task.FromResult(new PubnubConfig
             {

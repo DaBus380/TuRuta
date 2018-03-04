@@ -11,5 +11,6 @@ namespace TuRuta.Common
         public static string BusConfigGrainName { get; } = "bus-config";
         public static string BusPlatesGrainName { get; } = "bus-plate-relation";
         public static string NoRouteConfiguredGrainName { get; } = "non-route-selected";
+        public static string NoConfigGrainName { get; } = "no-config-buses";
     }
 }
