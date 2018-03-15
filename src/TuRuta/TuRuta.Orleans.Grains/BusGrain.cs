@@ -13,7 +13,8 @@ using TuRuta.Common.Device;
 using TuRuta.Common.StreamObjects;
 using TuRuta.Orleans.Grains.States;
 using TuRuta.Common.Models;
-using Microsoft.Extensions.Logging;
+using TuRuta.Common;
+using TuRuta.Common.ViewModels;
 
 namespace TuRuta.Orleans.Grains
 {
@@ -42,7 +43,7 @@ namespace TuRuta.Orleans.Grains
         {
             var config = await _configClient.GetPubnubConfig();
 
-			_clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
+            _clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
             Paradas = await routeGrain.Stops() ?? new List<Stop>();
@@ -58,51 +59,49 @@ namespace TuRuta.Orleans.Grains
             injestionStream = streamProvider.GetStream<RouteBusUpdate>((this).GetPrimaryKey(), "Buses");
             await injestionStream.SubscribeAsync(this);
 
-            RouteStream = streamProvider.GetStream<BusRouteUpdate>(State.RouteId, "Routes");
+            if (State.RouteId != Guid.Empty)
+            {
+                RouteStream = streamProvider.GetStream<BusRouteUpdate>(State.RouteId, "Routes");
+            }
         }
 
         private Stop GetClosest(RouteBusUpdate message)
             => Paradas.Select(
                 parada => (Distance: _distanceCalculator.GetDistance(
-                    message.Latitude,
-                    parada.Latitude,
-                    message.Longitude,
-                    parada.Longitude), Parada: parada))
+                    message.Location,
+                    State.Location), Parada: parada))
                 .OrderByDescending(tuple => tuple.Distance)
                 .FirstOrDefault().Parada;
 
         private async Task NewPositionReceived(RouteBusUpdate message)
         {
-            NextStop = GetClosest(message);
-
-            var position = new Point
+            if (State.RouteId == Guid.Empty)
             {
-                Latitude = message.Latitude,
-                Longitude = message.Longitude
-            };
+                var noRoutes = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
+                await noRoutes.SetName(this.GetPrimaryKey().ToString(), State.Plates);
+            }
+
+            NextStop = GetClosest(message);
 
             var sentTask = _clientUpdate.SentUpdate(new ClientBusUpdate
             {
-                Latitude = message.Latitude,
-                Longitude = message.Longitude,
+                Location = message.Location,
                 BusId = this.GetPrimaryKey(),
                 NextStop = new Stop
                 {
-                    Latitude = position.Latitude,
-                    Longitude = position.Longitude,
+                    Location = message.Location,
                     Name = "Plaza Galerias"
                 }
             });
 
-            State.CurrentLatitude = message.Latitude;
-            State.CurrentLongitude = message.Longitude;
+            State.Location = message.Location;
 
-            var routeUpdate = RouteStream.OnNextAsync(new BusRouteUpdate
+            var routeUpdate = RouteStream?.OnNextAsync(new BusRouteUpdate
             {
-                BusId = (this).GetPrimaryKey(),
-                Position = position
+                BusId = this.GetPrimaryKey(),
+                Position = message.Location
             });
-            
+
             var successful = await sentTask;
             await routeUpdate;
 
@@ -118,5 +117,13 @@ namespace TuRuta.Orleans.Grains
         public Task OnCompletedAsync() => Task.CompletedTask;
 
         public Task OnErrorAsync(Exception ex) => throw ex;
+
+        public Task<BusVM> GetBusVM()
+            => Task.FromResult(new BusVM
+            {
+                LicensePlate = State.Plates,
+                Id = this.GetPrimaryKey(),
+                Status = 0
+            });
     }
 }

@@ -7,8 +7,7 @@ namespace TuRuta.Common.StreamObjects
 {
     public class ClientBusUpdate
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public Point Location { get; set; }
         public Guid BusId { get; set; }
         public Stop NextStop { get; set; }
     }
