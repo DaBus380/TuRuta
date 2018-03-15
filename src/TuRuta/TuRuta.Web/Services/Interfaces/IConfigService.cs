@@ -9,6 +9,8 @@ namespace TuRuta.Web.Services.Interfaces
 {
     public interface IConfigService
     {
+        Task<List<string>> GetNoConfig();
+
         Task<BusConfigVM> GetConfig(string macAddress);
 
         Task<PubnubConfig> GetPubnub();

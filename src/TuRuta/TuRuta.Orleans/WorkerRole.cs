@@ -13,6 +13,7 @@ using TuRuta.Orleans.Grains;
 using TuRuta.Common.Logger;
 using TuRuta.Orleans.Grains.Services.Interfaces;
 using TuRuta.Orleans.Grains.Services;
+using Orleans.Storage;
 
 namespace TuRuta.Orleans
 {
@@ -69,8 +70,11 @@ namespace TuRuta.Orleans
 
                     return services.BuildServiceProvider();
                 })
-                //.ConfigureApplicationParts(
-                //    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(
+                    parts => {
+                        parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences();
+                        parts.AddApplicationPart(typeof(MemoryGrainStorage).Assembly).WithReferences();
+                    })
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)
@@ -79,7 +83,7 @@ namespace TuRuta.Orleans
                     .UseInMemoryReminderService()
                     .AddMemoryGrainStorage("AzureTableStore")
                     .AddMemoryGrainStorage("PubSubStore")
-                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", config => config.ConnectionString = connectionString);
+                    .AddSimpleMessageStreamProvider("StreamProvider");
             }
             else
             {
