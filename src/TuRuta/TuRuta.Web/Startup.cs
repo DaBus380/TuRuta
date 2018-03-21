@@ -45,6 +45,8 @@ namespace TuRuta.Web
             else
             {
                 services.AddSingleton<IConfigService, MockConfigService>();
+                services.AddSingleton<IRoutesService, MockRoutesService>();
+                services.AddSingleton<IBusService, MockBusService>();
             }
 
             if (Env.IsDevelopment())
@@ -55,8 +57,8 @@ namespace TuRuta.Web
                     {
                         Version = "v1",
                         Title = "TuRuta API",
-                        Description = "You know waht to do",
-                        TermsOfService = "None"
+                        Description = "You know what to do",
+                        TermsOfService = "This web API is private, do not use unless you are authorize to use it"
                     });
                 });
             }

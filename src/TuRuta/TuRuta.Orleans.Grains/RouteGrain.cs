@@ -98,7 +98,6 @@ namespace TuRuta.Orleans.Grains
 
         public Task OnNextAsync(BusRouteUpdate item, StreamSequenceToken token = null)
             => UpdateBusPosition(item);
-
         public Task OnCompletedAsync() => Task.CompletedTask;
         public Task OnErrorAsync(Exception ex) => throw new NotImplementedException();
 
@@ -116,7 +115,8 @@ namespace TuRuta.Orleans.Grains
                     Location = stop.Location,
                     Name = stop.Name
                 })
-                .ToList()
+                .ToList(),
+                Incidents = new List<IncidentVM>()
             };
 
             var buses = await resultsTask;

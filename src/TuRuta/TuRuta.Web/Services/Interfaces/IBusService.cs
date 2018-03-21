@@ -10,5 +10,11 @@ namespace TuRuta.Web.Services.Interfaces
         Task<List<string>> GetNoConfiguredBuses();
 
         Task<List<string>> FindBusByPlates(string plates);
+
+        Task<List<string>> GetNoConfiguredPlates();
+
+        Task SetRoute(Guid busId, Guid routeId);
+
+        Task SetPlates(Guid busId, string plates);
     }
 }

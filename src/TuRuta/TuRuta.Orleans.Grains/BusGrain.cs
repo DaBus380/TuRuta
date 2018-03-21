@@ -78,7 +78,19 @@ namespace TuRuta.Orleans.Grains
             if (State.RouteId == Guid.Empty)
             {
                 var noRoutes = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
-                await noRoutes.SetName(this.GetPrimaryKey().ToString(), State.Plates);
+                await noRoutes.SetName(this.GetPrimaryKey().ToString(), DateTimeOffset.Now.ToUnixTimeSeconds().ToString());
+            }
+
+            if (string.IsNullOrEmpty(State.Plates))
+            {
+                var noConfig = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
+                await noConfig.SetName(this.GetPrimaryKey().ToString(), DateTimeOffset.Now.ToUnixTimeSeconds().ToString());
+            }
+
+            if(Paradas.Count() == 0 && State.RouteId != Guid.Empty)
+            {
+                var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
+                Paradas = await routeGrain.Stops();
             }
 
             NextStop = GetClosest(message);
@@ -87,23 +99,22 @@ namespace TuRuta.Orleans.Grains
             {
                 Location = message.Location,
                 BusId = this.GetPrimaryKey(),
-                NextStop = new Stop
-                {
-                    Location = message.Location,
-                    Name = "Plaza Galerias"
-                }
+                NextStop = NextStop
             });
 
             State.Location = message.Location;
 
-            var routeUpdate = RouteStream?.OnNextAsync(new BusRouteUpdate
+            var sendToRoute = RouteStream?.OnNextAsync(new BusRouteUpdate
             {
                 BusId = this.GetPrimaryKey(),
                 Position = message.Location
             });
 
             var successful = await sentTask;
-            await routeUpdate;
+            if (sendToRoute != null)
+            {
+                await sendToRoute;
+            }
 
             if (!successful)
             {
@@ -125,5 +136,24 @@ namespace TuRuta.Orleans.Grains
                 Id = this.GetPrimaryKey(),
                 Status = 0
             });
+
+        public Task SetRoute(Guid route)
+        {
+            State.RouteId = route;
+
+            var noRoutes = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
+            return Task.WhenAll(GetStreams(), noRoutes.RemoveKey(this.GetPrimaryKey().ToString()));
+        }
+
+        public Task SetPlates(string plates)
+        {
+            State.Plates = plates;
+
+            var platesGrain = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.BusPlatesGrainName);
+            var noPlatesGrain = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
+
+            var grainId = this.GetPrimaryKey().ToString();
+            return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId));
+        }
     }
 }

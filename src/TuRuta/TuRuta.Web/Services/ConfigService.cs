@@ -35,25 +35,29 @@ namespace TuRuta.Web.Services
 
             _clusterClient = clusterClient;
             _configDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.BusConfigGrainName);
-            _noConfigDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
+            _noConfigDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
         }
-        
+
         public async Task<BusConfigVM> GetConfig(string macAddress)
         {
+            var config = new BusConfigVM
+            {
+                QueueName = QueueName,
+                ServiceBusConnectionString = ServiceBusConnectionString
+            };
+
             var id = await _configDb.GetId(macAddress);
             if(Guid.TryParse(id, out var ID))
             {
-                return new BusConfigVM
-                {
-                    BusId = ID,
-                    QueueName = QueueName,
-                    ServiceBusConnectionString = ServiceBusConnectionString
-                };
+                config.BusId = ID;
+                return config;
             }
 
-            await _noConfigDb.SetName(macAddress, Guid.NewGuid().ToString());
+            var newId = Guid.NewGuid();
+            await _configDb.SetName(macAddress, newId.ToString());
+            config.BusId = newId;
 
-            return default(BusConfigVM);
+            return config;
         }
 
         public Task<List<string>> GetNoConfig()

@@ -10,6 +10,9 @@ using Microsoft.Bot.Connector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using TuRuta.Bot.Services;
+using TuRuta.Bot.Services.Interfaces;
+
 namespace TuRuta.Bot
 {
     public class Startup
@@ -38,6 +41,9 @@ namespace TuRuta.Bot
                 .AddBotAuthentication(credentialProvider);
 
             services.AddSingleton(_ => Configuration);
+            services.AddSingleton<ILuisService, LuisService>();
+            services.AddSingleton<IRoutesService, RoutesServices>();
+            services.AddSingleton<IDialogService, DialogService>();
 
             services.AddMvc(options => options.Filters.Add(typeof(TrustServiceUrlAttribute)));
         }

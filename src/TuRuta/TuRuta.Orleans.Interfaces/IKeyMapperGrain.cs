@@ -19,6 +19,7 @@ namespace TuRuta.Orleans.Interfaces
         Task<List<string>> GetAllValues();
 
         Task<List<string>> FindByValue(string id);
+        Task<List<string>> FindByValueGetValues(string id);
 
         Task RemoveKey(string key);
 

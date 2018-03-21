@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TuRuta.Bot.Services.Interfaces;
 
 namespace TuRuta.Bot.Controllers
 {
@@ -14,9 +15,13 @@ namespace TuRuta.Bot.Controllers
     public class MessagesController : Controller
     {
         private IConfiguration Configuration { get; }
-        public MessagesController(IConfiguration configuration)
+        private IDialogService DialogService { get; }
+        public MessagesController(
+            IDialogService dialogService,
+            IConfiguration configuration)
         {
             Configuration = configuration;
+            DialogService = dialogService;
         }
 
         [HttpPost]
@@ -31,17 +36,12 @@ namespace TuRuta.Bot.Controllers
             }
 
             var client = new ConnectorClient(new Uri(activity.ServiceUrl), appCredentials);
-            var reply = activity.CreateReply();
             if(activity.Type == ActivityTypes.Message)
             {
-                reply.Text = $"echo: {activity.Text}";
-            }
-            else
-            {
-                reply.Text = $"activity type: {activity.Type}";
-            }
+                var reply = await DialogService.GetResponse(activity);
 
-            await client.Conversations.ReplyToActivityAsync(reply);
+                await client.Conversations.ReplyToActivityAsync(reply);
+            }
             return Ok();
         }
     }

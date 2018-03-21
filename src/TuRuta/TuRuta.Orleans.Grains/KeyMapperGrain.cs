@@ -21,7 +21,7 @@ namespace TuRuta.Orleans.Grains
 
         public Task<string> GetId(string Id)
         {
-            if (State.TryGetValue(Id, out var name))
+            if (State.TryGetValue(Id.ToLowerInvariant(), out var name))
             {
                 return Task.FromResult(name);
             }
@@ -32,7 +32,7 @@ namespace TuRuta.Orleans.Grains
         public Task<List<string>> FindByValue(string id)
             => Task.FromResult(
                 State
-                .Where(pair => pair.Value.Contains(id))
+                .Where(pair => pair.Value.Contains(id.ToLowerInvariant()))
                 .Select(pair => pair.Key)
                 .ToList());
 
@@ -43,37 +43,44 @@ namespace TuRuta.Orleans.Grains
                 return Task.CompletedTask;
             }
 
-            if (State.ContainsValue(name))
+            if (State.ContainsKey(Id.ToLowerInvariant()))
             {
                 return Task.CompletedTask;
             }
 
-            State.Add(Id, name);
+            State.Add(Id.ToLowerInvariant(), name.ToLowerInvariant());
             return WriteStateAsync();
         }
 
         public Task<List<string>> FindByKey(string id)
             => Task.FromResult(
                 State
-                .Where(pair => pair.Key.Contains(id))
+                .Where(pair => pair.Key.Contains(id.ToLowerInvariant()))
                 .Select(pair => pair.Value)
                 .ToList());
 
         public Task RemoveKey(string key)
         {
-            State.Remove(key);
+            State.Remove(key.ToLowerInvariant());
             return Task.CompletedTask;
         }
 
         public Task UpdateKey(string key, string value)
         {
-            if (State.ContainsKey(key))
+            if (State.ContainsKey(key.ToLowerInvariant()))
             {
-                State[key] = value;
+                State[key] = value.ToLowerInvariant();
                 return Task.CompletedTask;
             }
 
-            return SetName(key, value);
+            return SetName(key.ToLowerInvariant(), value.ToLowerInvariant());
         }
+
+        public Task<List<string>> FindByValueGetValues(string id) 
+            => Task.FromResult(
+                State
+                .Where(pair => pair.Value.Contains(id.ToLowerInvariant()))
+                .Select(pair => pair.Value)
+                .ToList());
     }
 }

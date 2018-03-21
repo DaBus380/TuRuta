@@ -27,7 +27,25 @@ namespace TuRuta.Web.Services
         public Task<List<string>> GetNoConfiguredBuses()
         {
             var noConfigBusesDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
-            return noConfigBusesDb.GetAllValues();
+            return noConfigBusesDb.GetAllKeys();
+        }
+
+        public Task<List<string>> GetNoConfiguredPlates()
+        {
+            var noConfiguredPlates = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
+            return noConfiguredPlates.GetAllKeys();
+        }
+
+        public Task SetRoute(Guid busId, Guid routeId)
+        {
+            var busGrain = _clusterClient.GetGrain<IBusGrain>(busId);
+            return busGrain.SetRoute(routeId);
+        }
+
+        public Task SetPlates(Guid busId, string plates)
+        {
+            var busGrain = _clusterClient.GetGrain<IBusGrain>(busId);
+            return busGrain.SetPlates(plates);
         }
     }
 }

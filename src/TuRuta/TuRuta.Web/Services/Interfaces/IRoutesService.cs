@@ -9,6 +9,8 @@ namespace TuRuta.Web.Services.Interfaces
 {
     public interface IRoutesService
     {
+        Task<RouteVM> GetRoute(string name);
+
         Task<List<string>> FindByName(string hint);
 
         Task<RouteVM> Create(string name);

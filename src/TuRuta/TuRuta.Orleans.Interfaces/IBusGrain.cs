@@ -10,5 +10,9 @@ namespace TuRuta.Orleans.Interfaces
     public interface IBusGrain : IGrainWithGuidKey
     {
         Task<BusVM> GetBusVM();
+
+        Task SetRoute(Guid route);
+
+        Task SetPlates(string plates);
     }
 }

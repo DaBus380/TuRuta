@@ -60,6 +60,19 @@ namespace TuRuta.Web.Services
         }
 
         public Task<List<string>> FindByName(string hint)
-            => _routeDB.FindByValue(hint);
+            => _routeDB.FindByValueGetValues(hint);
+
+        public async Task<RouteVM> GetRoute(string name)
+        {
+            var foundIds = await _routeDB.FindByValue(name);
+            if(foundIds.Count != 1)
+            {
+                return null;
+            }
+
+            var id = Guid.Parse(foundIds.First());
+            var route = _clusterClient.GetGrain<IRouteGrain>(id);
+            return await route.GetRouteVM();
+        }
     }
 }

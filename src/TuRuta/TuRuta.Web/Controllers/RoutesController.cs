@@ -18,6 +18,10 @@ namespace TuRuta.Web.Controllers
             _routesService = routesService;
         }
 
+        [HttpGet("{name}")]
+        public Task<RouteVM> Get(string name)
+            => _routesService.GetRoute(name);
+             
         [HttpGet("[action]/{hint}")]
         public Task<List<string>> Find(string hint)
             => _routesService.FindByName(hint);

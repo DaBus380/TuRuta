@@ -17,11 +17,39 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpGet("[action]")]
+        public Task<List<string>> NoPlates()
+            => _busService.GetNoConfiguredPlates();
+
+        [HttpGet("[action]")]
         public Task<List<string>> NoConfigured()
             => _busService.GetNoConfiguredBuses();
 
         [HttpGet("[action]/{plates}")]
         public async Task<List<string>> Find(string plates)
             => await _busService.FindBusByPlates(plates);
+
+        [HttpGet("[action]/{busId}/{routeId}")]
+        public async Task<IActionResult> SetRoute(string busId, string routeId)
+        {
+            if(Guid.TryParse(busId, out var BusId) && Guid.TryParse(routeId, out var RouteId))
+            {
+                await _busService.SetRoute(BusId, RouteId);
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("[action]/{busId}/{plates}")]
+        public async Task<IActionResult> SetPlates(string busId, string plates)
+        {
+            if(Guid.TryParse(busId, out var BusId))
+            {
+                await _busService.SetPlates(BusId, plates);
+                return Ok();
+            }
+
+            return BadRequest();
+        }
     }
 }
