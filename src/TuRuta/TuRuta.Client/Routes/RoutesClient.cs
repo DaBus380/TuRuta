@@ -13,7 +13,7 @@ namespace TuRuta.Client.Routes
     {
         private HttpClient HttpClient { get; } = new HttpClient
         {
-            BaseAddress = new Uri("https://27985237.ngrok.io")
+            BaseAddress = new Uri("http://localhost:56340/")
         };
 
         public async Task<IEnumerable<string>> Find(string hint)
