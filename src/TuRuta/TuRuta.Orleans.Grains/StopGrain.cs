@@ -14,12 +14,13 @@ namespace TuRuta.Orleans.Grains
 	{
 		public Task AddInfo(StopVM stopVM)
 		{
-			throw new NotImplementedException();
+			State.Location = stopVM.Location;
+			State.Name = stopVM.Name;
 		}
 
 		public Task<List<RouteVM>> GetRoutes()
 		{
-			throw new NotImplementedException();
+			return Task.FromResult(State.Routes);
 		}
 
 		public Task<StopVM> GetStop()
