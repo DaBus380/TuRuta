@@ -30,10 +30,8 @@ namespace TuRuta.Orleans.Grains
             _calculator = calculator;
         }
 
-        public Task<List<Stop>> Stops()
-        {
-            return Task.FromResult(State.Stops);
-        }
+        public async Task<List<StopVM>> Stops()
+            => (await Task.WhenAll(State.Stops.Select(stop => stop.GetStop()))).ToList();
 
         public async override Task OnActivateAsync()
         {
@@ -44,24 +42,15 @@ namespace TuRuta.Orleans.Grains
             await base.OnActivateAsync();
         }
 
-        public Task AddStops(List<CreateStopVM> stops)
+        public Task AddStops(List<IStopGrain> stops)
         {
-            State.Stops.AddRange(stops.Select(stop => new Stop {
-                Id = Guid.NewGuid(),
-                Location = stop.Location,
-                Name = stop.Name
-            }));
+            State.Stops.AddRange(stops);
             return WriteStateAsync();
         }
 
-        public Task AddStop(CreateStopVM stop)
+        public Task AddStop(IStopGrain stop)
         {
-            State.Stops.Add(new Stop
-            {
-                Id = Guid.NewGuid(),
-                Location = stop.Location,
-                Name = stop.Name
-            });
+            State.Stops.Add(stop);
             return WriteStateAsync();
         }
 
@@ -104,22 +93,19 @@ namespace TuRuta.Orleans.Grains
         public async Task<RouteVM> GetRouteVM()
         {
             var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
+            var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStop()));
 
             var vm = new RouteVM
             {
                 Id = this.GetPrimaryKey(),
                 Name = State.Name,
-                Stops = State.Stops.Select(stop => new StopVM
-                {
-                    Id = stop.Id,
-                    Location = stop.Location,
-                    Name = stop.Name
-                })
-                .ToList(),
                 Incidents = new List<IncidentVM>()
             };
 
             var buses = await resultsTask;
+            var stops = await stopsTask;
+
+            vm.Stops = stops.ToList();
             vm.Buses = buses.ToList();
 
 

@@ -11,25 +11,21 @@ namespace TuRuta.Web.Services.Mocks
     {
         private RouteVM MockRoute { get; } = new RouteVM();
 
-        public Task<RouteVM> AddStop(Guid id, CreateStopVM stop)
+        public Task<RouteVM> AddStop(Guid id, Guid stop)
         {
             MockRoute.Stops.Add(new StopVM
             {
-                Id = Guid.NewGuid(),
-                Location= stop.Location,
-                Name = stop.Name
+                Id = stop
             });
 
             return Task.FromResult(MockRoute);
         }
 
-        public Task<RouteVM> AddStops(Guid id, List<CreateStopVM> stops)
+        public Task<RouteVM> AddStops(Guid id, List<Guid> stops)
         {
-            MockRoute.Stops.AddRange(stops.Select(stop => new StopVM
+            MockRoute.Stops.AddRange(stops.Select(stopId => new StopVM
             {
-                Id = Guid.NewGuid(),
-                Location = stop.Location,
-                Name = stop.Name
+                Id = stopId
             }));
 
             return Task.FromResult(MockRoute);

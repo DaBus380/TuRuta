@@ -46,7 +46,12 @@ namespace TuRuta.Orleans.Grains
             _clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-            Paradas = await routeGrain.Stops() ?? new List<Stop>();
+            Paradas = (await routeGrain.Stops()).Select(stop => new Stop
+            {
+                Id = stop.Id,
+                Location = stop.Location,
+                Name = stop.Name
+            }).ToList() ?? new List<Stop>();
 
             await GetStreams();
 
@@ -90,7 +95,12 @@ namespace TuRuta.Orleans.Grains
             if(Paradas.Count() == 0 && State.RouteId != Guid.Empty)
             {
                 var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-                Paradas = await routeGrain.Stops();
+                Paradas = (await routeGrain.Stops()).Select(stop => new Stop
+                {
+                    Id = stop.Id,
+                    Location = stop.Location,
+                    Name = stop.Name
+                });
             }
 
             NextStop = GetClosest(message);
