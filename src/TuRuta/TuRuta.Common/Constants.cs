@@ -8,6 +8,7 @@ namespace TuRuta.Common
     {
         public static string RouteGrainName { get; } = "routes";
         public static string BusGrainName { get; } = "buses";
+		public static string StopGrainName { get; } = "stops";
         public static string BusConfigGrainName { get; } = "bus-config";
         public static string BusPlatesGrainName { get; } = "bus-plate-relation";
         public static string NoRouteConfiguredGrainName { get; } = "non-route-selected";

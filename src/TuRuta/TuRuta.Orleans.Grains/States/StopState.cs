@@ -6,11 +6,10 @@ using TuRuta.Orleans.Interfaces;
 
 namespace TuRuta.Orleans.Grains.States
 {
-	[Serializable]
-    public class RouteState
+    public class StopState
     {
-        public List<IStopGrain> Stops { get; set; } = new List<IStopGrain>();
+		public Point Location { get; set; }
 		public string Name { get; set; }
-        public List<IBusGrain> Buses { get; set; } = new List<IBusGrain>();
-    }
+		public List<IRouteGrain> Routes { get; set; } = new List<IRouteGrain>();
+	}
 }
