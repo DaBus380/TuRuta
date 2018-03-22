@@ -1,6 +1,19 @@
-@media (max-width: 767px) {
-    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
-    body {
-        padding-top: 50px;
-    }
+.navbar-inverse {
+    background-color: rgb(34, 192, 166);
+}
+.navbar-inverse .navbar-brand {
+    color: #fff;
+}
+.navbar-inverse .navbar-nav li  a {
+    color: #ececec;
+}
+.main-nav li a.router-link-active {
+    background-color: rgb(26, 145, 125) !important;
+}
+.container-fluid strong{
+    color: rgb(26, 145, 125);
+}
+.main-nav .navbar-collapse {
+    border-top: 1px solid rgb(24, 161, 139) !important;
+    padding: 0px;
 }

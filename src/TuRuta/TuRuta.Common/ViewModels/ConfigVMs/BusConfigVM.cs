@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TuRuta.Common.ViewModels
+namespace TuRuta.Common.ViewModels.ConfigVMs
 {
     public class BusConfigVM
     {

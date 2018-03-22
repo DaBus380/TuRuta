@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+using TuRuta.Common.StreamObjects;
+
 namespace TuRuta.Orleans.Grains.Services.Interfaces
 {
-    interface IClientUpdate
+    public interface IClientUpdate
     {
-        Task<bool> SentUpdate(object update);
+        Task<bool> SentUpdate(ClientBusUpdate update);
     }
 }

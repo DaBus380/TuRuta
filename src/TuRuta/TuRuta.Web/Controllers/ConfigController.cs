@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Common.ViewModels.ConfigVMs;
 
 namespace TuRuta.Web.Controllers
 {
@@ -18,8 +18,16 @@ namespace TuRuta.Web.Controllers
             _configService = configService;
         }
 
-        [HttpGet("{macAddress}")]
-        public async Task<BusConfigVM> Get(string macAddress)
-            => await _configService.GetConfig(macAddress);
+        [HttpGet("[action]")]
+        public Task<List<string>> NoConfig()
+            => _configService.GetNoConfig();
+
+        [HttpGet("[action]/{macAddress}")]
+        public Task<BusConfigVM> BusConfig(string macAddress)
+            => _configService.GetConfig(macAddress);
+
+        [HttpGet("[action]")]
+        public async Task<PubnubConfig> PubNub()
+            => await _configService.GetPubnub();
     }
 }

@@ -1,0 +1,16 @@
+.route-info {
+    margin: 5% 3%;
+}
+.route-info p{
+    color: lightgray;
+    font-style: italic;
+}
+.station-prev {
+    color: lightgray;
+}
+.station-current {
+    font-weight: bold;
+}
+.station-next {
+    color: black;
+}

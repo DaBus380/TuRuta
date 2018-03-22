@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using TuRuta.Common.Models;
 
 namespace TuRuta.Common.ViewModels
 {
@@ -12,6 +13,6 @@ namespace TuRuta.Common.ViewModels
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public (double, double) Location { get; set; }
+        public Point Location { get; set; }
     }
 }

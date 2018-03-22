@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-using TuRuta.Common.ViewModels;
+using TuRuta.Common.ViewModels.ConfigVMs;
 
 namespace TuRuta.Device.Configuration
 {
@@ -15,12 +15,12 @@ namespace TuRuta.Device.Configuration
     {
         private HttpClient httpClient = new HttpClient()
         {
-            BaseAddress = new Uri("https://3f3d1f78.ngrok.io")
+            BaseAddress = new Uri("http://localhost:56340")
         };
 
         public async Task<BusConfigVM> GetConfig()
         {
-            var result = await httpClient.GetAsync($"/api/config/{GetMac()}");
+            var result = await httpClient.GetAsync($"/api/config/busconfig/{GetMac()}");
             if (result.IsSuccessStatusCode)
             {
                 return JsonConvert.DeserializeObject<BusConfigVM>(await result.Content.ReadAsStringAsync());

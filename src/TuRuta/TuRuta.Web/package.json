@@ -23,5 +23,9 @@
     "vue-template-compiler": "^2.2.2",
     "webpack": "^2.2.0",
     "webpack-hot-middleware": "^2.12.2"
+  },
+  "dependencies": {
+    "@types/pubnub": "^4.0.2",
+    "pubnub": "^4.20.2"
   }
 }

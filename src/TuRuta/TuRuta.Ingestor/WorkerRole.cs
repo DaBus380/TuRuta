@@ -1,31 +1,32 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 using Orleans;
-using Orleans.Runtime.Host;
-using Orleans.Runtime.Configuration;
 using Orleans.Streams;
+using Orleans.Runtime.Configuration;
+using Orleans.Hosting;
+
 using TuRuta.Common.Device;
+using TuRuta.Orleans.Interfaces;
+using TuRuta.Common.Logger;
+using Orleans.Providers;
+using Orleans.Providers.Streams.AzureQueue;
 
 namespace TuRuta.Ingestor
 {
     public class WorkerRole : RoleEntryPoint
     {
         private QueueClient QueueClient;
-        private int attempsBeforeFailing = 2;
+        private int attempsBeforeFailing = 6;
         private IStreamProvider streamProvider;
         private ManualResetEvent CompletedEvent = new ManualResetEvent(false);
+        private IClusterClient client;
 
         public override void Run()
         {
@@ -57,26 +58,51 @@ namespace TuRuta.Ingestor
             Trace.TraceInformation("TuRuta.Ingestor has stopped");
         }
 
+        private IClientBuilder GetClientBuilder()
+        {
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
+            var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
+
+            var builder = new ClientBuilder()
+                .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
+                .ConfigureCluster(cluster => cluster.ClusterId = "DaBus")
+                .ConfigureApplicationParts(
+                    parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
+                .ConfigureLogging(logging => logging.AddAllTraceLoggers());
+
+            if (isDevelopment)
+            {
+                builder.AddSimpleMessageStreamProvider("StreamProvider");
+            }
+            else
+            {
+                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider");
+            }
+
+            return builder;
+        } 
+
         private async Task RunAsync()
         {
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
-            var config = AzureClient.DefaultConfiguration();
-            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
 
             int attemps = 0;
             while (true)
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                    AzureClient.Initialize(config);
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    
+                    client = GetClientBuilder().Build();
+
+                    await client.Connect();
                     Trace.TraceInformation("Orleans is initialized");
                     break;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     attemps++;
-                    Trace.TraceWarning("Orleans is not ready");
+                    Trace.TraceWarning($"Orleans is not ready {ex.Message}");
                     if (attemps > attempsBeforeFailing)
                     {
                         throw;
@@ -87,15 +113,25 @@ namespace TuRuta.Ingestor
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("QueueConnectionString");
             var queueName = RoleEnvironment.GetConfigurationSettingValue("QueueName");
 
+            attemps = 0;
             while (true)
             {
-                if (GrainClient.GetStreamProviders().Count() != 0)
+                try
                 {
-                    streamProvider = GrainClient.GetStreamProvider("StreamProvider");
+                    streamProvider = client.GetStreamProvider("StreamProvider");
                     break;
                 }
+                catch(Exception ex)
+                {
+                    if(attemps > 2)
+                    {
+                        break;
+                    }
 
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                    attemps++;
+                    Trace.TraceError($"Error: {ex.Message}");
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                }
             }
 
             QueueClient = new QueueClient(connectionString, queueName);
@@ -120,13 +156,13 @@ namespace TuRuta.Ingestor
 
         private async Task ProccessMessage(Message message, CancellationToken token)
         {
-            PositionUpdate Deserialize(byte[] data)
+            RouteBusUpdate Deserialize(byte[] data)
             {
                 var json = Encoding.UTF32.GetString(data);
-                return JsonConvert.DeserializeObject<PositionUpdate>(json);
+                return JsonConvert.DeserializeObject<RouteBusUpdate>(json);
             }
 
-            var stream = streamProvider.GetStream<PositionUpdate>(Guid.Parse(message.To), "Buses");
+            var stream = streamProvider.GetStream<RouteBusUpdate>(Guid.Parse(message.To), "Buses");
             await stream.OnNextAsync(Deserialize(message.Body));
 
             await QueueClient.CompleteAsync(message.SystemProperties.LockToken);
