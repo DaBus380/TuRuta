@@ -16,12 +16,12 @@ namespace TuRuta.Orleans.Grains
 	{
 		public Task AddInfo(StopVM stopVM)
 		{
-			throw new NotImplementedException();
+			State.Location = stopVM.Location;
+			State.Name = stopVM.Name;
 		}
-
         public async Task<List<RouteVM>> GetRoutes()
             => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteVM()))).ToList();
-
+            
 		public Task<StopVM> GetStop()
 			=> Task.FromResult(State.ToVM(this.GetPrimaryKey()));
 
