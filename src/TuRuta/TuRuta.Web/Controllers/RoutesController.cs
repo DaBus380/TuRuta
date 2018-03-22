@@ -35,7 +35,7 @@ namespace TuRuta.Web.Controllers
             => _routesService.Create(name);
 
         [HttpPost("[action]/{id}")]
-        public async Task<RouteVM> AddStops(string id, [FromBody]List<CreateStopVM> stops)
+        public async Task<RouteVM> AddStops(string id, [FromBody]List<Guid> stops)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
-        public async Task<RouteVM> AddStop(string id, [FromBody]CreateStopVM stop)
+        public async Task<RouteVM> AddStop(string id, [FromBody]Guid stop)
         {
             if (!ModelState.IsValid)
             {

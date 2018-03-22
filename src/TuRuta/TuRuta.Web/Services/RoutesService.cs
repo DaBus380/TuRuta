@@ -14,12 +14,14 @@ namespace TuRuta.Web.Services
 {
     public class RoutesService : IRoutesService
     {
+        private IKeyMapperGrain _stopNameDb;
         private IKeyMapperGrain _routeDB;
         private IClusterClient _clusterClient { get; }
         public RoutesService(IClusterClient clusterClient)
         {
             _clusterClient = clusterClient;
             _routeDB = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.RouteGrainName);
+            _stopNameDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.StopGrainName);
         }
 
         public async Task<RouteVM> Create(string name)
@@ -43,18 +45,23 @@ namespace TuRuta.Web.Services
         public Task<List<string>> GetAllNames()
             => _routeDB.GetAllValues();
 
-        public async Task<RouteVM> AddStops(Guid id, List<CreateStopVM> stops)
+        public async Task<RouteVM> AddStops(Guid id, List<Guid> stops)
         {
             var routeGrain = _clusterClient.GetGrain<IRouteGrain>(id);
-            await routeGrain.AddStops(stops);
+            var grains = stops
+                .Select(stopId => _clusterClient.GetGrain<IStopGrain>(stopId))
+                .ToList();
+
+            await routeGrain.AddStops(grains);
 
             return await routeGrain.GetRouteVM();
         }
 
-        public async Task<RouteVM> AddStop(Guid id, CreateStopVM stop)
+        public async Task<RouteVM> AddStop(Guid id, Guid stopId)
         {
             var routeGrain = _clusterClient.GetGrain<IRouteGrain>(id);
-            await routeGrain.AddStop(stop);
+            var stopGrain = _clusterClient.GetGrain<IStopGrain>(stopId);
+            await routeGrain.AddStop(stopGrain);
 
             return await routeGrain.GetRouteVM();
         }

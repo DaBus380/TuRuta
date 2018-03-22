@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using Orleans;
+
 using TuRuta.Common.ViewModels;
 using TuRuta.Orleans.Grains.Extensions;
 using TuRuta.Orleans.Grains.States;
@@ -17,12 +19,9 @@ namespace TuRuta.Orleans.Grains
 			State.Location = stopVM.Location;
 			State.Name = stopVM.Name;
 		}
-
-		public Task<List<RouteVM>> GetRoutes()
-		{
-			return Task.FromResult(State.Routes);
-		}
-
+        public async Task<List<RouteVM>> GetRoutes()
+            => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteVM()))).ToList();
+            
 		public Task<StopVM> GetStop()
 			=> Task.FromResult(State.ToVM(this.GetPrimaryKey()));
 
