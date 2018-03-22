@@ -9,63 +9,45 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
+using Orleans.Runtime.Host;
+using Orleans.Providers;
+using Orleans.Runtime.Configuration;
 
 namespace TuRuta.Orleans
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+        private AzureSilo silo;
 
         public override void Run()
         {
             Trace.TraceInformation("TuRuta.Orleans is running");
 
-            try
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
+
+            var config = AzureSilo.DefaultConfiguration();
+            config.AddAzureTableStorageProvider();
+            config.AddAzureQueueStreamProviderV2("StreamProvider", deploymentId: deploymentId);
+            config.AddMemoryStorageProvider("PubSubStore");
+
+            silo = new AzureSilo();
+            var isGood = silo.Start(config);
+            if (isGood)
             {
-                this.RunAsync(this.cancellationTokenSource.Token).Wait();
-            }
-            finally
-            {
-                this.runCompleteEvent.Set();
+                silo.Run();
             }
         }
 
         public override bool OnStart()
-        {
-            // Establecer el número máximo de conexiones simultáneas
-            ServicePointManager.DefaultConnectionLimit = 12;
-
-            // Para obtener información sobre cómo administrar los cambios de configuración
-            // consulte el tema de MSDN en https://go.microsoft.com/fwlink/?LinkId=166357.
-
-            bool result = base.OnStart();
-
-            Trace.TraceInformation("TuRuta.Orleans has been started");
-
-            return result;
-        }
+            => base.OnStart();
 
         public override void OnStop()
         {
             Trace.TraceInformation("TuRuta.Orleans is stopping");
 
-            this.cancellationTokenSource.Cancel();
-            this.runCompleteEvent.WaitOne();
-
             base.OnStop();
 
             Trace.TraceInformation("TuRuta.Orleans has stopped");
-        }
-
-        private async Task RunAsync(CancellationToken cancellationToken)
-        {
-            // TODO: Reemplazar lo siguiente por su propia lógica.
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Trace.TraceInformation("Working");
-                await Task.Delay(1000);
-            }
         }
     }
 }

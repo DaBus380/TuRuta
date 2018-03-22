@@ -4,4 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="1.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj" />
+  </ItemGroup>
+
 </Project>
