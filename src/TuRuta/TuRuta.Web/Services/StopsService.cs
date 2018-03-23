@@ -19,24 +19,48 @@ namespace TuRuta.Web.Services
 			_clusterClient = clusterClient;
 			_stopNameDb = _clusterClient.GetGrain<IKeyMapperGrain>(Constants.StopGrainName);
 		}
-		public Task<StopVM> CreateStop(StopVM stopVM)
+
+		public async Task<StopVM> CreateStop(StopVM stopVM)
 		{
-			throw new NotImplementedException();
+            var stopId = Guid.NewGuid();
+            var setName = _stopNameDb.SetName(stopId.ToString(), stopVM.Name);
+
+            var stopGrain = _clusterClient.GetGrain<IStopGrain>(stopId);
+            await stopGrain.AddInfo(stopVM);
+
+            return await stopGrain.GetStop();
 		}
 
-		public Task<List<string>> FindByStops(string hint)
+        public Task<List<string>> FindByStops(string hint)
+            => _stopNameDb.FindByValueGetValues(hint);
+
+		public async Task<List<StopVM>> GetAllStops()
 		{
-			throw new NotImplementedException();
+            var keys = (await _stopNameDb.GetAllKeys()).Select(key => Guid.Parse(key));
+
+            return (await Task.WhenAll(keys.Select(key =>
+            {
+                var grain = _clusterClient.GetGrain<IStopGrain>(key);
+                return grain.GetStop();
+            }))).ToList();
 		}
 
-		public Task<List<StopVM>> GetAllStops()
+		public async Task<StopVM> GetStop(string name)
 		{
-			throw new NotImplementedException();
-		}
+            var stopIds = await _stopNameDb.FindByValue(name);
+            if(stopIds.Count() != 1)
+            {
+                return null;
+            }
 
-		public Task<StopVM> GetStop(string name)
-		{
-			throw new NotImplementedException();
+            var stopId = stopIds.First();
+            if(Guid.TryParse(stopId, out var StopId))
+            {
+                var stopGrain = _clusterClient.GetGrain<IStopGrain>(StopId);
+                return await stopGrain.GetStop();
+            }
+
+            return null;
 		}
 	}
 }

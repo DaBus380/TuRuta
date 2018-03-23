@@ -13,10 +13,10 @@ namespace TuRuta.Common.ViewModels
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public List<BusVM> Buses { get; set; }
+        public List<BusVM> Buses { get; set; } = new List<BusVM>();
         [DataMember]
-        public List<StopVM> Stops { get; set; }
+        public List<StopVM> Stops { get; set; } = new List<StopVM>();
         [DataMember]
-        public List<IncidentVM> Incidents { get; set; }
+        public List<IncidentVM> Incidents { get; set; } = new List<IncidentVM>();
     }
 }

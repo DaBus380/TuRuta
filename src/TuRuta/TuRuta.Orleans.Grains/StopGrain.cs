@@ -20,6 +20,7 @@ namespace TuRuta.Orleans.Grains
 			State.Name = stopVM.Name;
 			return Task.CompletedTask;
 		}
+
         public async Task<List<RouteVM>> GetRoutes()
             => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteVM()))).ToList();
             
@@ -32,21 +33,5 @@ namespace TuRuta.Orleans.Grains
 			State.Routes.Add(routeGrain);
 			return Task.CompletedTask;
 		}
-		public Task<StopVM> GetStopVM()
-		{
-			var vm = new StopVM
-			{
-				Id = this.GetPrimaryKey(),
-				Name = State.Name,
-				Location = State.Location
-				
-			};
-			return Task.FromResult(vm);
-		}
-		public Task<RouteVM> GetRoute()
-		{
-			var vm = State.Routes.Select(route => route.GetRouteVM());
-			return Task.FromResult(vm);
-		}
-	}
+    }
 }

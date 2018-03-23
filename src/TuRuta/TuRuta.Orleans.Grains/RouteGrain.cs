@@ -98,8 +98,7 @@ namespace TuRuta.Orleans.Grains
             var vm = new RouteVM
             {
                 Id = this.GetPrimaryKey(),
-                Name = State.Name,
-                Incidents = new List<IncidentVM>()
+                Name = State.Name
             };
 
             var buses = await resultsTask;
@@ -111,5 +110,12 @@ namespace TuRuta.Orleans.Grains
 
             return vm;
         }
+
+        public Task<RouteVM> GetRouteInfo()
+            => Task.FromResult(new RouteVM
+            {
+                Id = this.GetPrimaryKey(),
+                Name = State.Name
+            });
     }
 }
