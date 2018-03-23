@@ -18,18 +18,18 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpPost]
-        public Task<StopVM> Post(StopVM stopVM)
+        public Task<StopVM> Post([FromBody]StopVM stopVM)
             => _stopService.CreateStop(stopVM);
 
         [HttpGet]
         public Task<List<StopVM>> Get()
             => _stopService.GetAllStops();
 
-        [HttpGet]
+        [HttpGet("{name}")]
         public Task<StopVM> Get(string name)
             => _stopService.GetStop(name);
 
-        [HttpGet("/{action}/{hint}")]
+        [HttpGet("[action]/{hint}")]
         public Task<List<string>> Find(string hint)
             => _stopService.FindByStops(hint);
     }

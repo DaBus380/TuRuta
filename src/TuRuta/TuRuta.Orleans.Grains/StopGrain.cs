@@ -9,16 +9,18 @@ using TuRuta.Common.ViewModels;
 using TuRuta.Orleans.Grains.Extensions;
 using TuRuta.Orleans.Grains.States;
 using TuRuta.Orleans.Interfaces;
+using Orleans.Providers;
 
 namespace TuRuta.Orleans.Grains
 {
-	public class StopGrain : Grain<StopState>, IStopGrain
+    [StorageProvider(ProviderName = "AzureTableStore")]
+    public class StopGrain : Grain<StopState>, IStopGrain
 	{
 		public Task AddInfo(StopVM stopVM)
 		{
 			State.Location = stopVM.Location;
 			State.Name = stopVM.Name;
-			return Task.CompletedTask;
+            return WriteStateAsync();
 		}
 
         public async Task<List<RouteVM>> GetRoutes()
@@ -31,7 +33,7 @@ namespace TuRuta.Orleans.Grains
 		{
 			var routeGrain = GrainFactory.GetGrain<IRouteGrain>(routeId);
 			State.Routes.Add(routeGrain);
-			return Task.CompletedTask;
+            return WriteStateAsync();
 		}
     }
 }
