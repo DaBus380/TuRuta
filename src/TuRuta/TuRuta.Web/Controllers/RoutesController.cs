@@ -50,15 +50,15 @@ namespace TuRuta.Web.Controllers
             return null;
         }
 
-        [HttpPost("[action]/{id}")]
-        public async Task<RouteVM> AddStop(string id, [FromBody]Guid stop)
+        [HttpGet("[action]/{id}/{stopId}")]
+        public async Task<RouteVM> AddStop(string id, string stopId)
         {
             if (!ModelState.IsValid)
             {
                 return null;
             }
 
-            if(Guid.TryParse(id, out var Id))
+            if(Guid.TryParse(id, out var Id) && Guid.TryParse(stopId, out var stop))
             {
                 return await _routesService.AddStop(Id, stop);
             }
