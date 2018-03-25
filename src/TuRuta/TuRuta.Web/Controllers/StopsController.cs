@@ -32,5 +32,16 @@ namespace TuRuta.Web.Controllers
         [HttpGet("[action]/{hint}")]
         public Task<List<string>> Find(string hint)
             => _stopService.FindByStops(hint);
+
+        [HttpGet("[action]/{id}")]
+        public Task<List<RouteVM>> GetRoutes(string id)
+        {
+            if(Guid.TryParse(id, out var ID))
+            {
+                return _stopService.GetRoutes(ID);
+            }
+
+            return null;
+        }
     }
 }

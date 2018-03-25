@@ -45,6 +45,12 @@ namespace TuRuta.Web.Services
             }))).ToList();
 		}
 
+        public Task<List<RouteVM>> GetRoutes(Guid id)
+        {
+            var stopGrain = _clusterClient.GetGrain<IStopGrain>(id);
+            return stopGrain.GetRoutes();
+        }
+
 		public async Task<StopVM> GetStop(string name)
 		{
             var stopIds = await _stopNameDb.FindByValue(name);

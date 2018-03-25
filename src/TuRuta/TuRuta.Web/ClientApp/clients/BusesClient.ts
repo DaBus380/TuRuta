@@ -10,7 +10,7 @@
     }
 
     async FindBus(plates: string) {
-        var response = await fetch('api/buses/find/${plates}');
+        var response = await fetch('api/buses/find/' + plates);
         if (response.ok) {
             var json = await response.json();
             return json as string[];
@@ -20,12 +20,12 @@
     }
 
     async SetRoute(busId: string, routeId: string) {
-        var response = await fetch('api/buses/setroute/${busId}/${routeId}');
+        var response = await fetch('api/buses/setroute/' + busId + '/' + routeId);
         return response.ok;
     }
 
     async SetPlates(busId: string, plates: string) {
-        var response = await fetch('api/buses/setplates/${busId}/${plates}');
+        var response = await fetch('api/buses/setplates/' + busId + '/' + plates);
         return response.ok;
     }
 }

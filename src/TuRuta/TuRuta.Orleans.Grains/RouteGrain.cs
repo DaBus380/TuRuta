@@ -42,16 +42,18 @@ namespace TuRuta.Orleans.Grains
             await base.OnActivateAsync();
         }
 
-        public Task AddStops(List<IStopGrain> stops)
+        public async Task AddStops(List<IStopGrain> stops)
         {
             State.Stops.AddRange(stops);
-            return WriteStateAsync();
+            await Task.WhenAll(stops.Select(stop => stop.SetRoute(this.GetPrimaryKey())));
+            await WriteStateAsync();
         }
 
-        public Task AddStop(IStopGrain stop)
+        public async Task AddStop(IStopGrain stop)
         {
             State.Stops.Add(stop);
-            return WriteStateAsync();
+            await stop.SetRoute(this.GetPrimaryKey());
+            await WriteStateAsync();
         }
 
         public Task<Guid> GetNearestBus(Point position)

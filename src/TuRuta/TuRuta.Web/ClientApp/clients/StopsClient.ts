@@ -1,4 +1,14 @@
 ﻿export default class StopsClient {
+    async GetRoutes(id: string) {
+        var response = await fetch('api/stops/getroutes/' + id);
+        if (response.ok) {
+            var json = await response.json();
+            return json as routeVM[];
+        }
+
+        return null;
+    }
+
     async Get() {
         var response = await fetch("api/stops");
         if (response.status == 200) {
@@ -26,7 +36,7 @@
     }
 
     async GetByName(name: string) {
-        var response = await fetch('api/stops/${name}');
+        var response = await fetch('api/stops/' + name);
         if (response.status == 200) {
             var json = await response.json();
             return json as stopVM;
@@ -36,7 +46,7 @@
     }
 
     async Find(hint: string) {
-        var response = await fetch('api/stops/find/${hint}');
+        var response = await fetch('api/stops/find/' + hint);
         if (response.status == 200) {
             var json = await response.json();
             return json as string[];
