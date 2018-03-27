@@ -21,22 +21,34 @@ namespace TuRuta.Web.Services
 		}
 		public Task<StopVM> CreateStop(StopVM stopVM)
 		{
-			throw new NotImplementedException();
+			var stop = new StopVM
+			{
+				Id = stopVM.Id,
+				Location = stopVM.Location,
+				Name = stopVM.Name
+			};
+			return Task.FromResult(stop);
 		}
 
 		public Task<List<string>> FindByStops(string hint)
-		{
-			throw new NotImplementedException();
-		}
+			=> _stopNameDb.FindByValueGetValues(hint);
 
 		public Task<List<StopVM>> GetAllStops()
 		{
-			throw new NotImplementedException();
+			
 		}
 
-		public Task<StopVM> GetStop(string name)
+		public async Task<StopVM> GetStop(string name)
 		{
-			throw new NotImplementedException();
+			var foundIds = await _stopNameDb.FindByValue(name);
+			if (foundIds.Count != 1)
+			{
+				return null;
+			}
+
+			var id = Guid.Parse(foundIds.First());
+			var stop = _clusterClient.GetGrain<IStopGrain>(id);
+			return await stop.GetStopVM();
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace TuRuta.Orleans.Interfaces
     public interface IStopGrain : IGrainWithGuidKey
     {
 		Task AddInfo(StopVM stopVM);
-		Task<StopVM> GetStop();
+		Task<StopVM> GetStopVM();
 		Task<List<RouteVM>> GetRoutes();
 		Task SetRoute(Guid routeId);
     }
