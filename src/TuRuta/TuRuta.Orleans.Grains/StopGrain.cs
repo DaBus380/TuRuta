@@ -21,7 +21,7 @@ namespace TuRuta.Orleans.Grains
 			return Task.CompletedTask;
 		}
         public async Task<List<RouteVM>> GetRoutes()
-            => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteVM()))).ToList();
+            => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteVMForStop()))).ToList();
 
 		public Task<StopVM> GetStopVM()
 			=> Task.FromResult(State.ToVM(this.GetPrimaryKey()));

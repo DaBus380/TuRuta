@@ -90,25 +90,46 @@ namespace TuRuta.Orleans.Grains
         public Task OnCompletedAsync() => Task.CompletedTask;
         public Task OnErrorAsync(Exception ex) => throw new NotImplementedException();
 
-        public async Task<RouteVM> GetRouteVM()
-        {
+		public async Task<RouteVM> GetRouteVM()
+		{
 
-            var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
-            var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()));
+			var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
+			var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()));
 
-            var vm = new RouteVM
-            {
-                Id = this.GetPrimaryKey(),
-                Name = State.Name,
-                Incidents = new List<IncidentVM>()
-            };
+			var vm = new RouteVM
+			{
+				Id = this.GetPrimaryKey(),
+				Name = State.Name,
+				Incidents = new List<IncidentVM>()
+			};
 
-            var buses = await resultsTask;
-            var stops = await stopsTask;
+			var buses = await resultsTask;
+			var stops = await stopsTask;
 
-            vm.Stops = stops.ToList();
-            vm.Buses = buses.ToList();
-            return vm;
-        }
+			vm.Stops = stops.ToList();
+			vm.Buses = buses.ToList();
+			return vm;
+		}
+
+		public async Task<RouteVM> GetRouteVMForStop()
+		{
+			var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
+			var vm = new RouteVM
+			{
+				Id = this.GetPrimaryKey(),
+				Name = State.Name,
+				Incidents = new List<IncidentVM>()
+			};
+			var buses = await resultsTask;
+			vm.Buses = buses.ToList();
+			return vm;
+		}
+
+		public async Task<List<StopVM>> GetStops()
+		{
+			var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()));
+			var stops = await stopsTask;
+			return stops.ToList();
+		}
     }
 }

@@ -16,5 +16,7 @@ namespace TuRuta.Orleans.Interfaces
         Task AddStops(List<IStopGrain> stops);
         Task AddStop(IStopGrain stop);
         Task<RouteVM> GetRouteVM();
+		Task<RouteVM> GetRouteVMForStop();
+		Task<List<StopVM>> GetStops();
     }
 }

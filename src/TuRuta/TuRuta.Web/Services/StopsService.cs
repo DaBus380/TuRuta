@@ -35,6 +35,7 @@ namespace TuRuta.Web.Services
 
 		public Task<List<StopVM>> GetAllStops()
 		{
+
 			
 		}
 
