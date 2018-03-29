@@ -60,7 +60,11 @@ namespace TuRuta.Orleans
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
             var builder = new SiloHostBuilder()
-                .Configure(config => config.ClusterId = "DaBus")
+                .Configure<ClusterOptions>(options =>
+                {
+                    options.ClusterId = "DaBus";
+                    options.ServiceId = "DaBus";
+                })
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
                 .UseServiceProviderFactory(services =>
@@ -89,7 +93,13 @@ namespace TuRuta.Orleans
             {
                 builder
                     .UseAzureTableReminderService(connectionString)
-                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider")
+                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configuratior =>
+                    {
+                        configuratior.Configure(options =>
+                        {
+                            options.ConnectionString = connectionString;
+                        });
+                    })
                     .AddAzureTableGrainStorage("AzureTableStore", options => options.UseJson = true)
                     .AddAzureTableGrainStorage("PubSubStore", options => options.UseJson = true);
             }

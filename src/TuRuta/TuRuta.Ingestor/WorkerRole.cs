@@ -17,6 +17,7 @@ using TuRuta.Orleans.Interfaces;
 using TuRuta.Common.Logger;
 using Orleans.Providers;
 using Orleans.Providers.Streams.AzureQueue;
+using Orleans.Configuration;
 
 namespace TuRuta.Ingestor
 {
@@ -66,7 +67,10 @@ namespace TuRuta.Ingestor
 
             var builder = new ClientBuilder()
                 .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
-                .ConfigureCluster(cluster => cluster.ClusterId = "DaBus")
+                .Configure<ClusterOptions>(cluster => {
+                    cluster.ClusterId = "DaBus";
+                    cluster.ServiceId = "DaBus";
+                })
                 .ConfigureApplicationParts(
                     parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly))
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers());
@@ -77,7 +81,13 @@ namespace TuRuta.Ingestor
             }
             else
             {
-                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider");
+                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configurator =>
+                {
+                    configurator.Configure(options =>
+                    {
+                        options.ConnectionString = connectionString;
+                    });
+                });
             }
 
             return builder;
@@ -85,35 +95,21 @@ namespace TuRuta.Ingestor
 
         private async Task RunAsync()
         {
-
-            int attemps = 0;
-            while (true)
+            client = GetClientBuilder().Build();
+            await client.Connect(async ex =>
             {
-                try
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(10));
-                    
-                    client = GetClientBuilder().Build();
+                Trace.TraceInformation($"{ex.Message}");
 
-                    await client.Connect();
-                    Trace.TraceInformation("Orleans is initialized");
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    attemps++;
-                    Trace.TraceWarning($"Orleans is not ready {ex.Message}");
-                    if (attemps > attempsBeforeFailing)
-                    {
-                        throw;
-                    }
-                }
-            }
+                await Task.Delay(TimeSpan.FromSeconds(10));
+                return true;
+            });
+
+            Trace.TraceInformation("Orleans is initialized");
 
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("QueueConnectionString");
             var queueName = RoleEnvironment.GetConfigurationSettingValue("QueueName");
 
-            attemps = 0;
+            int attemps = 0;
             while (true)
             {
                 try

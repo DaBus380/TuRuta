@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.Providers;
 using Orleans.Providers.Streams.AzureQueue;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Web.Services;
 using TuRuta.Web.Services.Interfaces;
@@ -61,7 +63,11 @@ namespace TuRuta.Web.Extensions
             var connectionString = configuration.GetValue<string>("DataConnectionString");
 
             var builder = new ClientBuilder()
-                .ConfigureCluster(cluster => cluster.ClusterId = "DaBus")
+                .Configure<ClusterOptions>(options =>
+                {
+                    options.ClusterId = "DaBus";
+                    options.ServiceId = "DaBus";
+                })
                 .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
                 .ConfigureLogging(logging => logging.AddConsole())
                 .ConfigureApplicationParts(
@@ -73,7 +79,13 @@ namespace TuRuta.Web.Extensions
             }
             else
             {
-                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider");
+                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configurator =>
+                {
+                    configurator.Configure(options =>
+                    {
+                        options.ConnectionString = connectionString;
+                    });
+                });
             }
 
             return builder;
