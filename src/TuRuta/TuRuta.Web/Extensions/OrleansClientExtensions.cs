@@ -26,29 +26,19 @@ namespace TuRuta.Web.Extensions
             IConfiguration configuration, 
             Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
-            int attemps = 0;
-            while (true)
+            var servicesBuilted = services.BuildServiceProvider();
+            var logger = servicesBuilted.GetService<ILoggerFactory>().CreateLogger("Debug");
+
+            var client = GetClientBuilder(configuration, env).Build();
+            client.Connect(async ex => 
             {
-                try
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-                    var client = GetClientBuilder(configuration, env).Build();
-                    client.Connect().Wait();
+                logger.LogInformation($"{ex.Message}");
 
-                    services.AddSingleton(client);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    attemps++;
-                    if (attemps > 3)
-                    {
-                        throw ex;
-                    }
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                return true;
+            }).Wait();
 
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-                }
-            }
+            services.AddSingleton(client);
 
             services.AddSingleton<IRoutesService, RoutesService>();
             services.AddSingleton<IBusService, BusService>();

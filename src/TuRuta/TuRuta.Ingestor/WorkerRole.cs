@@ -100,7 +100,7 @@ namespace TuRuta.Ingestor
             {
                 Trace.TraceInformation($"{ex.Message}");
 
-                await Task.Delay(TimeSpan.FromSeconds(10));
+                await Task.Delay(TimeSpan.FromSeconds(5));
                 return true;
             });
 
