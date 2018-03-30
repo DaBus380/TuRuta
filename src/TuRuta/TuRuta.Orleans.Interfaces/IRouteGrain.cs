@@ -11,7 +11,6 @@ namespace TuRuta.Orleans.Interfaces
     public interface IRouteGrain : IGrainWithGuidKey
     {
         Task SetName(string name);
-		Task<List<StopVM>> Stops();
         Task<Guid> GetNearestBus(Point position);
         Task AddStops(List<IStopGrain> stops);
         Task AddStop(IStopGrain stop);

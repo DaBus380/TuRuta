@@ -29,10 +29,6 @@ namespace TuRuta.Orleans.Grains
         {
             _calculator = calculator;
         }
-
-        public async Task<List<StopVM>> Stops()
-            => (await Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()))).ToList();
-
         public async override Task OnActivateAsync()
         {
             var streamProvider = GetStreamProvider("StreamProvider");
@@ -111,18 +107,15 @@ namespace TuRuta.Orleans.Grains
 			return vm;
 		}
 
-		public async Task<RouteVM> GetRouteVMForStop()
+		public Task<RouteVM> GetRouteVMForStop()
 		{
-			var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
 			var vm = new RouteVM
 			{
 				Id = this.GetPrimaryKey(),
 				Name = State.Name,
 				Incidents = new List<IncidentVM>()
 			};
-			var buses = await resultsTask;
-			vm.Buses = buses.ToList();
-			return vm;
+			return Task.FromResult(vm);
 		}
 
 		public async Task<List<StopVM>> GetStops()
