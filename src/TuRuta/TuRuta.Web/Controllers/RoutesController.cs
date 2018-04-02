@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
+using TuRuta.Common.Models;
 using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
 
@@ -18,45 +18,52 @@ namespace TuRuta.Web.Controllers
             _routesService = routesService;
         }
 
-        [HttpPost]
-        public Task<RouteVM> Post()
-            => _routesService.Create("Holis");
+        [HttpGet("{name}")]
+        public Task<RouteVM> Get(string name)
+            => _routesService.GetRoute(name);
+             
+        [HttpGet("[action]/{hint}")]
+        public Task<List<string>> Find(string hint)
+            => _routesService.FindByName(hint);
 
-        [HttpGet]
-        public IEnumerable<RouteVM> Get()
+        [HttpGet("[action]")]
+        public Task<List<string>> Names()
+            => _routesService.GetAllNames();
+
+        [HttpGet("[action]/{name}")]
+        public Task<RouteVM> Create(string name)
+            => _routesService.Create(name);
+
+        [HttpPost("[action]/{id}")]
+        public async Task<RouteVM> AddStops(string id, [FromBody]List<Guid> stops)
         {
-            return Enumerable.Range(0, 5).Select(index =>
-                new RouteVM
-                {
-                    Buses = Enumerable.Range(0, 1).Select(i =>
-                        new BusVM
-                        {
-                            Id = Guid.NewGuid(),
-                            LicensePlate = "RD-D2",
-                            Status = i
-                        }
-                    ).ToList(),
-                    Id = Guid.NewGuid(),
-                    Incidents = Enumerable.Range(0, 2).Select(j =>
-                        new IncidentVM
-                        {
-                            Description = "do",
-                            Id = Guid.NewGuid(),
-                            Issue = j,
-                            Name = "holi"
-                        }
-                    ).ToList(),
-                    Name = "380-A",
-                    Stops = Enumerable.Range(0, 3).Select(k =>
-                        new StopVM
-                        {
-                            Id = Guid.NewGuid(),
-                            Location = (k, k),
-                            Name = "Av. Vallarta"
-                        }
-                    ).ToList()
-                }
-            ).ToList();
+            if (!ModelState.IsValid)
+            {
+                return null;
+            }
+
+            if(Guid.TryParse(id, out var Id))
+            {
+                return await _routesService.AddStops(Id, stops);
+            }
+
+            return null;
+        }
+
+        [HttpGet("[action]/{id}/{stopId}")]
+        public async Task<RouteVM> AddStop(string id, string stopId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return null;
+            }
+
+            if(Guid.TryParse(id, out var Id) && Guid.TryParse(stopId, out var stop))
+            {
+                return await _routesService.AddStop(Id, stop);
+            }
+
+            return null;
         }
     }
 }

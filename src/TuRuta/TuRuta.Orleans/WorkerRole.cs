@@ -6,10 +6,14 @@ using Orleans.Runtime.Configuration;
 using Orleans.Hosting;
 using Orleans;
 using Orleans.Providers.Streams.AzureQueue;
+using Microsoft.Extensions.DependencyInjection;
+using Orleans.Configuration;
 
 using TuRuta.Orleans.Grains;
 using TuRuta.Common.Logger;
-using Orleans.Configuration;
+using TuRuta.Orleans.Grains.Services.Interfaces;
+using TuRuta.Orleans.Grains.Services;
+using Orleans.Storage;
 
 namespace TuRuta.Orleans
 {
@@ -56,11 +60,25 @@ namespace TuRuta.Orleans
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
             var builder = new SiloHostBuilder()
-                .Configure(config => config.ClusterId = "DaBus")
+                .Configure<ClusterOptions>(options =>
+                {
+                    options.ClusterId = "DaBus";
+                    options.ServiceId = "DaBus";
+                })
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
-                //.ConfigureApplicationParts(
-                //    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
+                .UseServiceProviderFactory(services =>
+                {
+                    services.AddSingleton<IDistanceCalculator, HavesineDistanceCalculator>();
+                    services.AddSingleton<IConfigClient, ConfigClient>();
+
+                    return services.BuildServiceProvider();
+                })
+                .ConfigureApplicationParts(
+                    parts => {
+                        parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences();
+                        parts.AddApplicationPart(typeof(MemoryGrainStorage).Assembly).WithReferences();
+                    })
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)
@@ -75,7 +93,13 @@ namespace TuRuta.Orleans
             {
                 builder
                     .UseAzureTableReminderService(connectionString)
-                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider")
+                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configuratior =>
+                    {
+                        configuratior.Configure(options =>
+                        {
+                            options.ConnectionString = connectionString;
+                        });
+                    })
                     .AddAzureTableGrainStorage("AzureTableStore", options => options.UseJson = true)
                     .AddAzureTableGrainStorage("PubSubStore", options => options.UseJson = true);
             }

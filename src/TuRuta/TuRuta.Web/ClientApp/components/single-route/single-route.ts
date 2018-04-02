@@ -97,7 +97,7 @@ export default class SingleRouteComponent extends Vue {
             .then(response => response.json() as Promise<any>)
             .then(data => {
                 var pubnub = new PubNub({
-                    subscribeKey: data.SubKey,
+                    subscribeKey: data.subKey,
                     ssl: true
                 })
                 this.messages

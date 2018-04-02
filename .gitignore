@@ -290,3 +290,5 @@ __pycache__/
 /src/TuRuta/TuRuta.Web/appsettings.json
 /src/TuRuta/TuRutaServices/ServiceConfiguration.Cloud.cscfg
 /src/TuRuta/TuRutaServices/ServiceConfiguration.Local.cscfg
+/src/TuRuta/TuRuta.Bot/appsettings.json
+/src/TuRuta/TuRuta.Bot/appsettings.Development.json

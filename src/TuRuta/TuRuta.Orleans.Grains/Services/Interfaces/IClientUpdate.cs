@@ -7,7 +7,7 @@ using TuRuta.Common.StreamObjects;
 
 namespace TuRuta.Orleans.Grains.Services.Interfaces
 {
-    interface IClientUpdate
+    public interface IClientUpdate
     {
         Task<bool> SentUpdate(ClientBusUpdate update);
     }

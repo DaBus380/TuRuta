@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using TuRuta.Common.Enums;
+using TuRuta.Common.Models;
 
 namespace TuRuta.Common.Device
 {
     [Serializable]
-    public class PositionUpdate
+    public class RouteBusUpdate
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public Point Location { get; set; }
         public BusStatus Status { get; set; }
     }
 }

@@ -1,35 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Orleans;
-using Orleans.Hosting;
-using Orleans.Providers;
-using Orleans.Providers.Streams.AzureQueue;
-using TuRuta.Orleans.Interfaces;
-using TuRuta.Web.Services;
+
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Web.Extensions;
+using TuRuta.Web.Services.Mocks;
 
 namespace TuRuta.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
             Env = env;
         }
 
         public IConfiguration Configuration { get; }
-        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Env { get; }
+        private IHostingEnvironment Env { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -37,33 +27,28 @@ namespace TuRuta.Web
 
             if (isRunning)
             {
-                int attemps = 0;
-                while (true)
-                {
-                    try
-                    {
-                        var client = GetClientBuilder().Build();
-                        client.Connect().Wait();
-
-                        services.AddSingleton(client);
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        attemps++;
-                        if(attemps > 3)
-                        {
-                            throw ex;
-                        }
-
-                        Thread.Sleep(TimeSpan.FromMinutes(3));
-                    }
-                }
-
-                services.AddSingleton<IRoutesService, RoutesService>();
+                services.AddOrleans(Configuration, Env);
             }
-            
-            services.AddSingleton<IConfigService, MockConfigService>();
+            else
+            {
+                services.AddSingleton<IConfigService, MockConfigService>();
+                services.AddSingleton<IRoutesService, MockRoutesService>();
+                services.AddSingleton<IBusService, MockBusService>();
+            }
+
+            if (Env.IsDevelopment())
+            {
+                services.AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                    {
+                        Version = "v1",
+                        Title = "TuRuta API",
+                        Description = "You know what to do",
+                        TermsOfService = "This web API is private, do not use unless you are authorize to use it"
+                    });
+                });
+            }
             
             services
                 .AddMvc(options => options.RespectBrowserAcceptHeader = true)
@@ -71,7 +56,7 @@ namespace TuRuta.Web
                 .AddXmlDataContractSerializerFormatters();
         }
 
-        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -79,6 +64,11 @@ namespace TuRuta.Web
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true
+                });
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "TuRuta API v1");
                 });
             }
             else
@@ -98,29 +88,6 @@ namespace TuRuta.Web
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-        }
-
-        private IClientBuilder GetClientBuilder()
-        {
-            var connectionString = Configuration.GetValue<string>("DataConnectionString");
-
-            var builder = new ClientBuilder()
-                .ConfigureCluster(cluster => cluster.ClusterId = "DaBus")
-                .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
-                .ConfigureLogging(logging => logging.AddConsole())
-                .ConfigureApplicationParts(
-                    parts => parts.AddApplicationPart(typeof(IBusGrain).Assembly));
-
-            if (Env.IsDevelopment())
-            {
-                builder.AddMemoryStreams<DefaultMemoryMessageBodySerializer>("StreamProvider");
-            }
-            else
-            {
-                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider");
-            }
-
-            return builder;
         }
     }
 }
