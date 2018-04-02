@@ -30,8 +30,9 @@ interface Stop {
 }
 
 @Component
-export default class RoutesDisplayComponent extends Vue {
+export default class SingleRouteComponent extends Vue {
     // Public props
+
     public messages: Message[] = [
         {
             latitude: 0,
@@ -47,7 +48,7 @@ export default class RoutesDisplayComponent extends Vue {
     ];
     public route: Route = {
         routeId: "1001",
-        name: "Ruta 629-B",
+        name: this.formatRouteName(),
         stops: [
             {
                 stopId: "3001",
@@ -119,9 +120,15 @@ export default class RoutesDisplayComponent extends Vue {
     }
 
     // Functions
-    messageReceived(message:any){
+    messageReceived(message: any){
         console.log(message);
         this.messages.push(message);
+    }
+
+    formatRouteName() {
+        var name = this.$route.params.route
+        var formated = "Ruta " + name.toUpperCase().replace(/-/g," ")
+        return formated
     }
 
     get currentCoordinates(){

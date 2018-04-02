@@ -1,0 +1,37 @@
+.routes-map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-image: url('../../img/temp-map.png');
+    background-attachment: fixed;
+    background-size: cover;
+}
+.routes-title-container {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 80px;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 -5px 15px 10px rgba(0,0,0,0.1);
+}
+.routes-title-container .search-container {
+    width: 100%;
+}
+.routes-title-container .search-container h2 {
+    display: inline-block;
+}
+.routes-title-container .search-container input{
+    width: 270px;
+    height: 30px;
+    font-size: 25px;
+    text-align: left;
+    margin-left: 5px;
+    padding-left: 3px;
+}
