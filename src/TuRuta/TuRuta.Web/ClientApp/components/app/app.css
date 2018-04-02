@@ -1,0 +1,38 @@
+.container-fluid {
+    padding: 0;
+    margin: 0 auto;
+}
+.main {
+    margin-top: 60px;
+    width: 100%;
+    height: 100%;
+}
+.simple-container {
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+    position: relative;
+}
+h1, h2, h3, p, input, a{
+    color: #4d4d4d;
+}
+p {
+    font-weight: 100;
+}
+h1, h2, h3, a{
+    font-weight: 600;
+}
+a {
+    transition: color 0.2s ease-in-out;
+    -webkit-transition: color 0.2s ease-in-out; /* Safari */
+}
+a:hover {
+    text-decoration: none !important;
+    color: #00a99d;
+}
+span.title-green{
+    color: #00a99d;
+}
+span.title-red{
+    color: #d4145a;
+}
