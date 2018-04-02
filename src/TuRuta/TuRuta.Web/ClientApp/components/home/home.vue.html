@@ -1,14 +1,21 @@
 <template>
     <div>
-        <div class="main-header-container">
-            <div class="main-header-image"></div>
+        <div class="home-header-container">
+            <div class="home-header-image"></div>
         </div>
-        <div class="simple-container">
-            <div class="main-search-container">
-                <h1>¿Qué <span class="title-green">ruta</span> o <span class="title-red">parada</span> estás buscando?</h1>
-                <input type="text" placeholder="La Minvera">
-                <p>¿No encuentras la ruta que necesitas? <a href="/rutas">Ve el mapa de rutas.</a></p>
-            </div>
+        <div class="home-container simple-container">
+            <search-component placeholder="Ejemplo: 629 B">
+                <template slot="title">
+                        <h1>¿Qué <span class="title-green">ruta</span> o <span class="title-red">parada</span> estás buscando?</h1>
+                </template>
+                <template slot="content">
+                        <p>¿No encuentras la ruta que necesitas? <a href="/rutas">Ve el mapa de rutas.</a></p>
+                </template>
+            </search-component>
+            
+            <!--
+            <input v-model.trim="search_input" v-on:keyup.enter="search(search_input)" type="text" placeholder="Ejemplo: 629 B">
+            -->
         </div>
     </div>
 </template>

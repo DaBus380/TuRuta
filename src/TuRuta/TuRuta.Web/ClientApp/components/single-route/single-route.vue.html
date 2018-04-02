@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <div class="routes-info-container">
+            <div class="route-info">
+                <h1 v-model="route">{{ route.name }}</h1>
+                <h2>Guadalajara</h2>
+                <!-- <p>Coordenadas Actuales {{ currentCoordinates }} </p> -->
+            </div>
+            <ul v-for="(stop, index) in route.stops">
+                <li class="station-current" v-if="stop.name === currentStop.name">
+                    {{ stop.name }}
+                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
+                </li>
+                <li class="station-next" v-else-if="index > currentStopIndex">
+                    {{ stop.name }}
+                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
+                </li>
+                <li class="station-prev" v-else>
+                    {{ stop.name }}
+                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
+                </li>
+            </ul>
+        </div>
+        <div class="routes-map-container"></div>
+    </div>
+</template>
+
+<style src="./single-route.css" />
+<script src="./single-route.ts"></script>
