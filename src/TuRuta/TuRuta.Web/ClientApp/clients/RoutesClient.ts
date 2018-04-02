@@ -7,7 +7,7 @@
             },
             body: JSON.stringify(stopIds)
         });
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as routeVM;
         }
@@ -17,7 +17,7 @@
 
     async AddStop(routeId:string, stopId: string) {
         var response = await fetch('api/routes/addstop/'+ routeId + '/' + stopId);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as routeVM;
         }
@@ -27,7 +27,7 @@
 
     async Search(hint: string) {
         var response = await fetch('api/routes/find/' +  hint);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json()
             return json as string[];
         }
@@ -37,7 +37,7 @@
 
     async Names() {
         var response = await fetch("api/routes/names");
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as string[];
         }
@@ -47,7 +47,7 @@
 
     async Create(name: string) {
         var response = await fetch('api/routes/create/' + name);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as routeVM;
         }
@@ -57,7 +57,7 @@
 
     async Get(name: string) {
         var response = await fetch('api/routes/' + name);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as routeVM;
         }
