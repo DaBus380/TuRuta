@@ -8,7 +8,8 @@ Vue.use(VueRouter);
 const routes = [
     { path: '/', component: require('./components/home/home.vue.html') },
     { path: '/rutas', component: require('./components/all-routes/all-routes.vue.html') },
-    { path: '/ruta/:route', component: require('./components/single-route/single-route.vue.html') }
+    { path: '/ruta/:route', component: require('./components/single-route/single-route.vue.html') },
+    { path: "/maptest", component: require("./components/testmaps/testmaps.vue.html") }
 ];
 
 new Vue({
