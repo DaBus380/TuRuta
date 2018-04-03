@@ -14,8 +14,8 @@ namespace TuRuta.Web.Services
 {
     public class RoutesService : IRoutesService
     {
-        private IKeyMapperGrain _stopNameDb;
-        private IKeyMapperGrain _routeDB;
+        private IKeyMapperGrain _stopNameDb { get; }
+        private IKeyMapperGrain _routeDB { get; }
         private IClusterClient _clusterClient { get; }
         public RoutesService(IClusterClient clusterClient)
         {

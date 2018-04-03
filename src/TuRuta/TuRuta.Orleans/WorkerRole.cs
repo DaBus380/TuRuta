@@ -75,10 +75,7 @@ namespace TuRuta.Orleans
                     return services.BuildServiceProvider();
                 })
                 .ConfigureApplicationParts(
-                    parts => {
-                        parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences();
-                        parts.AddApplicationPart(typeof(MemoryGrainStorage).Assembly).WithReferences();
-                    })
+                    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)

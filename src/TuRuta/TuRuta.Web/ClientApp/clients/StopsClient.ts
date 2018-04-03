@@ -11,7 +11,7 @@
 
     async Get() {
         var response = await fetch("api/stops");
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as stopVM[];
         }
@@ -27,7 +27,7 @@
             },
             body: JSON.stringify(stop)
         });
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as stopVM;
         }
@@ -37,7 +37,7 @@
 
     async GetByName(name: string) {
         var response = await fetch('api/stops/' + name);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as stopVM;
         }
@@ -47,7 +47,7 @@
 
     async Find(hint: string) {
         var response = await fetch('api/stops/find/' + hint);
-        if (response.status == 200) {
+        if (response.ok) {
             var json = await response.json();
             return json as string[];
         }
