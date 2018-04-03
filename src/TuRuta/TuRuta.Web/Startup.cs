@@ -34,6 +34,7 @@ namespace TuRuta.Web
                 services.AddSingleton<IConfigService, MockConfigService>();
                 services.AddSingleton<IRoutesService, MockRoutesService>();
                 services.AddSingleton<IBusService, MockBusService>();
+                services.AddSingleton<IStopService, MockStopService>();
             }
 
             if (Env.IsDevelopment())

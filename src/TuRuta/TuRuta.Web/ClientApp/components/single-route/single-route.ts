@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import PubNub from 'pubnub';
+import RoutesClient from '../../clients/RoutesClient';
 
 interface Message {
     latitude: number;
@@ -10,10 +11,10 @@ interface Message {
 }
 
 interface Route {
-    routeId: string;
+    routeId?: string;
     name: string;
-    stops: Stop[];
-    buses: Bus[];
+    stops?: Stop[];
+    buses?: Bus[];
 }
 
 interface Bus {
@@ -29,10 +30,98 @@ interface Stop {
     longitude: number;
 }
 
-@Component
+@Component({})
 export default class SingleRouteComponent extends Vue {
-    // Public props
 
+    // Public props
+    @Prop()
+    route?: Route;
+    messages?: Message[];
+
+    // Private props
+    private listener = {
+        status: function (statusEvent: any) {
+            if (statusEvent.category === "PNConnectedCategory") {
+                console.log("Conectado");
+            }
+        },
+        message: this.messageReceived
+    }
+
+    // Temporary functionality
+    created() {
+        this.createTempRoute();
+    }
+
+    // Lifecycle Hooks
+    mounted() {
+        // Sets route
+        this.getRoute()
+            .then(res => {
+                    this.$props.route = res as Route
+                    console.log("Mounted: ", this.$props.route)});   
+
+        // Gets config of pubnub
+        fetch('/api/config/pubnub')
+            .then(response => response.json() as Promise<any>)
+            .then(data => {
+                var pubnub = new PubNub({
+                    subscribeKey: data.subKey,
+                    ssl: true
+                })
+                pubnub.addListener(this.listener)
+                pubnub.subscribe({
+                    channels: ['client'],
+                });
+            });
+    }
+
+    // Functions
+    messageReceived(message: any){
+        console.log(message);
+        // this.messages.push(message);
+    }
+
+    async createTempRoute() {
+        // Creates temporary route
+        var routesClient = new RoutesClient();
+        var newRoute = await routesClient.Create(this.getRequestFromURL());
+        console.log("Created: ", newRoute);
+    }
+
+    async getRoute() {
+        // Gets route from 'server'
+        var routesClient = new RoutesClient();
+        var result = await routesClient.Search(this.getRequestFromURL());
+        var route: Route = {
+            name: this.formatRouteName(result![0])
+        };
+        return route;
+    }
+
+    getRequestFromURL() {  return this.$route.params.route }
+
+    formatRouteName(name: string) {
+        var formated = "Ruta " + name.toUpperCase().replace(/-/g," ")
+        console.log(formated)
+        return formated
+    }
+}
+
+
+
+
+
+/*var pubnub = new PubNub({
+    subscribeKey: "sub-c-5679dfc0-1135-11e8-bb6e-d6d19ee12a32",
+    ssl: true
+})
+pubnub.addListener(this.listener)
+pubnub.subscribe({
+    channels: ['client'],
+});*/
+
+/*
     public messages: Message[] = [
         {
             latitude: 0,
@@ -75,40 +164,9 @@ export default class SingleRouteComponent extends Vue {
                 status: 1
             }
         ]
-    };
-    public lastStop: number = this.route.stops.length-1;
-    public currentStop: Stop = this.messages[this.messages.length-1].nextStop;
-    public currentStopIndex: number = this.findCurrentIndex(this.route, this.currentStop);
-
-    // Private props
-    private listener = {
-        status: function (statusEvent: any) {
-            if (statusEvent.category === "PNConnectedCategory") {
-                console.log("Conectado");
-            }
-        },
-        message: this.messageReceived
-    }
-
-    // Lifecycle Hooks
-    mounted() {        
-        // Gets config of pubnub
-        fetch('/api/config/pubnub')
-            .then(response => response.json() as Promise<any>)
-            .then(data => {
-                var pubnub = new PubNub({
-                    subscribeKey: data.subKey,
-                    ssl: true
-                })
-                this.messages
-                pubnub.addListener(this.listener)
-                pubnub.subscribe({
-                    channels: ['client'],
-                });
-            });
-    }
-
-    // Find current stop's index
+    }; 
+    
+     // Find current stop's index
     findCurrentIndex(route: Route, currentStop: Stop){
         console.log(route.stops[0].name);
         for (let index = 0; index < route.stops.length; index++) {
@@ -118,29 +176,4 @@ export default class SingleRouteComponent extends Vue {
         }
         return -1;
     }
-
-    // Functions
-    messageReceived(message: any){
-        console.log(message);
-        this.messages.push(message);
-    }
-
-    formatRouteName() {
-        var name = this.$route.params.route
-        var formated = "Ruta " + name.toUpperCase().replace(/-/g," ")
-        return formated
-    }
-
-    get currentCoordinates(){
-        return '(' + this.currentStop.latitude + ', ' + this.currentStop.longitude + ')';
-    }
-}
-
-/*var pubnub = new PubNub({
-    subscribeKey: "sub-c-5679dfc0-1135-11e8-bb6e-d6d19ee12a32",
-    ssl: true
-})
-pubnub.addListener(this.listener)
-pubnub.subscribe({
-    channels: ['client'],
-});*/
+    */

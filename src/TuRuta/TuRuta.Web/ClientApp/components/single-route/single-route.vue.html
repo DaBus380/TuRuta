@@ -1,10 +1,9 @@
 <template>
     <div>
-        <div class="routes-info-container">
+        <div v-if="route" class="routes-info-container">
             <div class="route-info">
-                <h1 v-model="route">{{ route.name }}</h1>
+                <h1>{{ route.name }}</h1>
                 <h2>Guadalajara</h2>
-                <!-- <p>Coordenadas Actuales {{ currentCoordinates }} </p> -->
             </div>
             <ul v-for="(stop, index) in route.stops">
                 <li class="station-current" v-if="stop.name === currentStop.name">
@@ -21,7 +20,9 @@
                 </li>
             </ul>
         </div>
-        <div class="routes-map-container"></div>
+        <div class="route-map-container">
+            <map-component></map-component>
+        </div>
     </div>
 </template>
 

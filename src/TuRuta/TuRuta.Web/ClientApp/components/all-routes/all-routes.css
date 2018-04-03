@@ -1,12 +1,10 @@
-.routes-map-container {
+.all-routes-map-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 60px);
-    background-image: url('../../img/temp-map.png');
-    background-attachment: fixed;
-    background-size: cover;
+    margin-top: 80px;
+    height: calc(100vh - 140px);
 }
 .routes-title-container {
     position: absolute;
