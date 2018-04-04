@@ -1,27 +1,16 @@
 <template>
     <div>
         <div v-if="route" class="routes-info-container">
-            <div class="route-info">
-                <h1>{{ route.name }}</h1>
-                <h2>Guadalajara</h2>
-            </div>
-            <ul v-for="(stop, index) in route.stops">
-                <li class="station-current" v-if="stop.name === currentStop.name">
-                    {{ stop.name }}
-                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
-                </li>
-                <li class="station-next" v-else-if="index > currentStopIndex">
-                    {{ stop.name }}
-                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
-                </li>
-                <li class="station-prev" v-else>
-                    {{ stop.name }}
-                    <p v-if="index !== lastStop" class="trace-pipe">|</p>
-                </li>
-            </ul>
+            <route-info-component>
+                <template slot="route">
+                    <h1> {{ route.name }} </h1>
+                </template>
+            </route-info-component>
         </div>
         <div class="route-map-container">
-            <map-component></map-component>
+            <map-component
+                markers="route.stops"
+            ></map-component>
         </div>
     </div>
 </template>

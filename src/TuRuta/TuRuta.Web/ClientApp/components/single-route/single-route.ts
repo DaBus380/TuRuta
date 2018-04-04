@@ -1,111 +1,44 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import PubNub from 'pubnub';
 import RoutesClient from '../../clients/RoutesClient';
 
-interface Message {
-    latitude: number;
-    longitude: number;
-    busId: string;
-    nextStop: Stop;
-}
-
-interface Route {
-    routeId?: string;
-    name: string;
-    stops?: Stop[];
-    buses?: Bus[];
-}
-
-interface Bus {
-    busId: string;
-    licensePlate: string;
-    status: number;
-}
-
-interface Stop {
-    stopId: string;
-    name: string;
-    latitude: number;
-    longitude: number;
-}
-
-@Component({})
+@Component
 export default class SingleRouteComponent extends Vue {
 
-    // Public props
     @Prop()
-    route?: Route;
-    messages?: Message[];
+    route?: routeVM;
 
     // Private props
-    private listener = {
-        status: function (statusEvent: any) {
-            if (statusEvent.category === "PNConnectedCategory") {
-                console.log("Conectado");
-            }
-        },
-        message: this.messageReceived
-    }
+    private routesClient = new RoutesClient();
 
-    // Temporary functionality
+    // Lifecycle Hooks
     created() {
+        // Temporary functionality
         this.createTempRoute();
     }
 
-    // Lifecycle Hooks
     mounted() {
-        // Sets route
         this.getRoute()
-            .then(res => {
-                    this.$props.route = res as Route
-                    console.log("Mounted: ", this.$props.route)});   
-
-        // Gets config of pubnub
-        fetch('/api/config/pubnub')
-            .then(response => response.json() as Promise<any>)
-            .then(data => {
-                var pubnub = new PubNub({
-                    subscribeKey: data.subKey,
-                    ssl: true
-                })
-                pubnub.addListener(this.listener)
-                pubnub.subscribe({
-                    channels: ['client'],
-                });
+            .then( res => { 
+                this.$props.route = res 
+                this.$props.route.name = this.formatRouteName(this.$props.route.name)
+                console.log("Prop: ", this.$props.route)
             });
-    }
-
-    // Functions
-    messageReceived(message: any){
-        console.log(message);
-        // this.messages.push(message);
-    }
-
-    async createTempRoute() {
-        // Creates temporary route
-        var routesClient = new RoutesClient();
-        var newRoute = await routesClient.Create(this.getRequestFromURL());
-        console.log("Created: ", newRoute);
-    }
-
-    async getRoute() {
-        // Gets route from 'server'
-        var routesClient = new RoutesClient();
-        var result = await routesClient.Search(this.getRequestFromURL());
-        var route: Route = {
-            name: this.formatRouteName(result![0])
-        };
-        return route;
     }
 
     getRequestFromURL() {  return this.$route.params.route }
 
     formatRouteName(name: string) {
         var formated = "Ruta " + name.toUpperCase().replace(/-/g," ")
-        console.log(formated)
         return formated
     }
+
+    // Async Methods
+    async createTempRoute() {
+        var newRoute = await this.routesClient.Create(this.getRequestFromURL());
+    }
+
+    async getRoute() { return await this.routesClient.Get(this.getRequestFromURL()); }
 }
 
 
