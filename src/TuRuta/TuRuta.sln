@@ -20,7 +20,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuRuta.Ingestor", "TuRuta.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TuRuta.Bot", "TuRuta.Bot\TuRuta.Bot.csproj", "{267BC1B6-A083-4F42-9A73-B3C8F86833B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuRuta.Client", "TuRuta.Client\TuRuta.Client.csproj", "{45C64DC2-428E-4940-B561-8E3B8A31EFA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TuRuta.Client", "TuRuta.Client\TuRuta.Client.csproj", "{45C64DC2-428E-4940-B561-8E3B8A31EFA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MobileApps", "MobileApps", "{F72F4B66-76AD-4FEB-9F6A-40EBDD624534}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuRuta.Droid", "TuRuta.Droid\TuRuta.Droid.csproj", "{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,9 +202,36 @@ Global
 		{45C64DC2-428E-4940-B561-8E3B8A31EFA7}.Release|x64.Build.0 = Release|Any CPU
 		{45C64DC2-428E-4940-B561-8E3B8A31EFA7}.Release|x86.ActiveCfg = Release|Any CPU
 		{45C64DC2-428E-4940-B561-8E3B8A31EFA7}.Release|x86.Build.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|ARM.Build.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|ARM.Deploy.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|ARM.ActiveCfg = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|ARM.Build.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|ARM.Deploy.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x64.Build.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x64.Deploy.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.Build.0 = Release|Any CPU
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1} = {F72F4B66-76AD-4FEB-9F6A-40EBDD624534}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F54F2534-FEF7-4C3B-97AB-D2C89423ECC0}

@@ -11,10 +11,13 @@ namespace TuRuta.Client.Routes
 {
     public class RoutesClient
     {
-        private HttpClient HttpClient { get; } = new HttpClient
+        public RoutesClient(string baseAddress = null)
         {
-            BaseAddress = new Uri("http://localhost:56340/")
-        };
+            var address = baseAddress ?? "http://localhost:56340/";
+            HttpClient.BaseAddress = new Uri(address);
+        }
+
+        private HttpClient HttpClient { get; } = new HttpClient();
 
         public async Task<IEnumerable<string>> Find(string hint)
         {

@@ -10,5 +10,7 @@ namespace TuRuta.Client
     {
         public static RoutesClient RoutesClient { get; } = new RoutesClient();
         public static BusesClient BusesClient { get; } = new BusesClient();
+
+        public static RoutesClient RoutesClientAndroid { get; } = new RoutesClient("http://10.0.2.2:56340/");
     }
 }
