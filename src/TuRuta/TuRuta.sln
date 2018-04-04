@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MobileApps", "MobileApps", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuRuta.Droid", "TuRuta.Droid\TuRuta.Droid.csproj", "{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuRuta.UWP", "TuRuta.UWP\TuRuta.UWP.csproj", "{64C4800B-4E37-4E59-9E7E-80AB695C86BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,12 +228,33 @@ Global
 		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.Build.0 = Release|Any CPU
 		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1}.Release|x86.Deploy.0 = Release|Any CPU
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|ARM.Build.0 = Debug|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|ARM.Deploy.0 = Debug|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x64.ActiveCfg = Debug|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x64.Build.0 = Debug|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x64.Deploy.0 = Debug|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x86.ActiveCfg = Debug|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x86.Build.0 = Debug|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Debug|x86.Deploy.0 = Debug|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|Any CPU.ActiveCfg = Release|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|ARM.ActiveCfg = Release|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|ARM.Build.0 = Release|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|ARM.Deploy.0 = Release|ARM
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x64.ActiveCfg = Release|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x64.Build.0 = Release|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x64.Deploy.0 = Release|x64
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x86.ActiveCfg = Release|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x86.Build.0 = Release|x86
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BBA36DC4-94B5-49D6-9FA9-50D6306E42B1} = {F72F4B66-76AD-4FEB-9F6A-40EBDD624534}
+		{64C4800B-4E37-4E59-9E7E-80AB695C86BA} = {F72F4B66-76AD-4FEB-9F6A-40EBDD624534}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F54F2534-FEF7-4C3B-97AB-D2C89423ECC0}
