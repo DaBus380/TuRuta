@@ -97,8 +97,16 @@ namespace TuRuta.Orleans
                             options.ConnectionString = connectionString;
                         });
                     })
-                    .AddAzureTableGrainStorage("AzureTableStore", options => options.UseJson = true)
-                    .AddAzureTableGrainStorage("PubSubStore", options => options.UseJson = true);
+                    .AddAzureTableGrainStorage("AzureTableStore", options => 
+                    {
+                        options.ConnectionString = connectionString;
+                        options.UseJson = true;
+                    })
+                    .AddAzureTableGrainStorage("PubSubStore", options =>
+                    {
+                        options.ConnectionString = connectionString;
+                        options.UseJson = true;
+                    });
             }
 
             return builder;

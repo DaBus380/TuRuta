@@ -11,6 +11,6 @@ namespace TuRuta.Client
         public static RoutesClient RoutesClient { get; } = new RoutesClient();
         public static BusesClient BusesClient { get; } = new BusesClient();
 
-        public static RoutesClient RoutesClientAndroid { get; } = new RoutesClient("https://20dfdb48.ngrok.io/");
+        public static RoutesClient RoutesClientAndroid { get; } = new RoutesClient("https://f7a13bef.ngrok.io/");
     }
 }

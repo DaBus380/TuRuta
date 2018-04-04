@@ -70,17 +70,20 @@ namespace TuRuta.iOS
             mapView.RemoveAnnotations(mapPoints);
 
             var route = await _routeClient.Get(textField.Text);
-            mapPoints = route.Stops.Select(stop =>
+            if(route?.Stops.Count != 0)
             {
-                var location = stop.Location;
-                return new MapPoint(new CLLocationCoordinate2D(location.Latitude, location.Longitude), stop.Name, stop.Id);
-            }).ToArray();
+                mapPoints = route.Stops.Select(stop =>
+                {
+                    var location = stop.Location;
+                    return new MapPoint(new CLLocationCoordinate2D(location.Latitude, location.Longitude), stop.Name, stop.Id);
+                }).ToArray();
 
-            mapView.AddAnnotations(mapPoints);
+                mapView.AddAnnotations(mapPoints);
 
-            var middleStop = (route.Stops[route.Stops.Count / 2]).Location;
-            var region = new MKCoordinateSpan(MilesToLatitudeDegrees(20), MilesToLongitudeDegrees(20, middleStop.Latitude));
-            mapView.Region = new MKCoordinateRegion(new CLLocationCoordinate2D(middleStop.Latitude, middleStop.Longitude), region);
+                var middleStop = (route.Stops[route.Stops.Count / 2]).Location;
+                var region = new MKCoordinateSpan(MilesToLatitudeDegrees(20), MilesToLongitudeDegrees(20, middleStop.Latitude));
+                mapView.Region = new MKCoordinateRegion(new CLLocationCoordinate2D(middleStop.Latitude, middleStop.Longitude), region);
+            }
         }
 
         private double MilesToLatitudeDegrees(double miles)

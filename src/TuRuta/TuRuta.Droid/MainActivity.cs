@@ -91,16 +91,19 @@ namespace TuRuta.Droid
             
             var route = await routeTask;
 
-            var middlePoint = route.Stops.Count / 2;
-            var middleStop = route.Stops[middlePoint];
-            MoveCamera(middleStop.Location.Latitude, middleStop.Location.Longitude);
-
-            foreach (var stop in route.Stops)
+            if(route?.Stops.Count != 0)
             {
-                var markerOptions = new MarkerOptions();
-                markerOptions.SetPosition(new LatLng(stop.Location.Latitude, stop.Location.Longitude));
-                markerOptions.SetTitle(stop.Name);
-                Map.AddMarker(markerOptions);
+                var middlePoint = route.Stops.Count / 2;
+                var middleStop = route.Stops[middlePoint];
+                MoveCamera(middleStop.Location.Latitude, middleStop.Location.Longitude);
+
+                foreach (var stop in route.Stops)
+                {
+                    var markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(new LatLng(stop.Location.Latitude, stop.Location.Longitude));
+                    markerOptions.SetTitle(stop.Name);
+                    Map.AddMarker(markerOptions);
+                }
             }
         }
 

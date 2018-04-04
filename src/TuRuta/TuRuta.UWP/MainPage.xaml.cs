@@ -54,40 +54,44 @@ namespace TuRuta.UWP
 
         private async void SuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            if(Map.Layers.Count != 0)
+            if (Map.Layers.Count != 0)
             {
                 Map.Layers.Remove(Map.Layers.Where(layer => layer.ZIndex == 1).First());
             }
 
             var routeName = args.SelectedItem as string;
             var route = await _routesClient.Get(routeName);
-            var markers = route.Stops.Select(stop => new MapIcon()
+
+            if (route?.Stops.Count != 0)
             {
-                Location = new Geopoint(new BasicGeoposition
+                var markers = route.Stops.Select(stop => new MapIcon()
                 {
-                    Latitude = stop.Location.Latitude,
-                    Longitude = stop.Location.Longitude
-                }),
-                Title = stop.Name,
-                Tag = stop.Id,
-                NormalizedAnchorPoint = new Point(0.5, 1.0),
-                ZIndex = 0
-            } as MapElement);
+                    Location = new Geopoint(new BasicGeoposition
+                    {
+                        Latitude = stop.Location.Latitude,
+                        Longitude = stop.Location.Longitude
+                    }),
+                    Title = stop.Name,
+                    Tag = stop.Id,
+                    NormalizedAnchorPoint = new Point(0.5, 1.0),
+                    ZIndex = 0
+                } as MapElement);
 
-            Map.Layers.Add(new MapElementsLayer
-            {
-                ZIndex = 1,
-                MapElements = markers.ToList()
-            });
+                Map.Layers.Add(new MapElementsLayer
+                {
+                    ZIndex = 1,
+                    MapElements = markers.ToList()
+                });
 
-            var middlePoint = route.Stops[route.Stops.Count / 2];
-            
-            Map.Center = new Geopoint(new BasicGeoposition
-            {
-                Latitude = middlePoint.Location.Latitude,
-                Longitude = middlePoint.Location.Longitude
-            });
-            Map.ZoomLevel = 12;
+                var middlePoint = route.Stops[route.Stops.Count / 2];
+
+                Map.Center = new Geopoint(new BasicGeoposition
+                {
+                    Latitude = middlePoint.Location.Latitude,
+                    Longitude = middlePoint.Location.Longitude
+                });
+                Map.ZoomLevel = 12;
+            }
         }
     }
 }
