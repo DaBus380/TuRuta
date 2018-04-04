@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 using TuRuta.Client;
 using TuRuta.Client.Routes;
@@ -24,7 +14,7 @@ namespace TuRuta.UWP
 {
     public sealed partial class MainPage : Page
     {
-        private RoutesClient RoutesClient { get; } = TuRutaClient.RoutesClientAndroid;
+        private RoutesClient _routesClient = TuRutaClient.RoutesClientAndroid;
 
         public MainPage()
         {
@@ -54,7 +44,7 @@ namespace TuRuta.UWP
         {
             if(args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 2)
             {
-                var suggestions = await RoutesClient.Find(sender.Text);
+                var suggestions = await _routesClient.Find(sender.Text);
                 SuggestBox.ItemsSource = suggestions;
                 return;
             }
@@ -70,7 +60,7 @@ namespace TuRuta.UWP
             }
 
             var routeName = args.SelectedItem as string;
-            var route = await RoutesClient.Get(routeName);
+            var route = await _routesClient.Get(routeName);
             var markers = route.Stops.Select(stop => new MapIcon()
             {
                 Location = new Geopoint(new BasicGeoposition
