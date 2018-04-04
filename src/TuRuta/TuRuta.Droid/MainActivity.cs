@@ -2,12 +2,14 @@
 using Android.Widget;
 using Android.OS;
 using Android.Gms.Maps;
+using Android.Gms.Maps.Model;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using TuRuta.Client;
 using TuRuta.Client.Routes;
-using System.Collections.Generic;
-using Android.Gms.Maps.Model;
+using Android.Gms.Location;
 
 namespace TuRuta.Droid
 {
@@ -18,8 +20,19 @@ namespace TuRuta.Droid
         private RoutesClient routesClient = TuRutaClient.RoutesClientAndroid;
         private AutoCompleteTextView SuggestBox { get; set; }
         private IEnumerable<string> Suggestions { get; set; }
+        private FusedLocationProviderClient locationProviderClient;
 
-        public void OnMapReady(GoogleMap googleMap) => Map = googleMap;
+        public async void OnMapReady(GoogleMap googleMap)
+        {
+            Map = googleMap;
+            locationProviderClient = LocationServices.GetFusedLocationProviderClient(this);
+            var location = await locationProviderClient.GetLastLocationAsync();
+
+            if(location != null)
+            {
+                MoveCamera(location.Latitude, location.Longitude);
+            }
+        }
 
         private void InitMap()
         {
@@ -28,7 +41,6 @@ namespace TuRuta.Droid
             {
                 var options = new GoogleMapOptions()
                     .InvokeMapType(GoogleMap.MapTypeNormal)
-                    .InvokeZoomControlsEnabled(true)
                     .InvokeCompassEnabled(true);
 
                 var tx = FragmentManager.BeginTransaction();
@@ -54,10 +66,35 @@ namespace TuRuta.Droid
             InitMap();
         }
 
+        private async Task SearchRoute(string hint)
+        {
+            Suggestions = await routesClient.Find(hint);
+            var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Suggestions.ToArray());
+            SuggestBox.Adapter = adapter;
+        }
+
+        private void MoveCamera(double latitude, double longitude)
+        {
+            var positionBuilder = CameraPosition.InvokeBuilder();
+            positionBuilder.Target(new LatLng(latitude, longitude));
+            positionBuilder.Zoom(12);
+            var cameraUpdate = CameraUpdateFactory.NewCameraPosition(positionBuilder.Build());
+            Map.MoveCamera(cameraUpdate);
+        }
+
         private async void SuggestBox_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             var routeName = Suggestions.ElementAt(e.Position);
-            var route = await routesClient.Get(routeName);
+            var routeTask = routesClient.Get(routeName);
+
+            Map.Clear();
+            
+            var route = await routeTask;
+
+            var middlePoint = route.Stops.Count / 2;
+            var middleStop = route.Stops[middlePoint];
+            MoveCamera(middleStop.Location.Latitude, middleStop.Location.Longitude);
+
             foreach (var stop in route.Stops)
             {
                 var markerOptions = new MarkerOptions();
@@ -72,9 +109,7 @@ namespace TuRuta.Droid
             var query = args.Text.ToString();
             if (query.Length > 2)
             {
-                Suggestions = await routesClient.Find(query);
-                var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Suggestions.ToArray());
-                SuggestBox.Adapter = adapter;
+                await SearchRoute(query);
             }
         }
     }
