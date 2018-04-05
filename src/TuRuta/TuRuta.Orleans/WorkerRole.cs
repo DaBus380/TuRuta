@@ -9,11 +9,11 @@ using Orleans.Providers.Streams.AzureQueue;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Configuration;
 
-using TuRuta.Orleans.Grains;
+using TuRuta.Common;
 using TuRuta.Common.Logger;
-using TuRuta.Orleans.Grains.Services.Interfaces;
+using TuRuta.Orleans.Grains;
 using TuRuta.Orleans.Grains.Services;
-using Orleans.Storage;
+using TuRuta.Orleans.Grains.Services.Interfaces;
 
 namespace TuRuta.Orleans
 {
@@ -55,14 +55,14 @@ namespace TuRuta.Orleans
         {
             var proxyPort = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint.Port;
             var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
             var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
-
+            
             var builder = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "DaBus";
+                    options.ClusterId = Constants.ClusterId;
                     options.ServiceId = "DaBus";
                 })
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)

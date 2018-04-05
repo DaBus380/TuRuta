@@ -13,8 +13,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using TuRuta.Orleans.Interfaces;
+using TuRuta.Common;
 using TuRuta.Web.Services;
+using TuRuta.Orleans.Interfaces;
 using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web.Extensions
@@ -55,7 +56,7 @@ namespace TuRuta.Web.Extensions
             var builder = new ClientBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "DaBus";
+                    options.ClusterId = Constants.ClusterId;
                     options.ServiceId = "DaBus";
                 })
                 .UseAzureStorageClustering(config => config.ConnectionString = connectionString)

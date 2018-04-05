@@ -11,20 +11,19 @@ using Orleans;
 using Orleans.Streams;
 using Orleans.Runtime.Configuration;
 using Orleans.Hosting;
+using Orleans.Providers.Streams.AzureQueue;
+using Orleans.Configuration;
 
+using TuRuta.Common;
 using TuRuta.Common.Device;
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Common.Logger;
-using Orleans.Providers;
-using Orleans.Providers.Streams.AzureQueue;
-using Orleans.Configuration;
 
 namespace TuRuta.Ingestor
 {
     public class WorkerRole : RoleEntryPoint
     {
         private QueueClient QueueClient;
-        private int attempsBeforeFailing = 6;
         private IStreamProvider streamProvider;
         private ManualResetEvent CompletedEvent = new ManualResetEvent(false);
         private IClusterClient client;
@@ -64,11 +63,11 @@ namespace TuRuta.Ingestor
             var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
             var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
-
+            
             var builder = new ClientBuilder()
                 .UseAzureStorageClustering(config => config.ConnectionString = connectionString)
                 .Configure<ClusterOptions>(cluster => {
-                    cluster.ClusterId = "DaBus";
+                    cluster.ClusterId = Constants.ClusterId;
                     cluster.ServiceId = "DaBus";
                 })
                 .ConfigureApplicationParts(
