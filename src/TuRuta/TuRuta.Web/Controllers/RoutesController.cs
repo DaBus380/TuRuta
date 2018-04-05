@@ -19,20 +19,20 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpGet("{name}")]
-        public Task<RouteVM> Get(string name)
-            => _routesService.GetRoute(name);
+        public async Task<RouteVM> Get(string name)
+            => await _routesService.GetRoute(name);
              
         [HttpGet("[action]/{hint}")]
-        public Task<List<string>> Find(string hint)
-            => _routesService.FindByName(hint);
+        public async Task<List<string>> Find(string hint)
+            => await _routesService.FindByName(hint);
 
         [HttpGet("[action]")]
-        public Task<List<string>> Names()
-            => _routesService.GetAllNames();
+        public async Task<List<string>> Names()
+            => await _routesService.GetAllNames();
 
         [HttpGet("[action]/{name}")]
-        public Task<RouteVM> Create(string name)
-            => _routesService.Create(name);
+        public async Task<RouteVM> Create(string name)
+            => await _routesService.Create(name);
 
         [HttpPost("[action]/{id}")]
         public async Task<RouteVM> AddStops(string id, [FromBody]List<Guid> stops)
