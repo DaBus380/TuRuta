@@ -8,16 +8,11 @@ export default class Test extends Vue {
     authentication = new Authentication();
 
     beforeMount(){
-        //this.authentication.signOut();
-        //this.authentication.initialize();
+        this.authentication.initialize();
     }
 
     async mounted(){
-        /*
         var token = await this.authentication.acquireToken();
         console.log(token);
-
-        console.log(this.authentication.isAuthenticated());
-        */
     }
 }

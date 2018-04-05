@@ -8,8 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\components\testmaps\**" />
+    <Content Remove="ClientApp\components\testmaps\**" />
+    <EmbeddedResource Remove="ClientApp\components\testmaps\**" />
+    <None Remove="ClientApp\components\testmaps\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ClientApp\clients\BusesClient.ts" />
-    <None Remove="ClientApp\components\testmaps\testmaps.ts" />
     <None Remove="ClientApp\components\test\test.ts" />
     <None Remove="ClientApp\models\busVM.ts" />
     <None Remove="ClientApp\models\incidentVM.ts" />
@@ -41,7 +47,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\clients\BusesClient.ts" />
     <TypeScriptCompile Include="ClientApp\clients\RoutesClient.ts" />
-    <TypeScriptCompile Include="ClientApp\components\testmaps\testmaps.ts" />
     <TypeScriptCompile Include="ClientApp\components\test\test.ts" />
     <TypeScriptCompile Include="ClientApp\models\busVM.ts" />
     <TypeScriptCompile Include="ClientApp\models\incidentVM.ts" />

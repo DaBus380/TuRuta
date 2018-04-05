@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-using TuRuta.Web.Services.Interfaces;
 using TuRuta.Web.Extensions;
 using TuRuta.Web.Services.Mocks;
+using TuRuta.Web.Extensions.AzureAD;
+using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web
 {
@@ -24,6 +26,12 @@ namespace TuRuta.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var isRunning = Configuration.GetValue<bool>("ORLEANS_RUNNING");
+
+            services.AddAuthentication(options
+                => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
+            .AddAzureAdBearer(options => Configuration.Bind("AzureAD", options));
+            
+
 
             if (isRunning)
             {
