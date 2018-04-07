@@ -110,7 +110,7 @@ namespace TuRuta.Orleans.Grains
                 Location = message.Location,
                 BusId = this.GetPrimaryKey(),
                 NextStop = NextStop
-            });
+            }, this.GetPrimaryKey());
 
             State.Location = message.Location;
 
@@ -144,7 +144,8 @@ namespace TuRuta.Orleans.Grains
             {
                 LicensePlate = State.Plates,
                 Id = this.GetPrimaryKey(),
-                Status = 0
+                Status = 0,
+                Location = State.Location
             });
 
         public Task SetRoute(Guid route)

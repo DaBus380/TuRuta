@@ -1,5 +1,6 @@
 ﻿interface busVM {
     id: string,
     licensePlate: string,
-    status: number
+    status: number,
+    location: point
 }
