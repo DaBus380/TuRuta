@@ -30,8 +30,6 @@ namespace TuRuta.Web
             services.AddAuthentication(options
                 => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
             .AddAzureAdBearer(options => Configuration.Bind("AzureAD", options));
-            
-
 
             if (isRunning)
             {
@@ -86,6 +84,7 @@ namespace TuRuta.Web
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
