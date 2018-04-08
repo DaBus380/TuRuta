@@ -14,6 +14,6 @@ namespace TuRuta.Common
         public static string NoRouteConfiguredGrainName { get; } = "non-route-selected";
         public static string NoConfigGrainName { get; } = "no-config-buses";
 
-        public static string ClusterId { get; } = "dp1";
+        public static string ClusterId { get; } = "dp2";
     }
 }

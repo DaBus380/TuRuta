@@ -15,6 +15,8 @@ using TuRuta.Orleans.Grains.States;
 using TuRuta.Common.Models;
 using TuRuta.Common;
 using TuRuta.Common.ViewModels;
+using PubNubMessaging.Core;
+using Microsoft.Extensions.Logging;
 
 namespace TuRuta.Orleans.Grains
 {
@@ -30,13 +32,16 @@ namespace TuRuta.Orleans.Grains
         private IEnumerable<Stop> Paradas;
         private Stop NextStop;
         private IConfigClient _configClient;
+        private ILogger _logger; 
 
         public BusGrain(
+            ILogger logger,
             IDistanceCalculator distanceCalculator,
             IConfigClient configClient)
         {
             _distanceCalculator = distanceCalculator;
             _configClient = configClient;
+            _logger = logger;
         }
 
         public async override Task OnActivateAsync()
@@ -110,7 +115,7 @@ namespace TuRuta.Orleans.Grains
                 Location = message.Location,
                 BusId = this.GetPrimaryKey(),
                 NextStop = NextStop
-            }, this.GetPrimaryKey());
+            }, this.GetPrimaryKey(), OnPubnubError);
 
             State.Location = message.Location;
 
@@ -166,5 +171,8 @@ namespace TuRuta.Orleans.Grains
             var grainId = this.GetPrimaryKey().ToString();
             return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId));
         }
+
+        private void OnPubnubError(PubnubClientError error)
+            => _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
     }
 }

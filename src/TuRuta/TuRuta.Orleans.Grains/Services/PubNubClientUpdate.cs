@@ -18,16 +18,18 @@ namespace TuRuta.Orleans.Grains.Services
             pubnub = new Pubnub(pubKey, subKey);
         }
 
-        private bool Sent(ClientBusUpdate update, string busId)
+        private bool Sent(ClientBusUpdate update, string busId, Action<PubnubClientError> onError)
         {
             return pubnub.Publish(
                 busId,
                 update,
-                (obj) => {},
-                (error) => {});
+                (obj) => {
+                    Console.WriteLine(obj);
+                },
+                onError);
         }
 
-        public Task<bool> SentUpdate(ClientBusUpdate update, Guid busId)
-            => Task.FromResult(Sent(update, busId.ToString()));
+        public Task<bool> SentUpdate(ClientBusUpdate update, Guid busId, Action<PubnubClientError> onError)
+            => Task.FromResult(Sent(update, busId.ToString(), onError));
     }
 }
