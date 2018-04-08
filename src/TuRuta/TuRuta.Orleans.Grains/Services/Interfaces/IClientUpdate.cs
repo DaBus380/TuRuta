@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PubNubMessaging.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,6 @@ namespace TuRuta.Orleans.Grains.Services.Interfaces
 {
     public interface IClientUpdate
     {
-        Task<bool> SentUpdate(ClientBusUpdate update);
+        Task<bool> SentUpdate(ClientBusUpdate update, Guid busId, Action<PubnubClientError> onError);
     }
 }

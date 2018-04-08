@@ -6,13 +6,23 @@ import Authentication from '../../authentication/Authentication';
 @Component
 export default class Test extends Vue {
     authentication = new Authentication();
+    headers = new Headers();
 
-    beforeMount(){
+    beforeMount() {
         this.authentication.initialize();
+        if(this.authentication.isAuthenticated()){
+            this.authentication.acquireToken().then(token => {
+                this.headers.set("Authorization", "Bearer "+token);
+            });
+        }
     }
 
-    async mounted(){
-        var token = await this.authentication.acquireToken();
-        console.log(token);
+    clicked(){
+        fetch("/api/SampleData/WeatherForecasts", {
+            headers: this.headers
+        })
+        .then(response => {
+            console.log(response.status);
+        });
     }
 }
