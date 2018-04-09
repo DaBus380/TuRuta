@@ -44,6 +44,24 @@
     <DiagnosticsConfiguration Include="TuRuta.IngestorContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="TuRuta.OrleansContent\diagnostics.wadcfgx" />
   </ItemGroup>
+<ItemGroup>
+    <ProjectReference Include="..\TuRuta.Ingestor\TuRuta.Ingestor.csproj">
+      <Name>TuRuta.Ingestor</Name>
+      <Project>{7b6ba26e-31ce-4896-b195-3be169996265}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>TuRuta.Ingestor</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+    <ProjectReference Include="..\TuRuta.Orleans\TuRuta.Orleans.csproj">
+      <Name>TuRuta.Orleans</Name>
+      <Project>{f0868c37-6727-4a5c-acbf-62b432f4e161}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>TuRuta.Orleans</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+  </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
