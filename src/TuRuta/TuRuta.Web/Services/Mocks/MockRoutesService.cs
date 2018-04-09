@@ -44,7 +44,13 @@ namespace TuRuta.Web.Services.Mocks
                 new BusVM
                 {
                     LicensePlate = "MP-18-11",
-                    Status = 1
+                    Status = 1,
+                    Location = new Point
+                    {
+                        Latitude = 20.786873,
+                        Longitude = -103.522932
+                    },
+                    Id = Guid.NewGuid()
                 }
             }
         };
