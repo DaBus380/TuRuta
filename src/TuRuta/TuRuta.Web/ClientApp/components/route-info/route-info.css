@@ -1,0 +1,24 @@
+.route-name {
+    margin-bottom: 30px;
+}
+.route-name h2 {
+    color: #cccccc;
+    margin: 0;
+}
+.route-stops {
+    padding-left: 7%;
+}
+.route-stops .station-prev {
+    color: #ccc;
+}
+.route-stops .station-current {
+    font-weight: bold;
+}
+.route-stops .station-next {
+    color: #000;
+}
+.route-stops p.trace-pipe {
+    position: relative;
+    font-weight: 600;
+    left: -15px;
+}

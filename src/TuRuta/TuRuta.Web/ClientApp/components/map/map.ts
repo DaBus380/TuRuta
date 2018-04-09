@@ -1,50 +1,56 @@
-﻿import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { } from "@types/googlemaps";
+﻿import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+import { } from "@types/googlemaps"
 
 @Component
 export default class MapComponent extends Vue {
 
-    @Prop()
-    map?: google.maps.Map;
-    markers?: google.maps.Marker[];
-    stops?: stopVM[];
+    // Data
+    map: any = null
+    city: string = ''
+    markers: google.maps.Marker[] = []
 
+    // Properties
+    @Prop() stops?: stopVM[]
+
+    // Lifecycle
     mounted() {
-        let element = document.getElementById("mapDiv");
-        let latLon = new google.maps.LatLng(20.6736, -103.344);
+        this.initMap()
+        if(this.stops != undefined && this.stops.length != 0) {
+            this.iniMarkers()
+        }
+    }
+
+    // Methods
+    initMap(){
+        let element = document.getElementById("mapDiv")
+        let latLon = new google.maps.LatLng(20.6736, -103.344)
         let options = {
-            zoom: 13,
+            zoom: 14,
             center: latLon,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        this.map = new google.maps.Map(element, options);
-
-        let myLatLng = {lat: 20.678819, lng: -103.394160};
-
-        this.markers = this.mapStopsToMarkers();   
+        }
+        this.map = new google.maps.Map(element, options)
     }
 
-    mapStopsToMarkers() {
-        var tempMarkers = new Array<google.maps.Marker>();
-        if (this.stops != undefined) {
+    iniMarkers() {
+        var newMarkers = new Array<google.maps.Marker>()
+        if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
-                var location = { lat: stop.location.latitude, lng: stop.location.longitude }
-                var marker = new google.maps.Marker({
+                let location = { 
+                    lat: stop.location.latitude, 
+                    lng: stop.location.longitude
+                }
+                let marker = new google.maps.Marker({
                     position: location,
                     map: this.map,
-                    title: stop.name,
-                });
-                tempMarkers.push()
-            });
+                    title: stop.name
+                })
+                newMarkers.push(marker)
+            })
+            this.markers = newMarkers
+            var centerPosition = Math.floor( this.markers.length / 2 )
+            this.map.center = this.markers[centerPosition].getPosition()
         }
-        return tempMarkers
     }
-
-    /*var marker = new google.maps.Marker({
-            position: myLatLng,
-            map: this.map,
-            title: 'Hello World!'
-          });*/
 }
