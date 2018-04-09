@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import PubNub from 'pubnub';
 
 interface Message {
@@ -12,11 +12,11 @@ interface Message {
 @Component
 export default class RouteInfoComponent extends Vue {
 
-    // Public props
-    @Prop()
-    messages?: Message[];
-    route: routeVM = { name: '', id: '', stops: [], buses: [], incidents: [] };
-
+    // Props
+    @Prop() messages!: Message[]
+    @Prop() name!: string
+    @Prop() stops!: stopVM[]
+    
     // Private props
     private listener = {
         status: function (statusEvent: any) {
@@ -28,6 +28,16 @@ export default class RouteInfoComponent extends Vue {
     }
 
     mounted() {
+        this.fetchPubNub()
+    }
+
+    // Methods
+    messageReceived(message: any){
+        console.log(message);
+        // this.messages.push(message);
+    }
+
+    fetchPubNub(){
         fetch('/api/config/pubnub')
             .then(response => response.json() as Promise<any>)
             .then(data => {
@@ -40,11 +50,5 @@ export default class RouteInfoComponent extends Vue {
                     channels: ['client'],
                 });
             });
-    }
-
-    // Methods
-    messageReceived(message: any){
-        console.log(message);
-        // this.messages.push(message);
     }
 }
