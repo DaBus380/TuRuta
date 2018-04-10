@@ -78,7 +78,7 @@ namespace TuRuta.Orleans.Grains
                 State.Buses.Add(bus);
             }
 
-            return Task.CompletedTask;
+            return WriteStateAsync();
         }
 
         public Task SetName(string name)

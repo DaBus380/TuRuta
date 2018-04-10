@@ -3,6 +3,13 @@ import { Component, Prop } from 'vue-property-decorator'
 import { } from "@types/googlemaps"
 import PubNub from 'pubnub';
 
+interface Message {
+    latitude: number;
+    longitude: number;
+    busId: string;
+    nextStop: stopVM;
+}
+
 @Component
 export default class MapComponent extends Vue {
 
@@ -27,12 +34,6 @@ export default class MapComponent extends Vue {
         message: this.messageReceived
     }
 
-    // Methods
-    messageReceived(message: any) {
-        console.log(message);
-        // this.messages.push(message);
-    }
-
     // Lifecycle
     mounted() {
         this.initMap()
@@ -43,6 +44,18 @@ export default class MapComponent extends Vue {
         if (this.buses != undefined && this.buses.length != 0) {
             this.initPubnubListeners();
         }
+    }
+
+    beforeDestroy() {
+        this.pubnub.unsubscribeAll();
+        this.pubnub.removeListener(this.listener);
+    }
+
+    // Methods
+    messageReceived(message: any) {
+        var busUpdate = message.message;
+        let latLon = new google.maps.LatLng(busUpdate.Location.Latitude, busUpdate.Location.Longitude);
+        this.busesTable[message.message.BusId].setPosition(latLon);
     }
 
     initPubnubListeners() {
@@ -59,12 +72,12 @@ export default class MapComponent extends Vue {
             })
 
         for (let bus of this.buses!) {
-            let marker = this.createMarker(bus.location, bus.licensePlate);
+            let marker = this.createMarker(bus.location, bus.licensePlate, true);
             this.busesTable[bus.id] = marker;
         }
     }
 
-    createMarker(location: point, title: string): google.maps.Marker {
+    createMarker(location: point, title: string, isBus: boolean): google.maps.Marker {
         let latLon = new google.maps.LatLng(location.latitude, location.longitude);
         let marker = new google.maps.Marker({
             position: latLon,
@@ -72,10 +85,16 @@ export default class MapComponent extends Vue {
             title: title
         });
 
+        if (isBus) {
+            marker.setIcon({
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10
+            });
+        }
+
         return marker;
     }
 
-    // Methods
     initMap(){
         let element = document.getElementById("mapDiv")
         let latLon = new google.maps.LatLng(20.6736, -103.344)
@@ -91,7 +110,7 @@ export default class MapComponent extends Vue {
         var newMarkers = new Array<google.maps.Marker>()
         if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
-                let marker = this.createMarker(stop.location, stop.name);
+                let marker = this.createMarker(stop.location, stop.name, false);
                 newMarkers.push(marker);
             })
             this.markers = newMarkers
@@ -110,6 +129,7 @@ export default class MapComponent extends Vue {
                 })
                 this.pubnub.addListener(this.listener);
                 resolve();
-            }));
+            })
+        );
     }
 }

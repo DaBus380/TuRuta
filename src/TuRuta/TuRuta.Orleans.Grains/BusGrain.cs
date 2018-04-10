@@ -32,16 +32,13 @@ namespace TuRuta.Orleans.Grains
         private IEnumerable<Stop> Paradas;
         private Stop NextStop;
         private IConfigClient _configClient;
-        private ILogger _logger; 
 
         public BusGrain(
-            ILogger logger,
             IDistanceCalculator distanceCalculator,
             IConfigClient configClient)
         {
             _distanceCalculator = distanceCalculator;
             _configClient = configClient;
-            _logger = logger;
         }
 
         public async override Task OnActivateAsync()
@@ -135,6 +132,8 @@ namespace TuRuta.Orleans.Grains
             {
                 notSentUpdates.Enqueue(message);
             }
+
+            await WriteStateAsync();
         }
 
         public Task OnNextAsync(RouteBusUpdate item, StreamSequenceToken token = null)
@@ -158,7 +157,7 @@ namespace TuRuta.Orleans.Grains
             State.RouteId = route;
 
             var noRoutes = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
-            return Task.WhenAll(GetStreams(), noRoutes.RemoveKey(this.GetPrimaryKey().ToString()));
+            return Task.WhenAll(GetStreams(), noRoutes.RemoveKey(this.GetPrimaryKey().ToString()), WriteStateAsync());
         }
 
         public Task SetPlates(string plates)
@@ -169,10 +168,13 @@ namespace TuRuta.Orleans.Grains
             var noPlatesGrain = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
 
             var grainId = this.GetPrimaryKey().ToString();
-            return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId));
+            return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId), WriteStateAsync());
         }
 
         private void OnPubnubError(PubnubClientError error)
-            => _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
+        {
+            return;
+        }
+            //=> _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
     }
 }
