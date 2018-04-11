@@ -28,7 +28,7 @@ namespace TuRuta.Web.Services
             var stopGrain = _clusterClient.GetGrain<IStopGrain>(stopId);
             await stopGrain.AddInfo(stopVM);
 
-            return await stopGrain.GetStop();
+            return await stopGrain.GetStopVM();
 		}
 
         public Task<List<string>> FindByStops(string hint)
@@ -41,7 +41,7 @@ namespace TuRuta.Web.Services
             return (await Task.WhenAll(keys.Select(key =>
             {
                 var grain = _clusterClient.GetGrain<IStopGrain>(key);
-                return grain.GetStop();
+                return grain.GetStopVM();
             }))).ToList();
 		}
 
@@ -63,7 +63,7 @@ namespace TuRuta.Web.Services
             if(Guid.TryParse(stopId, out var StopId))
             {
                 var stopGrain = _clusterClient.GetGrain<IStopGrain>(StopId);
-                return await stopGrain.GetStop();
+                return await stopGrain.GetStopVM();
             }
 
             return null;
