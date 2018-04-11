@@ -26,7 +26,7 @@ namespace TuRuta.Orleans.Grains
         public async Task<List<RouteVM>> GetRoutes()
             => (await Task.WhenAll(State.Routes.Select(route => route.GetRouteInfo()))).ToList();
             
-		public Task<StopVM> GetStop()
+		public Task<StopVM> GetStopVM()
 			=> Task.FromResult(State.ToVM(this.GetPrimaryKey()));
 
 		public Task SetRoute(Guid routeId)

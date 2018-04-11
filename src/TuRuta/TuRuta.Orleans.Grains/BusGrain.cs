@@ -5,6 +5,7 @@ using System.Linq;
 using Orleans;
 using Orleans.Streams;
 using Orleans.Providers;
+using PubNubMessaging.Core;
 
 using TuRuta.Orleans.Grains.Services.Interfaces;
 using TuRuta.Orleans.Grains.Services;
@@ -15,8 +16,7 @@ using TuRuta.Orleans.Grains.States;
 using TuRuta.Common.Models;
 using TuRuta.Common;
 using TuRuta.Common.ViewModels;
-using PubNubMessaging.Core;
-using Microsoft.Extensions.Logging;
+using TuRuta.Orleans.Grains.Extensions;
 
 namespace TuRuta.Orleans.Grains
 {
@@ -48,12 +48,7 @@ namespace TuRuta.Orleans.Grains
             _clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-            Paradas = (await routeGrain.GetStops()).Select(stop => new Stop
-            {
-                Id = stop.Id,
-                Location = stop.Location,
-                Name = stop.Name
-            }).ToList() ?? new List<Stop>();
+            Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop()).ToList() ?? new List<Stop>();
 
             await GetStreams();
 
@@ -97,12 +92,7 @@ namespace TuRuta.Orleans.Grains
             if(Paradas.Count() == 0 && State.RouteId != Guid.Empty)
             {
                 var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-                Paradas = (await routeGrain.GetStops()).Select(stop => new Stop
-                {
-                    Id = stop.Id,
-                    Location = stop.Location,
-                    Name = stop.Name
-                });
+                Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop());
             }
 
             NextStop = GetClosest(message);
