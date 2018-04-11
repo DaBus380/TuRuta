@@ -44,7 +44,7 @@
     <DiagnosticsConfiguration Include="TuRuta.IngestorContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="TuRuta.OrleansContent\diagnostics.wadcfgx" />
   </ItemGroup>
-  <ItemGroup>
+<ItemGroup>
     <ProjectReference Include="..\TuRuta.Ingestor\TuRuta.Ingestor.csproj">
       <Name>TuRuta.Ingestor</Name>
       <Project>{7b6ba26e-31ce-4896-b195-3be169996265}</Project>

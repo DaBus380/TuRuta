@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TuRuta.Client.Buses;
 using TuRuta.Client.Routes;
+using TuRuta.Client.Stops;
 
 namespace TuRuta.Client
 {
