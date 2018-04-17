@@ -58,7 +58,7 @@ namespace TuRuta.Orleans
             var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
             var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
-            
+
             var builder = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
