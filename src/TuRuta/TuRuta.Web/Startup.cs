@@ -52,7 +52,7 @@ namespace TuRuta.Web
                         Version = "v1",
                         Title = "TuRuta API",
                         Description = "You know what to do",
-                        TermsOfService = "This web API is private, do not use unless you are authorize to use it"
+                        TermsOfService = "This web API is private, do not use unless you are authorize to use it."
                     });
                 });
             }

@@ -20,19 +20,29 @@ namespace TuRuta.Client.Stops
 		public async Task<StopVM> Get(string name)
 		{
 			var response = await HttpClient.GetAsync($"/api/Stops/{name}");
-			var text = await response.Content.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<StopVM>(await response.Content.ReadAsStringAsync());
+			if (response.IsSuccessStatusCode)
+			{
+				return JsonConvert.DeserializeObject<StopVM>(await response.Content.ReadAsStringAsync());
+			}
+			return default(StopVM);
 		}
 		public async Task<IEnumerable<string>> Find(string hint)
 		{
 			var response = await HttpClient.GetAsync($"/api/Stops/Find/{hint}");
-			return JsonConvert.DeserializeObject<IEnumerable<string>>(await response.Content.ReadAsStringAsync());
+			if (response.IsSuccessStatusCode)
+			{
+				return JsonConvert.DeserializeObject<IEnumerable<string>>(await response.Content.ReadAsStringAsync());
+			}
+			return default(IEnumerable<string>);
 		}
 		public async Task<RouteVM> GetRoutes(string id)
 		{
 			var response = await HttpClient.GetAsync($"/api/Stops/GetRoutes/{id}");
-			var text = await response.Content.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<RouteVM>(await response.Content.ReadAsStringAsync());
+			if (response.IsSuccessStatusCode)
+			{
+				return JsonConvert.DeserializeObject<RouteVM>(await response.Content.ReadAsStringAsync());
+			}
+			return default(RouteVM);
 		}
 	}
 }

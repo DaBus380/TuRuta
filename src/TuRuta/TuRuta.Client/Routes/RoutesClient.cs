@@ -22,14 +22,23 @@ namespace TuRuta.Client.Routes
         public async Task<IEnumerable<string>> Find(string hint)
         {
             var response = await HttpClient.GetAsync($"/api/routes/find/{hint}");
-            return JsonConvert.DeserializeObject<IEnumerable<string>>(await response.Content.ReadAsStringAsync());
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<string>>(await response.Content.ReadAsStringAsync());
+            }
+
+            return default(IEnumerable<string>);
         }
 
         public async Task<RouteVM> Get(string name)
         {
             var response = await HttpClient.GetAsync($"/api/routes/{name}");
-            var text = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<RouteVM>(await response.Content.ReadAsStringAsync());
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<RouteVM>(await response.Content.ReadAsStringAsync());
+            }
+
+            return default(RouteVM);
         }
     }
 }
