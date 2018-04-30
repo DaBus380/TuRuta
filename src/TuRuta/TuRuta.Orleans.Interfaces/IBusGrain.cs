@@ -14,5 +14,7 @@ namespace TuRuta.Orleans.Interfaces
         Task SetRoute(Guid route);
 
         Task SetPlates(string plates);
+
+        Task<BusInfoVM> GetInfo();
     }
 }
