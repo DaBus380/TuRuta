@@ -16,6 +16,6 @@ export default class SearchComponent extends Vue {
     // Functions
     search(input: string) {
         var path = input.toLowerCase().replace(/ /g,"-");
-        this.$router.push("ruta/" + path)
+        this.$router.push("route/" + path)
     }
 }

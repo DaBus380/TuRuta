@@ -1,7 +1,8 @@
 <template>
     <div id='app-root' class="container-fluid">
         <header>
-            <menu-component />
+            <admin-menu-component v-if="['admin'].indexOf($route.name) > -1"></admin-menu-component>
+            <menu-component v-else></menu-component>
         </header>
         <div class="main-container">
             <router-view></router-view>
