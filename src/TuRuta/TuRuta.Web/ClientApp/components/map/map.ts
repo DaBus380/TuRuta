@@ -14,7 +14,7 @@ interface Message {
 export default class MapComponent extends Vue {
 
     // Data
-    pubnub: PubNub;
+    pubnub?: PubNub;
     map: any = null;
     city: string = '';
     markers: google.maps.Marker[] = [];
@@ -48,8 +48,8 @@ export default class MapComponent extends Vue {
     }
 
     beforeDestroy() {
-        this.pubnub.unsubscribeAll();
-        this.pubnub.removeListener(this.listener);
+        this.pubnub!.unsubscribeAll();
+        this.pubnub!.removeListener(this.listener);
     }
 
     // Methods
@@ -67,7 +67,7 @@ export default class MapComponent extends Vue {
                     busIds.push(bus.id);
                 });
 
-                this.pubnub.subscribe({
+                this.pubnub!.subscribe({
                     channels: busIds
                 });
             })
@@ -78,13 +78,20 @@ export default class MapComponent extends Vue {
         }
     }
 
+    contentString:string = "<p>hello</p>";
+
     createMarker(location: point, title: string, isBus: boolean): google.maps.Marker {
+        let contentInfo = new google.maps.InfoWindow({
+            content: this.contentString
+        });
+
         let latLon = new google.maps.LatLng(location.latitude, location.longitude);
         let marker = new google.maps.Marker({
             position: latLon,
             map: this.map,
             title: title
         });
+        marker.addListener("click", () => contentInfo.open(this.map, marker));
 
         if (isBus) {
             marker.setIcon({
@@ -103,8 +110,8 @@ export default class MapComponent extends Vue {
             zoom: 14,
             center: latLon,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        this.map = new google.maps.Map(element, options)
+        };
+        this.map = new google.maps.Map(element, options);
     }
 
     iniMarkers() {
@@ -112,10 +119,11 @@ export default class MapComponent extends Vue {
         if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
                 let marker = this.createMarker(stop.location, stop.name, false);
+
                 newMarkers.push(marker);
-            })
-            this.markers = newMarkers
-            var centerPosition = Math.floor( this.markers.length / 2 )
+            });
+            this.markers = newMarkers;
+            var centerPosition = Math.floor(this.markers.length / 2);
             this.map.setCenter(this.markers[centerPosition].getPosition());
         }
     }
