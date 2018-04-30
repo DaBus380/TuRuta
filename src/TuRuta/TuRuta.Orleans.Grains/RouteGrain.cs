@@ -31,7 +31,7 @@ namespace TuRuta.Orleans.Grains
         }
 
         public async Task<List<StopVM>> Stops()
-            => (await Task.WhenAll(State.Stops.Select(stop => stop.GetStop()))).ToList();
+            => (await Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()))).ToList();
 
         public async override Task OnActivateAsync()
         {
@@ -78,7 +78,7 @@ namespace TuRuta.Orleans.Grains
                 State.Buses.Add(bus);
             }
 
-            return Task.CompletedTask;
+            return WriteStateAsync();
         }
 
         public Task SetName(string name)
@@ -95,7 +95,7 @@ namespace TuRuta.Orleans.Grains
         public async Task<RouteVM> GetRouteVM()
         {
             var resultsTask = Task.WhenAll(State.Buses.Select(bus => bus.GetBusVM()));
-            var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStop()));
+            var stopsTask = Task.WhenAll(State.Stops.Select(stop => stop.GetStopVM()));
 
             var vm = new RouteVM
             {

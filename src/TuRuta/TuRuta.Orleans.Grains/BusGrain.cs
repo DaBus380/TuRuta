@@ -5,6 +5,7 @@ using System.Linq;
 using Orleans;
 using Orleans.Streams;
 using Orleans.Providers;
+using PubNubMessaging.Core;
 
 using TuRuta.Orleans.Grains.Services.Interfaces;
 using TuRuta.Orleans.Grains.Services;
@@ -15,8 +16,7 @@ using TuRuta.Orleans.Grains.States;
 using TuRuta.Common.Models;
 using TuRuta.Common;
 using TuRuta.Common.ViewModels;
-using PubNubMessaging.Core;
-using Microsoft.Extensions.Logging;
+using TuRuta.Orleans.Grains.Extensions;
 
 namespace TuRuta.Orleans.Grains
 {
@@ -32,16 +32,13 @@ namespace TuRuta.Orleans.Grains
         private IEnumerable<Stop> Paradas;
         private Stop NextStop;
         private IConfigClient _configClient;
-        private ILogger _logger; 
 
         public BusGrain(
-            ILogger logger,
             IDistanceCalculator distanceCalculator,
             IConfigClient configClient)
         {
             _distanceCalculator = distanceCalculator;
             _configClient = configClient;
-            _logger = logger;
         }
 
         public async override Task OnActivateAsync()
@@ -51,12 +48,7 @@ namespace TuRuta.Orleans.Grains
             _clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-            Paradas = (await routeGrain.GetStops()).Select(stop => new Stop
-            {
-                Id = stop.Id,
-                Location = stop.Location,
-                Name = stop.Name
-            }).ToList() ?? new List<Stop>();
+            Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop()).ToList() ?? new List<Stop>();
 
             await GetStreams();
 
@@ -100,12 +92,7 @@ namespace TuRuta.Orleans.Grains
             if(Paradas.Count() == 0 && State.RouteId != Guid.Empty)
             {
                 var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-                Paradas = (await routeGrain.GetStops()).Select(stop => new Stop
-                {
-                    Id = stop.Id,
-                    Location = stop.Location,
-                    Name = stop.Name
-                });
+                Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop());
             }
 
             NextStop = GetClosest(message);
@@ -135,6 +122,8 @@ namespace TuRuta.Orleans.Grains
             {
                 notSentUpdates.Enqueue(message);
             }
+
+            await WriteStateAsync();
         }
 
         public Task OnNextAsync(RouteBusUpdate item, StreamSequenceToken token = null)
@@ -158,7 +147,7 @@ namespace TuRuta.Orleans.Grains
             State.RouteId = route;
 
             var noRoutes = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoRouteConfiguredGrainName);
-            return Task.WhenAll(GetStreams(), noRoutes.RemoveKey(this.GetPrimaryKey().ToString()));
+            return Task.WhenAll(GetStreams(), noRoutes.RemoveKey(this.GetPrimaryKey().ToString()), WriteStateAsync());
         }
 
         public Task SetPlates(string plates)
@@ -169,10 +158,13 @@ namespace TuRuta.Orleans.Grains
             var noPlatesGrain = GrainFactory.GetGrain<IKeyMapperGrain>(Constants.NoConfigGrainName);
 
             var grainId = this.GetPrimaryKey().ToString();
-            return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId));
+            return Task.WhenAll(platesGrain.SetName(grainId, plates), noPlatesGrain.RemoveKey(grainId), WriteStateAsync());
         }
 
         private void OnPubnubError(PubnubClientError error)
-            => _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
+        {
+            return;
+        }
+            //=> _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
     }
 }

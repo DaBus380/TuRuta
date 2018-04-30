@@ -1,24 +1,17 @@
 <template>
-    <div v-if="route">
-        <div class="route-info">
-            <slot name="route"></slot>
+    <div>
+        <div class="route-name">
+            <h1>{{ name }}</h1>
             <h2>Guadalajara</h2>
         </div>
-        <ul  v-if="route.stops" v-for="(stop, index) in route.stops">
-            <li class="station-current" v-if="stop.name === currentStop.name">
+        <ul class="route-stops">
+            <li  v-for="(stop, index) in stops" class="station-current">
                 {{ stop.name }}
-                <p v-if="index !== lastStop" class="trace-pipe">|</p>
-            </li>
-            <li class="station-next" v-else-if="index > currentStopIndex">
-                {{ stop.name }}
-                <p v-if="index !== lastStop" class="trace-pipe">|</p>
-            </li>
-            <li class="station-prev" v-else>
-                {{ stop.name }}
-                <p v-if="index !== lastStop" class="trace-pipe">|</p>
+                <p v-if="index < (stops.length - 1)" class="trace-pipe">|</p>
             </li>
         </ul>
     </div>
 </template>
 
+<style src="./route-info.css"/>
 <script src="./route-info.ts"></script>

@@ -43,7 +43,7 @@ namespace TuRuta.Orleans.Grains
                 return Task.CompletedTask;
             }
 
-            if (State.ContainsValue(name.ToLowerInvariant()))
+            if (State.ContainsValue(name.ToLowerInvariant()) || State.ContainsKey(Id.ToLowerInvariant()))
             {
                 return Task.CompletedTask;
             }

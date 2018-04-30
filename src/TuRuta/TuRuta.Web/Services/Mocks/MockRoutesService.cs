@@ -4,12 +4,56 @@ using System.Linq;
 using System.Threading.Tasks;
 using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Common.Models;
 
 namespace TuRuta.Web.Services.Mocks
 {
     public class MockRoutesService : IRoutesService
     {
-        private RouteVM MockRoute { get; } = new RouteVM();
+        private RouteVM MockRoute { get; } = new RouteVM() 
+        {
+            Stops = new List<StopVM>()
+            {
+                new StopVM 
+                {
+                    Name = "Plaza Galerias",
+                    Location = new Point {
+                        Latitude = 20.680699,
+                        Longitude = -103.430508
+                    }
+                },
+                new StopVM 
+                {
+                    Name = "Patria y Vallarta",
+                    Location = new Point {
+                        Latitude = 20.678855,
+                        Longitude = -103.422062
+                    }
+                },
+                new StopVM 
+                {
+                    Name = "Los Cubos",
+                    Location = new Point {
+                        Latitude = 20.676873,
+                        Longitude = -103.412932
+                    }
+                }
+            },
+            Buses = new List<BusVM>()
+            {
+                new BusVM
+                {
+                    LicensePlate = "MP-18-11",
+                    Status = 1,
+                    Location = new Point
+                    {
+                        Latitude = 20.786873,
+                        Longitude = -103.522932
+                    },
+                    Id = Guid.NewGuid()
+                }
+            }
+        };
 
         public Task<RouteVM> AddStop(Guid id, Guid stop)
         {
