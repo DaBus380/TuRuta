@@ -53,6 +53,7 @@ namespace TuRuta.Web.Controllers
             return BadRequest();
         }
 
+        [HttpGet("{id}")]
 		public async Task<BusInfoVM> Get(string id)
 		{
 			if (Guid.TryParse(id, out var ID))
