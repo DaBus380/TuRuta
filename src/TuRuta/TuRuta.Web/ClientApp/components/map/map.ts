@@ -18,6 +18,7 @@ export default class MapComponent extends Vue {
     map: any = null;
     city: string = '';
     markers: google.maps.Marker[] = [];
+    poly: any = null;
     busesTable: { [id:string] : google.maps.Marker } = {};
 
     // Properties
