@@ -5,6 +5,7 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminRouteComponent extends Vue {
 
+    marker: point = { latitude: 0, longitude: 0 };
     isStopPanelActive: boolean = false;
 
     // Methods
@@ -12,7 +13,8 @@ export default class AdminRouteComponent extends Vue {
         this.isStopPanelActive = !this.isStopPanelActive
     }
 
-    receivePosition(point:point) {
-        console.log(point);
+    receivePosition(point: point) {
+        // console.log(point);
+        this.marker = point
     }
 }

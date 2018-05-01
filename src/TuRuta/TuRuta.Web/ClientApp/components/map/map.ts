@@ -25,6 +25,7 @@ export default class MapComponent extends Vue {
     // Properties
     @Prop() stops?: stopVM[];
     @Prop() buses?: busVM[];
+    @Prop() isMarkerActive?: boolean;
 
     // Private props
     private listener = {
@@ -120,12 +121,14 @@ export default class MapComponent extends Vue {
     }
 
     addClickMarker(args: any){
-        if(this.stopMarker != undefined){
-            this.stopMarker.setMap(null);
+        if (this.$props.isMarkerActive) {
+            if(this.stopMarker != undefined){
+                this.stopMarker.setMap(null);
+            }
+            var latLon = args.latLng as google.maps.LatLng;
+            this.stopMarker = this.createMarker({latitude: latLon.lat(), longitude: latLon.lng()}, "", false);
+            this.$emit("addMarker", {latitude: latLon.lat(), longitude: latLon.lng()});
         }
-        var latLon = args.latLng as google.maps.LatLng;
-        this.stopMarker = this.createMarker({latitude: latLon.lat(), longitude: latLon.lng()}, "", false);
-        this.$emit("addMarker", {latitude: latLon.lat(), longitude: latLon.lng()});
     }
 
     

@@ -15,9 +15,9 @@
                         <p>Seleccione la ubicación de la parada en el mapa.</p>
                         <p><em>
                             <span>Coordenadas: </span>
-                            <span id="latitud">34.5</span>
+                            <span id="latitud">{{ stopLocation.latitude }}</span>
                             <span>,</span>
-                            <span id="longitud">40.5</span>
+                            <span id="longitud">{{ stopLocation.longitude }}</span>
                         </em></p>
                         <br><br>
                         <button v-if="isOptionalComponent" v-on:click="closeStopComponent">Cancelar</button>
