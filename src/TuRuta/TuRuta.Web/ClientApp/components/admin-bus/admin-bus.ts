@@ -5,4 +5,11 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminBusComponent extends Vue {
 
+    emptyBus: busVM = {
+        id: "",
+        licensePlate: "",
+        status: 0,
+        location: { latitude: 0, longitude: 0 },
+    }
+
 }

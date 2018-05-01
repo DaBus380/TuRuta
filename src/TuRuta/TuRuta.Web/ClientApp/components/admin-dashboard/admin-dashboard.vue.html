@@ -1,10 +1,53 @@
 <template>
     <div>
-        <div class="info-container first">
-            <admin-dashboard-info-component></admin-dashboard-info-component>
+        <!-- Stop Blade -->
+        <div class="info-container" v-bind:class="computedStopActive">
+            <admin-stop-info-component 
+                v-bind:stop="stopResult"
+                v-bind:isOptionalComponent="isStopCreateActive"
+                v-bind:isOptionalComponentEdit="isStopEditActive"
+                v-bind:stopLocation="marker"
+
+                @closeEdit="toggleStopInfoComponent(1)"
+                @close="toggleStopInfoComponent(2)">
+            </admin-stop-info-component>
         </div>
-        <div class="map-container big">
-            <map-component></map-component>
+
+        <!-- Route Blade -->
+        <div v-if="routeResult !== null" class="info-container" v-bind:class="{ 'second': isRouteEditActive, 'hide-container': !isRouteEditActive }">
+            <admin-route-info-component
+                v-bind:route="routeResult"
+                v-bind:isOptionalComponent="isRouteEditActive"
+                v-bind:isButtonActive="!isStopCreateActive"
+                
+                @close="toggleRouteInfoComponent"
+                @open="toggleStopInfoComponent(2)">
+            </admin-route-info-component>
+        </div>
+
+        <!-- Bus Blade -->
+        <div v-if="busResult !== null" class="info-container" v-bind:class="{ 'second': isBusEditActive, 'hide-container': !isBusEditActive }">
+            <admin-bus-info-component
+                v-bind:bus="busResult"
+                v-bind:isOptionalComponent="isBusEditActive"
+
+                @close="toggleBusInfoComponent">
+            </admin-bus-info-component>
+        </div>
+        
+        <!-- Dashboard Blade -->
+        <div class="info-container">
+            <admin-dashboard-info-component 
+                @resultEmitted="editResult">
+            </admin-dashboard-info-component>
+        </div>
+
+        <!-- Map -->
+        <div class="map-container" v-bind:class="computedEditActive">
+            <map-component 
+                v-bind:isMarkerActive="computedStop"
+                @addMarker="receivePosition">
+            </map-component>
         </div>
     </div>
 </template>

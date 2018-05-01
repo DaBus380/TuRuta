@@ -7,6 +7,13 @@ export default class AdminRouteComponent extends Vue {
 
     marker: point = { latitude: 0, longitude: 0 };
     isStopPanelActive: boolean = false;
+    emptyRoute: routeVM = {
+        id: "",
+        name: "",
+        buses: [],
+        stops: [],
+        incidents: [],
+    }
 
     // Methods
     toggleStopInfoComponent () {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="stop !== null">
         <div class="info-title">
             <h1>Parada</h1>
             <h2>Crear nueva parada</h2>
@@ -10,19 +10,39 @@
                     <h3 class="green">Información</h3> 
                     <div class="green">
                         <h4>Nombre</h4>
-                        <input type="text" placeholder="Ejemplo: La Minverva..."/><br>
+                        <input type="text" placeholder="Ejemplo: La Minverva..." v-model:name="stop.name" value="name"/><br>
                         <h4>Localización</h4>
                         <p>Seleccione la ubicación de la parada en el mapa.</p>
-                        <p><em>
+                        
+                        <p v-if="stopLocation.latitud !== 0 && stopLocation.longitude !== 0"><em>
                             <span>Coordenadas: </span>
                             <span id="latitud">{{ stopLocation.latitude }}</span>
                             <span>,</span>
                             <span id="longitud">{{ stopLocation.longitude }}</span>
                         </em></p>
+
+                        <p v-else><em>
+                            <span>Coordenadas: </span>
+                            <span id="latitud">{{ stop.location.latitude }}</span>
+                            <span>,</span>
+                            <span id="longitud">{{ stop.location.longitude }}</span>
+                        </em></p>
+                        
                         <br><br>
-                        <button v-if="isOptionalComponent" v-on:click="closeStopComponent">Cancelar</button>
-                        <router-link v-else to="/admin/dashboard"><button>Cancelar</button></router-link>
-                        <button>Crear parada</button>
+
+
+                        <div v-if="isOptionalComponent">
+                            <button v-on:click="closeStopComponent">Cancelar</button>
+                            <button>Crear parada</button>
+                        </div>
+                        <div v-else-if="isOptionalComponentEdit">
+                            <button v-on:click="closeStopEditComponent">Cancelar</button>
+                            <button>Editar parada</button>
+                        </div>
+                        <div v-else>
+                            <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                            <button>Crear parada</button>
+                        </div>
                     </div>
                 </div>
             </div>

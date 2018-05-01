@@ -81,10 +81,25 @@ span.title-red{
 }
 .search-container .search-results ul li{
     text-align: left;
-    padding: 2px 5px;
+    padding: 10px;
     border: 1px solid #e4e4e4;
     margin-top: -1px;
     font-weight: 200;
+}
+.search-container .search-results ul li span{
+    cursor: pointer;
+    color: #4d4d4d;
+}
+.search-container .search-results ul li button{
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    color: #d4145a;
+    font-weight: 600;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-size: 20px;
 }
 .main-header-container input:focus, textarea:focus {
     border: 0;

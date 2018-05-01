@@ -6,8 +6,14 @@ import RoutesClient from '../../clients/RoutesClient';
 export default class AdminRouteInfoComponent extends Vue {
 
     @Prop() isButtonActive?: boolean
+    @Prop() isOptionalComponent?: boolean
+    @Prop() route?: routeVM
 
-    openStopComponent(event: Event) {
+    openStopComponent() {
         this.$emit('open')
+    }
+
+    closeRouteComponent() {
+        this.$emit('close')
     }
 }

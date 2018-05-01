@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="route !== undefined">
         <div class="info-title">
             <h1>Ruta</h1>
             <h2>Crear nueva ruta</h2>
@@ -8,21 +8,34 @@
             <div class="form-content">
                 <h3 class="red">Información</h3> 
                 <div class="red">
+                    
                     <h4>Nombre</h4>
-                    <input type="text" placeholder="Ejemplo: 629..."/><br><br>
+                    <input type="text" placeholder="Ejemplo: 629..." v-model:name="route.name" value="name"/>
+                    <br><br>
+                    
+                    <h4>Ruta Actual</h4>
+                    <ol>
+                        <p v-if="route.stops.length < 1"><em>Ruta vacía</em></p>
+                        <li v-for="stop in route.stops">{{ stop.name }} <a>×</a></li>
+                    </ol>
+                    <br>
+                    
                     <h4>Paradas</h4>
                     <p>Crear nueva parada.</p>
-                    <button v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button><br><br>
-                    <p>Buscar parada existente.</p>
-                    <search-component findStops="true" placeholder="Ejemplo: La Minerva..."></search-component><br>
-                    <h4>Ruta</h4>
-                    <ol>
-                        <li>Tec de Monterrey <a>×</a></li>
-                        <li>Central de Camiones <a>×</a></li>
-                    </ol>
+                    <button v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button>
                     <br><br>
-                    <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
-                    <button>Crear ruta</button>
+                    <p>Buscar parada existente.</p>
+                    <search-component findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
+                    
+                    
+                    <div v-if="isOptionalComponent">
+                        <button v-on:click="closeRouteComponent">Cancelar</button>
+                        <button>Guardar ruta</button>
+                    </div>
+                    <div v-else>
+                        <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                        <button>Crear ruta</button>
+                    </div>
                 </div>
             </div>
         </div>
