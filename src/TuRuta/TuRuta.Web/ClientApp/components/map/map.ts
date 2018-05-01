@@ -15,11 +15,12 @@ export default class MapComponent extends Vue {
 
     // Data
     pubnub?: PubNub;
-    map: any = null;
+    map?: google.maps.Map = undefined;
     city: string = '';
     markers: google.maps.Marker[] = [];
     poly: any = null;
     busesTable: { [id:string] : google.maps.Marker } = {};
+    stopMarker?: google.maps.Marker;
 
     // Properties
     @Prop() stops?: stopVM[];
@@ -48,8 +49,10 @@ export default class MapComponent extends Vue {
     }
 
     beforeDestroy() {
-        this.pubnub!.unsubscribeAll();
-        this.pubnub!.removeListener(this.listener);
+        if(this.pubnub != undefined){
+            this.pubnub.unsubscribeAll();
+            this.pubnub.removeListener(this.listener);
+        }
     }
 
     // Methods
@@ -112,8 +115,20 @@ export default class MapComponent extends Vue {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(element, options);
+
+        this.map.addListener("click", this.addClickMarker)
     }
 
+    addClickMarker(args: any){
+        if(this.stopMarker != undefined){
+            this.stopMarker.setMap(null);
+        }
+        var latLon = args.latLng as google.maps.LatLng;
+        this.stopMarker = this.createMarker({latitude: latLon.lat(), longitude: latLon.lng()}, "", false);
+        this.$emit("addMarker", {latitude: latLon.lat(), longitude: latLon.lng()});
+    }
+
+    
     iniMarkers() {
         var newMarkers = new Array<google.maps.Marker>()
         if (this.stops != undefined && this.stops.length != 0) {
@@ -124,7 +139,7 @@ export default class MapComponent extends Vue {
             });
             this.markers = newMarkers;
             var centerPosition = Math.floor(this.markers.length / 2);
-            this.map.setCenter(this.markers[centerPosition].getPosition());
+            this.map!.setCenter(this.markers[centerPosition].getPosition());
         }
     }
 

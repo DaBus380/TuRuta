@@ -5,4 +5,8 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminStopComponent extends Vue {
 
+    receivePosition(){
+        console.log("holi");
+    }
+
 }
