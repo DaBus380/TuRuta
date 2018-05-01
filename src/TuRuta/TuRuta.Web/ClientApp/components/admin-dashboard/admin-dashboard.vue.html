@@ -3,7 +3,7 @@
         <!-- Stop Blade -->
         <div class="info-container" v-bind:class="computedStopActive">
             <admin-stop-info-component 
-                v-bind:stop="stopResult"
+                v-bind:stopDefault="stopResult"
                 v-bind:isOptionalComponent="isStopCreateActive"
                 v-bind:isOptionalComponentEdit="isStopEditActive"
 
@@ -15,7 +15,7 @@
         <!-- Route Blade -->
         <div v-if="routeResult !== null" class="info-container" v-bind:class="{ 'second': isRouteEditActive, 'hide-container': !isRouteEditActive }">
             <admin-route-info-component
-                v-bind:route="routeResult"
+                v-bind:routeDefault="routeResult"
                 v-bind:isOptionalComponent="isRouteEditActive"
                 v-bind:isButtonActive="!isStopCreateActive"
                 

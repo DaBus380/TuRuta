@@ -10,7 +10,11 @@
                     <h3 class="green">Información</h3> 
                     <div class="green">
                         <h4>Nombre</h4>
-                        <input type="text" placeholder="Ejemplo: La Minverva..." v-model:name="stop.name" value="name"/><br>
+
+                        <input 
+                            v-model="stop.name" type="text"
+                            placeholder="Ejemplo: La Minverva..."/>
+                        <br>
                         <h4>Localización</h4>
                         <p>Seleccione la ubicación de la parada en el mapa.</p>
                         
@@ -33,7 +37,7 @@
                         </div>
                         <div v-else>
                             <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
-                            <button>Crear parada</button>
+                            <button v-bind:class="computedStopReady" v-on:click="createStop">Crear parada</button>
                         </div>
                     </div>
                 </div>

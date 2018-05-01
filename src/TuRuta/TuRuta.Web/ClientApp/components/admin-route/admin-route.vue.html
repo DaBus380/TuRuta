@@ -2,7 +2,7 @@
     <div>
         <div class="info-container">
             <admin-stop-info-component 
-                v-bind:stopLocation="marker"
+                v-bind:stopDefault="stopDefault"
                 v-bind:isOptionalComponent="true"
                 v-bind:isOptionalComponentEdit="false"
                 @close="toggleStopInfoComponent">
@@ -10,7 +10,7 @@
         </div>
         <div class="info-container first">
             <admin-route-info-component 
-                v-bind:route="emptyRoute"
+                v-bind:routeDefault="routeDefault"
                 v-bind:isButtonActive="!isStopPanelActive"
                 @open="toggleStopInfoComponent">
             </admin-route-info-component>

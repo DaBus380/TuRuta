@@ -10,7 +10,9 @@
                 <div class="red">
                     
                     <h4>Nombre</h4>
-                    <input type="text" placeholder="Ejemplo: 629..." v-model:name="route.name" value="name"/>
+                    <input 
+                        v-model.trim="route.name" type="text"
+                        placeholder="Ejemplo: 629..."/>
                     <br><br>
                     
                     <h4>Ruta Actual</h4>

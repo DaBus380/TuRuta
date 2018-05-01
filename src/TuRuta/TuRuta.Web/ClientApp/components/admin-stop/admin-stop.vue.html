@@ -3,13 +3,15 @@
         <div>
             <div class="info-container first">
                 <admin-stop-info-component 
-                    v-bind:stop="emptyStop"
-                    v-bind:stopLocation="marker"
+                    v-bind:stopDefault="stopDefault"
                     v-bind:isOptionalComponent="false">
                 </admin-stop-info-component>
             </div>
             <div class="map-container big">
-                <map-component v-bind:isMarkerActive="true" @addMarker="receivePosition"></map-component>
+                <map-component 
+                    v-bind:isMarkerActive="true"
+                    @addMarker="receivePosition">
+                </map-component>
             </div>
         </div>
     </div>

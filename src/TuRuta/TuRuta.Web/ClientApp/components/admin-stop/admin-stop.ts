@@ -5,16 +5,14 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminStopComponent extends Vue {
 
-    marker: point = { latitude: 0, longitude: 0 };
-    emptyStop: stopVM = {
+    stopDefault: stopVM = {
         name: "",
         id: "",
-        location: this.marker
+        location: { latitude: 0, longitude: 0 }
     }
 
     receivePosition(point: point) {
-        // console.log(point);
-        this.marker = point
+        this.stopDefault.location = point
     }
 
 }

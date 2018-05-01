@@ -7,7 +7,21 @@ export default class AdminRouteInfoComponent extends Vue {
 
     @Prop() isButtonActive?: boolean
     @Prop() isOptionalComponent?: boolean
-    @Prop() route?: routeVM
+    @Prop() routeDefault?: routeVM
+   
+    routesClient = new RoutesClient();
+    route?: routeVM = this.routeDefault;
+
+    createRoute(){
+        
+    }
+
+    setRouteStops(name: string) {
+        if (this.route != undefined) {
+            console.log("NAME: ", name)
+            this.route.name = name
+        }
+    }
 
     openStopComponent() {
         this.$emit('open')
@@ -15,5 +29,7 @@ export default class AdminRouteInfoComponent extends Vue {
 
     closeRouteComponent() {
         this.$emit('close')
+
+        // this.routesClient.
     }
 }

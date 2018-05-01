@@ -50,6 +50,19 @@ span.title-green{
 span.title-red{
     color: #d4145a;
 }
+button.disabled {
+    color: #b3b3b3 !important;
+    border: 1px solid #b3b3b3 !important;  
+    background-color: #fff !important; 
+    cursor: default !important;
+}
+button.disabled:hover {
+    color: #b3b3b3 !important;
+    border: 1px solid #b3b3b3 !important;  
+    background-color: #fff !important; 
+    cursor: default !important;
+}
+
 
 .search-container {
     position: relative;

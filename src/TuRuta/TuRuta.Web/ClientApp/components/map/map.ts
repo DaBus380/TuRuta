@@ -129,9 +129,6 @@ export default class MapComponent extends Vue {
     }
 
     addClickMarker(args: any){
-
-        console.log("MAPS isActive? ", this.isMarkerActive);
-
         if (this.$props.isMarkerActive) {
             if(this.stopMarker != undefined){
                 this.stopMarker.setMap(null);

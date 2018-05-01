@@ -5,14 +5,18 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminRouteComponent extends Vue {
 
-    marker: point = { latitude: 0, longitude: 0 };
     isStopPanelActive: boolean = false;
-    emptyRoute: routeVM = {
+    routeDefault: routeVM = {
         id: "",
         name: "",
         buses: [],
         stops: [],
         incidents: [],
+    }
+    stopDefault: stopVM = {
+        name: "",
+        id: "",
+        location: { latitude: 0, longitude: 0 }
     }
 
     // Methods
@@ -21,7 +25,6 @@ export default class AdminRouteComponent extends Vue {
     }
 
     receivePosition(point: point) {
-        // console.log(point);
-        this.marker = point
+        this.stopDefault.location = point
     }
 }
