@@ -86,11 +86,19 @@ export default class SearchComponent extends Vue {
 
     onResultClicked(result: any){
         this.searchResults = [];
-        this.$emit("resultClicked", result);
+        if (this.hasAuth) {
+            this.$emit("resultClicked", result);
+        }
+        else {
+            if (result.type == 1) {
+                this.getRoute(result.name);
+            }
+        }
+
     }
 
-    getRoute(input: string) {
-        var path = input.toLowerCase().replace(/ /g,"-");
+    getRoute(route: string) {
+        var path = route.toLowerCase().replace(/ /g,"-");
         this.$router.push("route/" + path)
     }
 }

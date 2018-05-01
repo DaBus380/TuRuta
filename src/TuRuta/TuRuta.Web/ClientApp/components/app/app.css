@@ -116,13 +116,6 @@ span.title-red{
     color: #b3b3b3;
     font-style: italic;
 }
-.title-container .search-container h1{
-    font-size: 40px;
-    margin-bottom: 20px;
-}
-.title-container .search-container p a{
-    font-weight: 600;
-}
 .info-container {
     position: absolute;
     background-color: #fff;
@@ -185,33 +178,6 @@ span.title-red{
     height: 100%;
     position: relative;
     overflow: hidden;
-}
-.title-container {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    min-height: 80px;
-    padding: 10px 0;
-    text-align: center;
-    background-color: #fff;
-    box-shadow: 0 -5px 15px 10px rgba(0,0,0,0.1);
-}
-.title-container .search-container {
-    width: 100%;
-}
-.title-container .search-container h2 {
-    display: inline-block;
-}
-.title-container .search-container input{
-    width: 270px;
-    height: 30px;
-    font-size: 25px;
-    text-align: left;
-    margin-left: 5px;
-    padding-left: 3px;
 }
 .form-content div{
     margin: 3rem 0 0;
