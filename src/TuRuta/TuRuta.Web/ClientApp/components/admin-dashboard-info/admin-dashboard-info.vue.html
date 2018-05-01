@@ -1,5 +1,28 @@
 <template>
     <div>
+        <div class="info-title">
+            <h1>¡Bienvenido!</h1>
+            <h2>Administrador</h2>
+        </div>
+        <div class="info-content">
+            <div class="dashboard-options">
+                <div class="red">
+                    <h3>Rutas</h3>
+                    <input type="text" placeholder="Buscar ruta para editarla o borrarla..."/>
+                    <a href="./admin/route/create">Agregar una ruta ›</a>
+                </div>
+                <div class="green">
+                    <h3>Paradas</h3>
+                    <input type="text" placeholder="Buscar parada para editarla o borrarla..."/>
+                    <a href="./admin/stop/create">Agregar un parada ›</a>
+                </div>
+                <div class="blue">
+                    <h3>Camiones</h3>
+                    <input type="text" placeholder="Buscar camión para editarlo o borrarlo..."/>
+                    <a href="./admin/bus/create">Agregar un camión ›</a>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style src="./admin-dashboard-info.css"/>

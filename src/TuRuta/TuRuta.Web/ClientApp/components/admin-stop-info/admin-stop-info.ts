@@ -5,4 +5,9 @@ import RoutesClient from '../../clients/RoutesClient';
 @Component
 export default class AdminStopInfoComponent extends Vue {
 
+    @Prop() isOptionalComponent?: boolean;
+    
+    closeStopComponent(){
+        this.$emit('close')
+    }
 }

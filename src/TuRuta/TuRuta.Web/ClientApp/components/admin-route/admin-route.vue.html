@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="info-container" v-bind:class="{ 'second': isStopPanelActive, 'hide-container': !isStopPanelActive }">
+            <admin-stop-info-component v-bind:isOptionalComponent="true" @close="toggleStopInfoComponent"></admin-stop-info-component>
+        </div>
+        <div class="info-container first">
+            <admin-route-info-component v-bind:isButtonActive="!isStopPanelActive" @open="toggleStopInfoComponent"></admin-route-info-component>
+        </div>
+        <div class="map-container" v-bind:class="{ 'medium': isStopPanelActive, 'big': !isStopPanelActive }">
+            <map-component></map-component>
+        </div>
     </div>
 </template>
 <style src="./admin-route.css"/>

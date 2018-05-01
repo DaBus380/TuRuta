@@ -1,5 +1,31 @@
 <template>
     <div>
+        <div class="info-title">
+            <h1>Ruta</h1>
+            <h2>Crear nueva ruta</h2>
+        </div>
+        <div class="info-content">
+            <div class="form-content">
+                <h3 class="red">Información</h3> 
+                <div class="red">
+                    <h4>Nombre</h4>
+                    <input type="text" placeholder="Ejemplo: 629..."/><br><br>
+                    <h4>Paradas</h4>
+                    <p>Crear nueva parada.</p>
+                    <button v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button><br><br>
+                    <p>Buscar parada existente.</p>
+                    <input type="text" placeholder="Ejemplo: 629..."/><br><br>
+                    <h4>Ruta</h4>
+                    <ol>
+                        <li>Tec de Monterrey <a>×</a></li>
+                        <li>Central de Camiones <a>×</a></li>
+                    </ol>
+                    <br><br>
+                    <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                    <button>Crear ruta</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style src="./admin-route-info.css"/>

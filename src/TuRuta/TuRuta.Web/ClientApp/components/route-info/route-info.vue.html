@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="route-name">
+        <div class="info-title">
             <h1>{{ name }}</h1>
             <h2>Guadalajara</h2>
         </div>
-        <ul class="route-stops">
+        <ul class="info-content">
             <li  v-for="(stop, index) in stops" class="station-current">
                 {{ stop.name }}
                 <p v-if="index < (stops.length - 1)" class="trace-pipe">|</p>

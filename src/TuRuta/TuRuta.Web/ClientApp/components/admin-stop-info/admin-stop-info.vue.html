@@ -1,5 +1,32 @@
 <template>
     <div>
+        <div class="info-title">
+            <h1>Parada</h1>
+            <h2>Crear nueva parada</h2>
+        </div>
+        <div>
+            <div class="info-content">
+                <div class="form-content">
+                    <h3 class="green">Información</h3> 
+                    <div class="green">
+                        <h4>Nombre</h4>
+                        <input type="text" placeholder="Ejemplo: La Minverva..."/><br>
+                        <h4>Localización</h4>
+                        <p>Seleccione la ubicación de la parada en el mapa.</p>
+                        <p><em>
+                            <span>Coordenadas: </span>
+                            <span id="latitud">34.5</span>
+                            <span>,</span>
+                            <span id="longitud">40.5</span>
+                        </em></p>
+                        <br><br>
+                        <button v-if="isOptionalComponent" v-on:click="closeStopComponent">Cancelar</button>
+                        <router-link v-else to="/admin/dashboard"><button>Cancelar</button></router-link>
+                        <button>Crear parada</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style src="./admin-stop-info.css"/>
