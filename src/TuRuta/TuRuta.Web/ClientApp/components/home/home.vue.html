@@ -4,7 +4,7 @@
             <div class="home-header-image"></div>
         </div>
         <div class="home-container simple-container">
-            <search-component placeholder="Ejemplo: 629 B">
+            <search-component findRoutes="true" findStops="true" placeholder="Ejemplo: 629 B, La Minerva">
                 <template slot="title">
                         <h1>¿Qué <span class="title-green">ruta</span> o <span class="title-red">parada</span> estás buscando?</h1>
                 </template>
@@ -12,10 +12,6 @@
                         <p>¿No encuentras la ruta que necesitas? <a href="/routes">Ve el mapa de rutas.</a></p>
                 </template>
             </search-component>
-            
-            <!--
-            <input v-model.trim="search_input" v-on:keyup.enter="search(search_input)" type="text" placeholder="Ejemplo: 629 B">
-            -->
         </div>
     </div>
 </template>

@@ -2,12 +2,16 @@
     <div class="search-container">
         <slot name="title"></slot>
         <input
-            v-model.trim="search_input"
-            v-on:keyup.enter="search(search_input)"
-            v-on:keyup=""
-            placeholder="629 B, por ejemplo..."
+            v-model.trim="searchInput"
+            v-on:keyup="search(searchInput)"
+            v-bind:placeholder="placeholder"
             type="text"
         >
+        <div class="search-results">
+            <ul>
+                <li v-for="result in searchResults"><b>{{ result.type }}</b> {{ result.name }}</li>
+            </ul>
+        </div>
         <slot name="content"></slot>
     </div>
 </template>

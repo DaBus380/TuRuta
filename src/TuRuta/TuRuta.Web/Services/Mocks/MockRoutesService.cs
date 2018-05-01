@@ -11,7 +11,9 @@ namespace TuRuta.Web.Services.Mocks
     public class MockRoutesService : IRoutesService
     {
         private RouteVM MockRoute { get; } = new RouteVM() 
-        {
+        {   
+            Name = "629",
+
             Stops = new List<StopVM>()
             {
                 new StopVM 

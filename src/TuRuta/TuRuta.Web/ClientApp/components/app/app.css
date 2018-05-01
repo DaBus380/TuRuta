@@ -52,11 +52,8 @@ span.title-red{
 }
 
 .search-container {
+    position: relative;
     text-align: center;
-}
-.search-container h1{
-    font-size: 40px;
-    margin-bottom: 20px;
 }
 .search-container p {
     font-size: 18px;
@@ -64,15 +61,30 @@ span.title-red{
     position: absolute;
     left: 0; bottom: 0; right: 0;
 }
-.search-container p a{
-    font-weight: 600;
-}
 .search-container input{
     font-weight: 100;
     text-align: center;
     border: 0;
     border-bottom: 1px solid #4d4d4d;
     outline: none;
+}
+.search-container .search-results {
+    position: absolute;
+    top: 25px;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+.search-container .search-results ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.search-container .search-results ul li{
+    text-align: left;
+    padding: 2px 5px;
+    border: 1px solid #e4e4e4;
+    margin-top: -1px;
+    font-weight: 200;
 }
 .main-header-container input:focus, textarea:focus {
     border: 0;
@@ -88,6 +100,13 @@ span.title-red{
 .search-container input::-ms-input-placeholder {
     color: #b3b3b3;
     font-style: italic;
+}
+.title-container .search-container h1{
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+.title-container .search-container p a{
+    font-weight: 600;
 }
 .info-container {
     position: absolute;
@@ -179,63 +198,14 @@ span.title-red{
     margin-left: 5px;
     padding-left: 3px;
 }
-.dashboard-options div{
-    margin: 3rem 0 6rem;
-}
-.dashboard-options ol { 
-    counter-reset: item;
-    list-style-type: none;
-    padding-left: 0;
-}
-.dashboard-options p {
-    font-weight: 200;
-}
-.dashboard-options span {
-    color: #b3b3b3;
-}
-.dashboard-optionsli { 
-    display: block;
-    width: 100%;
-    line-height: 2.5rem;
-    font-weight: 200;
-}
-.dashboard-options li a {
-    position: absolute;
-    right: 100px;
-    font-weight: 600;
-}
-.dashboard-options input {
-    width: 100%;
-    margin-bottom: 10px;
-    border: 0;
-    border-bottom: 1px solid #e4e4e4;
-    outline: none;
-    font-weight: 100;
-    letter-spacing: 0.4px;
-}
-.dashboard-options input:focus, textarea:focus {
-    border-top: 0;
-    border-left: 0;
-    border-right: 0;
-}
-.dashboard-options input::placeholder {
-    color: #b3b3b3;
-    font-style: italic;
-}
-.dashboard-options input:-ms-input-placeholder {
-    color: #b3b3b3;
-    font-style: italic;
-}
-.dashboard-options input::-ms-input-placeholder {
-    color: #b3b3b3;
-    font-style: italic;
-}
-.dashboard-options a{
-    font-weight: 200;
-    cursor: pointer;
-}
 .form-content div{
     margin: 3rem 0 0;
+}
+.form-content .search-container{
+    margin: 0;
+}
+.form-content .search-container input{
+    text-align: left;
 }
 .form-content ol { 
     counter-reset: item;
