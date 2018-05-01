@@ -1,6 +1,26 @@
 <template>
     <div>
-        <h1>ADMIN BUS</h1>
+        <div class="info-title">
+            <h1>Camión</h1>
+            <h2>Crear nueva camión</h2>
+        </div>
+        <div>
+            <div class="info-content">
+                <div class="form-content">
+                    <h3 class="blue">Información</h3>
+                    <div class="blue">
+                        <h4>Placas</h4>
+                        <input type="text" placeholder="Ejemplo: 721-463-G..."/><br>
+                        <h4>Ruta</h4>
+                        <p>Seleccione la ruta a la que pertenece el camión.</p>
+                        <input type="text" placeholder="Ejemplo: 629..."/><br>
+                        <br><br>
+                        <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                        <button>Añadir camión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style src="./admin-bus-info.css"/>

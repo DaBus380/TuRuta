@@ -23,7 +23,6 @@
 }
 .main-nav .navbar a{
     height: 100%;
-    float: left;
     height: 60px;
     padding: 20px 0;
     font-size: 14px;
@@ -32,6 +31,14 @@
     text-transform: lowercase;
     letter-spacing: 3px;
     font-weight: 200;
+}
+.main-nav .navbar a.navbar-brand {
+    float: left;
+    text-align: left;
+}
+.main-nav .navbar a {
+    float: right;
+    text-align: right;
 }
 .main-nav .navbar-header {
     float: none;
