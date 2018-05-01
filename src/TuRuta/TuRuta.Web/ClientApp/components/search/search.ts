@@ -84,6 +84,24 @@ export default class SearchComponent extends Vue {
         }
     }
 
+    getResultType(result: number){
+        let type = ""
+        switch (result) {
+            case 1:
+                type = "Ruta";
+                break;
+            case 2:
+                type = "Parada";
+                break;
+            case 3:
+                type = "Camión";
+                break;
+            default:
+                break;
+        }
+        return type
+    }
+
     onResultClicked(result: any){
         this.searchResults = [];
         if (this.hasAuth) {
