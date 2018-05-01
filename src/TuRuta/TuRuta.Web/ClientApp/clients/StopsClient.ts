@@ -20,12 +20,19 @@
     }
 
     async Create(stop: stopVM) {
+        var newStop: stopVM = {
+            id: "00000000-0000-0000-0000-000000000000",
+            name: stop.name,
+            location: stop.location
+        };
+        console.log(JSON.stringify(newStop));
+
         var response = await fetch("api/stops", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(stop)
+            body: JSON.stringify(newStop)
         });
         if (response.ok) {
             var json = await response.json();
