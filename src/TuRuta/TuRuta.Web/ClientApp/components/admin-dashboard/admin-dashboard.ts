@@ -19,13 +19,11 @@ export default class AdminDashboardComponent extends Vue {
     busResult: any = null
     busesClient: BusesClient = new BusesClient()
 
-    marker: point = { latitude: 0, longitude: 0 }
-    emptyStop: stopVM = {
+    stopResult: stopVM = {
         name: "",
         id: "",
-        location: this.marker
+        location: { latitude: 0, longitude: 0 }
     }
-    stopResult: stopVM = this.emptyStop
     stopsClient: StopsClient = new StopsClient()
 
 
@@ -45,9 +43,7 @@ export default class AdminDashboardComponent extends Vue {
         }
     }
 
-    get computedStop() {
-        return (this.isStopEditActive || this.isStopCreateActive);
-    }
+    get computedStop() { return (this.isRouteEditActive || this.isBusEditActive || this.isStopEditActive || this.isStopCreateActive) }
 
     
     editResult(result: any){
@@ -80,7 +76,11 @@ export default class AdminDashboardComponent extends Vue {
             this.isStopEditActive = !this.isStopEditActive;
         }
         else if (blade == 2) {
-            this.stopResult = this.emptyStop
+            this.stopResult = {
+                name: "",
+                id: "",
+                location: { latitude: 0, longitude: 0 }
+            }
             this.isStopCreateActive = !this.isStopCreateActive;
         }
     }
@@ -115,7 +115,6 @@ export default class AdminDashboardComponent extends Vue {
         return new Promise<any>((resolved, rejected) =>{
             let promise = this.stopsClient.GetByName(name)
                 .then( stop => {
-                    console.log(stop);
                     if (stop != null) {
                         this.stopResult = stop;
                     }
@@ -125,7 +124,7 @@ export default class AdminDashboardComponent extends Vue {
     }
 
     receivePosition(point: point) {
-        this.marker = point
+        this.stopResult.location = point
     }
 
 }

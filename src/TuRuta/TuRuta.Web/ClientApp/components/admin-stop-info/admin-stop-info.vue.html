@@ -14,20 +14,12 @@
                         <h4>Localización</h4>
                         <p>Seleccione la ubicación de la parada en el mapa.</p>
                         
-                        <p v-if="stopLocation.latitud !== 0 && stopLocation.longitude !== 0"><em>
-                            <span>Coordenadas: </span>
-                            <span id="latitud">{{ stopLocation.latitude }}</span>
-                            <span>,</span>
-                            <span id="longitud">{{ stopLocation.longitude }}</span>
-                        </em></p>
-
-                        <p v-else><em>
+                        <p><em>
                             <span>Coordenadas: </span>
                             <span id="latitud">{{ stop.location.latitude }}</span>
                             <span>,</span>
                             <span id="longitud">{{ stop.location.longitude }}</span>
                         </em></p>
-                        
                         <br><br>
 
 

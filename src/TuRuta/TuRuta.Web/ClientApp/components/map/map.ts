@@ -1,5 +1,5 @@
 ﻿import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch} from 'vue-property-decorator'
 import { } from "@types/googlemaps"
 import PubNub from 'pubnub';
 
@@ -27,6 +27,13 @@ export default class MapComponent extends Vue {
     @Prop() buses?: busVM[];
     @Prop() isMarkerActive?: boolean;
 
+    @Watch('isMarkerActive')
+    onIsMarkerActiveChanged(val: boolean, oldVal: boolean) { 
+        if (!val && this.stopMarker != undefined) {
+            this.stopMarker.setMap(null)
+        }
+    }
+
     // Private props
     private listener = {
         status: function (statusEvent: any) {
@@ -37,11 +44,12 @@ export default class MapComponent extends Vue {
         message: this.messageReceived
     }
 
+
     // Lifecycle
     mounted() {
         this.initMap()
         if(this.stops != undefined && this.stops.length != 0) {
-            this.iniMarkers()
+            this.initMarkers()
         }
 
         if (this.buses != undefined && this.buses.length != 0) {
@@ -103,7 +111,7 @@ export default class MapComponent extends Vue {
                 scale: 10
             });
         }
-
+    
         return marker;
     }
 
@@ -121,6 +129,9 @@ export default class MapComponent extends Vue {
     }
 
     addClickMarker(args: any){
+
+        console.log("MAPS isActive? ", this.isMarkerActive);
+
         if (this.$props.isMarkerActive) {
             if(this.stopMarker != undefined){
                 this.stopMarker.setMap(null);
@@ -132,7 +143,7 @@ export default class MapComponent extends Vue {
     }
 
     
-    iniMarkers() {
+    initMarkers() {
         var newMarkers = new Array<google.maps.Marker>()
         if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
@@ -145,6 +156,7 @@ export default class MapComponent extends Vue {
             this.map!.setCenter(this.markers[centerPosition].getPosition());
         }
     }
+
 
     fetchPubNub() {
         return new Promise((resolve, error) => fetch('/api/config/pubnub')
