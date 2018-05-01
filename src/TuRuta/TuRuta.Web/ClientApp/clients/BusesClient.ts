@@ -28,4 +28,14 @@
         var response = await fetch('api/buses/setplates/' + busId + '/' + plates);
         return response.ok;
     }
+
+    async GetBusInfo(busId: string) {
+        var response = await fetch('api/buses/' + busId);
+        if (response.ok) {
+            var json = await response.json();
+            return json as busInfoVM;
+        }
+
+        return null;
+    }
 }

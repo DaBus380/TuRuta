@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web.Controllers
@@ -51,5 +52,15 @@ namespace TuRuta.Web.Controllers
 
             return BadRequest();
         }
+
+        [HttpGet("{id}")]
+		public async Task<BusInfoVM> Get(string id)
+		{
+			if (Guid.TryParse(id, out var ID))
+			{
+				return await _busService.GetBus(ID);
+			}
+			return null;
+		}
     }
 }

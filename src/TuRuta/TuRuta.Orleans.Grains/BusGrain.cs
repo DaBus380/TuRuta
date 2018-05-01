@@ -29,7 +29,9 @@ namespace TuRuta.Orleans.Grains
         private IAsyncStream<BusRouteUpdate> RouteStream;
         private Queue<RouteBusUpdate> notSentUpdates = new Queue<RouteBusUpdate>();
         private IDistanceCalculator _distanceCalculator;
-        private IEnumerable<Stop> Paradas;
+        private Queue<Stop> Paradas;
+        private Stop PreviewsStop;
+        private Stop CurrentStop;
         private Stop NextStop;
         private IConfigClient _configClient;
 
@@ -48,7 +50,17 @@ namespace TuRuta.Orleans.Grains
             _clientUpdate = new PubNubClientUpdate(config.SubKey, config.PubKey);
 
             var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-            Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop()).ToList() ?? new List<Stop>();
+
+            var stops = (await routeGrain.Stops()).Select(stop => stop.ToStop()) ?? new List<Stop>();
+
+            Paradas = new Queue<Stop>(stops);
+
+            if(Paradas.Count != 0)
+            {
+                CurrentStop = Paradas.Dequeue();
+                NextStop = Paradas.Dequeue();
+            }
+
 
             await GetStreams();
 
@@ -92,7 +104,14 @@ namespace TuRuta.Orleans.Grains
             if(Paradas.Count() == 0 && State.RouteId != Guid.Empty)
             {
                 var routeGrain = GrainFactory.GetGrain<IRouteGrain>(State.RouteId);
-                Paradas = (await routeGrain.Stops()).Select(stop => stop.ToStop());
+                var stops = (await routeGrain.Stops()).Select(stop => stop.ToStop());
+                Paradas = new Queue<Stop>(stops);
+
+                if (Paradas.Count != 0)
+                {
+                    CurrentStop = Paradas.Dequeue();
+                    NextStop = Paradas.Dequeue();
+                }
             }
 
             NextStop = GetClosest(message);
@@ -124,6 +143,17 @@ namespace TuRuta.Orleans.Grains
             }
 
             await WriteStateAsync();
+        }
+
+        private void UpdateStops(Point location)
+        {
+            var distance = _distanceCalculator.GetDistance(CurrentStop.Location, location);
+            if(distance < 20)
+            {
+                PreviewsStop = CurrentStop;
+                CurrentStop = NextStop;
+                NextStop = Paradas.Dequeue();
+            }
         }
 
         public Task OnNextAsync(RouteBusUpdate item, StreamSequenceToken token = null)
@@ -163,8 +193,16 @@ namespace TuRuta.Orleans.Grains
 
         private void OnPubnubError(PubnubClientError error)
         {
+            //=> _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
             return;
         }
-            //=> _logger.LogCritical($"Pubnub Error on channel {error.Channel}: {error.Description}"); 
+
+        public Task<BusInfoVM> GetInfo()
+            => Task.FromResult(new BusInfoVM
+            {
+                CurrentStop = CurrentStop.Name,
+                NextStop = NextStop.Name,
+                PreviewsStop = PreviewsStop.Name
+            });
     }
 }

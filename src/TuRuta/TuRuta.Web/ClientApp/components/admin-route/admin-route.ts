@@ -11,4 +11,8 @@ export default class AdminRouteComponent extends Vue {
     toggleStopInfoComponent () {
         this.isStopPanelActive = !this.isStopPanelActive
     }
+
+    receivePosition(point:point) {
+        console.log(point);
+    }
 }

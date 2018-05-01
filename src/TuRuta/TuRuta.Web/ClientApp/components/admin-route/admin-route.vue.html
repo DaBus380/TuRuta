@@ -7,7 +7,7 @@
             <admin-route-info-component v-bind:isButtonActive="!isStopPanelActive" @open="toggleStopInfoComponent"></admin-route-info-component>
         </div>
         <div class="map-container" v-bind:class="{ 'medium': isStopPanelActive, 'big': !isStopPanelActive }">
-            <map-component></map-component>
+            <map-component @addMarker="receivePosition"></map-component>
         </div>
     </div>
 </template>

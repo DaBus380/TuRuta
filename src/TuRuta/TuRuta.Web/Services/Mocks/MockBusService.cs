@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
 
 namespace TuRuta.Web.Services.Mocks
@@ -15,6 +15,13 @@ namespace TuRuta.Web.Services.Mocks
         };
 
         public Task<List<string>> FindBusByPlates(string plates) => Task.FromResult(Lists);
+        public Task<BusInfoVM> GetBus(Guid Id)
+            => Task.FromResult(new BusInfoVM
+            {
+                PreviewsStop = "nigga stop",
+                NextStop = "white stop",
+                CurrentStop = "yellow stop"
+            });
         public Task<List<string>> GetNoConfiguredBuses() => Task.FromResult(Lists);
         public Task<List<string>> GetNoConfiguredPlates() => Task.FromResult(Lists);
         
