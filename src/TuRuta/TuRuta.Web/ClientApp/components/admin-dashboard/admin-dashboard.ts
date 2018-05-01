@@ -19,27 +19,25 @@ export default class AdminDashboardComponent extends Vue {
     busResult: any = null
     busesClient: BusesClient = new BusesClient()
 
-    stopResult: stopVM = {
-        name: "",
-        id: "",
-        location: { latitude: 0, longitude: 0 }
-    }
+    stopResult: any = null
     stopsClient: StopsClient = new StopsClient()
+
+    bladeCounter: number = 1
 
 
     get computedEditActive() {
         return {
-            'big': ( (!this.isRouteEditActive || !this.isStopEditActive || !this.isBusEditActive) && !this.isStopCreateActive ),
-            'medium': ( (this.isRouteEditActive || this.isStopEditActive || this.isBusEditActive) && !this.isStopCreateActive ),
-            'small': this.isStopCreateActive
+            'big': this.bladeCounter == 1,
+            'medium': this.bladeCounter == 2,
+            'small': this.bladeCounter == 3
         }
     }
 
     get computedStopActive(){
         return {
-            'second': this.isStopEditActive, 
-            'third': this.isStopCreateActive, 
-            'hide-container': !this.isStopEditActive && !this.isStopCreateActive
+            'second': this.bladeCounter == 2, 
+            'third': this.bladeCounter == 3, 
+            'hide-container':  this.bladeCounter < 2
         }
     }
 
@@ -66,28 +64,58 @@ export default class AdminDashboardComponent extends Vue {
     }
 
     toggleRouteInfoComponent(name: string){
-        this.getRoute(name);
-        this.isRouteEditActive = !this.isRouteEditActive;
+        this.getRoute(name).then(() => { 
+            this.isRouteEditActive = !this.isRouteEditActive; 
+            if (this.isRouteEditActive) {
+                this.bladeCounter++;
+            }
+            else {
+                this.bladeCounter--;
+            }
+        });
     }
 
     toggleStopInfoComponent(blade: number, name: string){
         if (blade == 1) {
-            this.getStop(name);
-            this.isStopEditActive = !this.isStopEditActive;
+            if (this.isStopEditActive) {
+                this.stopResult = null
+                this.isStopEditActive = false;
+                this.bladeCounter--;
+            }
+            else{
+                this.getStop(name).then(() => {
+                    this.isStopEditActive = true;
+                    this.bladeCounter++;
+                });
+            }
         }
-        else if (blade == 2) {
+        else {
             this.stopResult = {
                 name: "",
                 id: "",
                 location: { latitude: 0, longitude: 0 }
             }
-            this.isStopCreateActive = !this.isStopCreateActive;
+            if (this.isStopCreateActive) {
+                this.isStopCreateActive = false;
+                this.bladeCounter--;
+            }
+            else {
+                this.isStopCreateActive = true;
+                this.bladeCounter++;
+            }
         }
     }
 
     toggleBusInfoComponent(id: string){
-        this.getBus(id);
-        this.isBusEditActive = !this.isBusEditActive;
+        this.getBus(id).then(() => {
+            this.isBusEditActive = !this.isBusEditActive;
+            if (this.isBusEditActive) {
+                this.bladeCounter++;
+            }
+            else {
+                this.bladeCounter--;
+            }
+        });
     }
 
 

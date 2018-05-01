@@ -20,8 +20,27 @@ export default class AdminRouteComponent extends Vue {
     }
 
     // Methods
-    toggleStopInfoComponent () {
+    toggleStopInfoComponent (result: any) {
+        
         this.isStopPanelActive = !this.isStopPanelActive
+
+        if (result != undefined) {
+            this.routeDefault.stops.push(result)
+            let emptyStop = {
+                name: "",
+                id: "",
+                location: { latitude: 0, longitude: 0 }
+            }
+            this.stopDefault = emptyStop
+        }
+    }
+
+    cleanStopComponent (){
+        this.stopDefault = {
+            name: "",
+            id: "",
+            location: { latitude: 0, longitude: 0 }
+        }
     }
 
     receivePosition(point: point) {

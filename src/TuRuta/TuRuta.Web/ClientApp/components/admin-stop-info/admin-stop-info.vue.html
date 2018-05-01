@@ -29,11 +29,11 @@
 
                         <div v-if="isOptionalComponent">
                             <button v-on:click="closeStopComponent">Cancelar</button>
-                            <button>Crear parada</button>
+                            <button v-bind:class="computedStopReady" v-on:click="addStop">Crear parada</button>
                         </div>
                         <div v-else-if="isOptionalComponentEdit">
                             <button v-on:click="closeStopEditComponent">Cancelar</button>
-                            <button>Editar parada</button>
+                            <button v-bind:class="computedStopReady" v-on:click="saveStop">Guardar</button>
                         </div>
                         <div v-else>
                             <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>

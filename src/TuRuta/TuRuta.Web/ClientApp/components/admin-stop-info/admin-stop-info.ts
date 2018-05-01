@@ -24,11 +24,33 @@ export default class AdminStopInfoComponent extends Vue {
         }
     }
 
+    addStop() {
+        if (this.stop != undefined) {
+            if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
+                this.stopClient.Create(this.stop)
+                    .then( newStop => {
+                        this.$emit('close', newStop);
+                    })
+            }
+        }    
+    }
+
     createStop(){
         if (this.stop != undefined) {
             if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
-                console.log("Created Stop", this.stop);
-                this.stopClient.Create(this.stop);
+                this.stopClient.Create(this.stop)
+                    .then( () => {
+                        this.$emit('close');
+                    })
+            }
+        }
+    }
+
+    saveStop() {
+        if (this.stop != undefined) {
+            if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
+                // AQUI VA EL UPDATE
+                this.$emit('closeEdit')
             }
         }
     }
