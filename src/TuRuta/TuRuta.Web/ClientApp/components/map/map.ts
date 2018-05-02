@@ -15,12 +15,15 @@ export default class MapComponent extends Vue {
 
     // Data
     pubnub?: PubNub;
+    routeService = new google.maps.DirectionsService();
     map?: google.maps.Map = undefined;
     city: string = '';
     markers: google.maps.Marker[] = [];
     poly: any = null;
     busesTable: { [id:string] : google.maps.Marker } = {};
     stopMarker?: google.maps.Marker;
+    path = new google.maps.MVCArray()
+    polys = new Array<google.maps.Polyline>()
 
     // Properties
     @Prop() stops?: stopVM[];
@@ -141,13 +144,30 @@ export default class MapComponent extends Vue {
 
     
     initMarkers() {
+        this.polys.forEach(line => line.setMap(null));
+
+
         var newMarkers = new Array<google.maps.Marker>()
         if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
                 let marker = this.createMarker(stop.location, stop.name, false);
-
                 newMarkers.push(marker);
             });
+
+            for (var i = 0; i < this.stops.length - 1; i++) {
+                let origin = this.stops[i].location;
+                let destination = this.stops[i + 1].location;
+
+                let originLatLng = new google.maps.LatLng(origin.latitude, origin.longitude);
+                let destLatLng = new google.maps.LatLng(destination.latitude, destination.longitude);
+
+                this.routeService.route({ origin: originLatLng, destination: destLatLng, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
+                    let line = new google.maps.Polyline({ map: this.map });
+                    line.setPath(result.routes[0].overview_path);
+                    this.polys.push(line);
+                });
+            }
+
             this.markers = newMarkers;
             var centerPosition = Math.floor(this.markers.length / 2);
             this.map!.setCenter(this.markers[centerPosition].getPosition());
