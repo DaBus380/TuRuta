@@ -162,7 +162,12 @@ export default class MapComponent extends Vue {
                 let destLatLng = new google.maps.LatLng(destination.latitude, destination.longitude);
 
                 this.routeService.route({ origin: originLatLng, destination: destLatLng, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
-                    let line = new google.maps.Polyline({ map: this.map });
+                    let line = new google.maps.Polyline({ 
+                        map: this.map,
+                        strokeColor: '#00a99d',
+                        strokeOpacity: 0.5,
+                        strokeWeight: 8
+                    });
                     line.setPath(result.routes[0].overview_path);
                     this.polys.push(line);
                 });
