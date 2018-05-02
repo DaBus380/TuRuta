@@ -10,19 +10,21 @@
                     <h3 class="blue">Información</h3>
                     <div class="blue">
                         <h4>Placas</h4>
-                        <input type="text" placeholder="Ejemplo: 721-463-G..." v-model:plate="bus[0]" value="plate"/><br>
+                        <input 
+                            v-model.trim="bus.licensePlate" type="text"
+                            placeholder="Ejemplo: 721-463-G..."/><br>
                         <h4>Ruta</h4>
                         <p>Seleccione la ruta a la que pertenece el camión.</p>
-                        <search-component findBuses="true" placeholder="Ejemplo: 629..."></search-component><br>
+                        <search-component findRoutes="true" placeholder="Ejemplo: 629..."></search-component><br>
                         <br><br>
                         
                         <div v-if="isOptionalComponent">
                             <button v-on:click="closeBusComponent">Cancelar</button>
-                            <button>Guardar camión</button>
+                            <button v-bind:class="computedBusReady">Guardar camión</button>
                         </div>
                         <div v-else>
                             <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
-                            <button>Añadir camión</button>
+                            <button v-bind:class="computedBusReady" v-on:click="createBus">Añadir camión</button>
                         </div>
                     </div>
                 </div>

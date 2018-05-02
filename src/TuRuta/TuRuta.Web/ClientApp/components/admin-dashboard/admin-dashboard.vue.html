@@ -27,7 +27,7 @@
         <!-- Bus Blade -->
         <div v-if="busResult !== null" class="info-container" v-bind:class="{ 'second': isBusEditActive, 'hide-container': !isBusEditActive }">
             <admin-bus-info-component
-                v-bind:bus="busResult"
+                v-bind:busDefault="busResult"
                 v-bind:isOptionalComponent="isBusEditActive"
 
                 @close="toggleBusInfoComponent">

@@ -138,12 +138,20 @@ export default class AdminDashboardComponent extends Vue {
         });
     }
 
-    getBus(id: string){
+    getBus(plates: string){
         return new Promise<any>((resolved, rejected) =>{
-            let promise = this.busesClient.FindBus(id)
+            // plates is the id, for the moment
+            let promise = this.busesClient.FindBus(plates)
                 .then( bus => {
-                    this.busResult = bus;
-                });
+                    // Plates missing
+                    let newBus: busVM = {
+                        id: bus[0],
+                        licensePlate: bus[0],
+                        status: 0,
+                        location: { latitude: 0, longitude: 0}
+                    }
+                    this.busResult = newBus;
+                })
             return promise.then(() => resolved());
         });
     }
