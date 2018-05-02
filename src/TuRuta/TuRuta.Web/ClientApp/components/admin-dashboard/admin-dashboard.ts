@@ -128,6 +128,43 @@ export default class AdminDashboardComponent extends Vue {
     }
 
 
+    deleteResult(result: any){
+        switch (result.type) {
+            case 1:
+                this.deleteRoute(result.name)
+                break;
+            
+            case 2:
+                this.deleteStop(result.name)
+                break;
+            
+            case 3:
+                this.deleteBus(result.name)
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    deleteRoute(name: string){
+        if (confirm("¿Estás seguro de querer eliminar la ruta '" + name + "'?")) {
+            // this.routeClient.deleteRoute(name)
+        }
+    }
+
+    deleteStop(name: string){
+        if (confirm("¿Estás seguro de querer eliminar la parada '" + name + "'?")) {
+            // this.stopClient.deleteStop(name)
+        }
+    }
+
+    deleteBus(name: string){
+        if (confirm("¿Estás seguro de querer eliminar el camión con placas '" + name + "'?")) {
+            // this.busClient.deleteBus(name)
+        }
+    }
+
     getRoute(name: string) {
         return new Promise<any>((resolved, rejected) =>{
             let promise = this.routesClient.Get(name)

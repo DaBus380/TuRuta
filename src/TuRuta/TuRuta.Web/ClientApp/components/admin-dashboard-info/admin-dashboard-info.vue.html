@@ -9,19 +9,31 @@
                 <div class="dashboard-option red">
                     <h3>Rutas</h3>
                     <p>Editar/borrar existente:</p>
-                    <search-component @resultClicked="onResultEmitted" v-bind:hasAuth="true" findRoutes="true" placeholder="Ejemplo: 629..."></search-component>
+                    <search-component 
+                        @resultClicked="onResultEmitted" 
+                        @resultDelete="onDeleteEmitted"
+                        v-bind:hasAuth="true" 
+                        findRoutes="true" placeholder="Ejemplo: 629..."></search-component>
                     <a href="./admin/route/create">Agregar nueva ›</a>
                 </div>
                 <div class="dashboard-option green">
                     <h3>Paradas</h3>
                     <p>Editar/borrar existente: </p>
-                    <search-component @resultClicked="onResultEmitted" v-bind:hasAuth="true" findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
+                    <search-component 
+                        @resultClicked="onResultEmitted"
+                        @resultDelete="onDeleteEmitted"
+                        v-bind:hasAuth="true"
+                        findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
                     <a href="./admin/stop/create">Agregar nueva ›</a>
                 </div>
                 <div class="dashboard-option blue">
                     <h3>Camiones</h3>
                     <p>Editar/borrar existente:</p>
-                    <search-component @resultClicked="onResultEmitted" v-bind:hasAuth="true" findBuses="true" placeholder="Ejemplo: 721-463-G..."></search-component>
+                    <search-component 
+                        @resultClicked="onResultEmitted" 
+                        @resultDelete="onDeleteEmitted"
+                        v-bind:hasAuth="true" 
+                        findBuses="true" placeholder="Ejemplo: 721-463-G..."></search-component>
                     <a href="./admin/bus/create">Agregar nuevo ›</a>
                 </div>
             </div>

@@ -11,7 +11,7 @@
             <ul>
                 <li v-for="result in searchResults">
                     <span v-on:click="onResultClicked(result)"><b>{{ getResultType(result.type) }}</b> {{ result.name }}</span>
-                    <button v-if="hasAuth">×</button>
+                    <button v-on:click="onResultDelete(result)" v-if="hasAuth">×</button>
                 </li>
             </ul>
         </div>

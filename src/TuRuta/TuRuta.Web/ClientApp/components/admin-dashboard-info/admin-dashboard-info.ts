@@ -9,4 +9,8 @@ export default class AdminDashboardInfoComponent extends Vue {
     onResultEmitted(result: any){
         this.$emit("resultEmitted", result);
     }
+
+    onDeleteEmitted(result: any){
+        this.$emit("deleteEmitted", result);
+    }
 }

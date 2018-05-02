@@ -115,6 +115,13 @@ export default class SearchComponent extends Vue {
 
     }
 
+    onResultDelete(result: any) {
+        this.searchResults = [];
+        if (this.hasAuth) {
+            this.$emit("resultDelete", result);
+        }
+    }
+
     getRoute(route: string) {
         var path = route.toLowerCase().replace(/ /g,"-");
         this.$router.push("route/" + path)
