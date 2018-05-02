@@ -11,14 +11,16 @@ export default class AdminStopComponent extends Vue {
         location: { latitude: 0, longitude: 0 }
     }
 
+    resetStop() {
+        let emptyStop = {
+            name: "",
+            id: "",
+            location: { latitude: 0, longitude: 0 }
+        }
+        this.stopDefault = emptyStop
+    }
+
     receivePosition(point: point) {
         this.stopDefault.location = point
     }
-
-    clearComponent(){
-        this.stopDefault.name = ""
-        this.stopDefault.id = ""
-        this.stopDefault.location = { latitude: 0, longitude: 0 }
-    }
-
 }

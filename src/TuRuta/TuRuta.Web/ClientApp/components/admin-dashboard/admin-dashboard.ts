@@ -51,7 +51,7 @@ export default class AdminDashboardComponent extends Vue {
                 break;
             
             case 2:
-                this.toggleStopInfoComponent(1, result.name)
+                this.toggleStopEditComponent(result.name)
                 break;
             
             case 3:
@@ -75,34 +75,43 @@ export default class AdminDashboardComponent extends Vue {
         });
     }
 
-    toggleStopInfoComponent(blade: number, name: string){
-        if (blade == 1) {
-            if (this.isStopEditActive) {
-                this.stopResult = null
-                this.isStopEditActive = false;
-                this.bladeCounter--;
-            }
-            else{
-                this.getStop(name).then(() => {
-                    this.isStopEditActive = true;
-                    this.bladeCounter++;
-                });
+    toggleStopEditComponent(name: string) {
+        if (this.isStopEditActive) {
+            this.stopResult = null
+            this.isStopEditActive = false;
+            this.bladeCounter--;
+        }
+        else{
+            this.getStop(name).then(() => {
+                this.isStopEditActive = true;
+                this.bladeCounter++;
+            });
+        }
+    }
+
+    toggleStopCreateComponent(newStop: any){
+        let emptyStop = {
+            name: "",
+            id: "",
+            location: { latitude: 0, longitude: 0 }
+        }
+    
+        if (newStop != undefined) {
+            if (newStop != undefined) {
+                console.log("NEW STOP", newStop)
+                this.routeResult.stops.push(newStop)
             }
         }
+
+        this.stopResult = emptyStop
+
+        if (this.isStopCreateActive) {
+            this.isStopCreateActive = false;
+            this.bladeCounter--;
+        }
         else {
-            this.stopResult = {
-                name: "",
-                id: "",
-                location: { latitude: 0, longitude: 0 }
-            }
-            if (this.isStopCreateActive) {
-                this.isStopCreateActive = false;
-                this.bladeCounter--;
-            }
-            else {
-                this.isStopCreateActive = true;
-                this.bladeCounter++;
-            }
+            this.isStopCreateActive = true;
+            this.bladeCounter++;
         }
     }
 

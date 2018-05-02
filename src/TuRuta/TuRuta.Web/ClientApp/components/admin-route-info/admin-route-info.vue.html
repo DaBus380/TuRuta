@@ -32,11 +32,11 @@
                     
                     <div v-if="isOptionalComponent">
                         <button v-on:click="closeRouteComponent">Cancelar</button>
-                        <button>Guardar ruta</button>
+                        <button v-bind:class="computedRouteReady" v-on:click="saveRoute">Guardar ruta</button>
                     </div>
                     <div v-else>
                         <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
-                        <button v-on:click="createRoute">Crear ruta</button>
+                        <button v-bind:class="computedRouteReady" v-on:click="createRoute">Crear ruta</button>
                     </div>
                 </div>
             </div>

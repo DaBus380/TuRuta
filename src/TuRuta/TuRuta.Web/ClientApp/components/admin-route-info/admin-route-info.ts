@@ -12,16 +12,56 @@ export default class AdminRouteInfoComponent extends Vue {
     routesClient = new RoutesClient();
     route?: routeVM = this.routeDefault;
 
-    createRoute(){
+    get computedRouteReady() {
+        let isReady = false;
         if (this.route != undefined) {
-            console.log("Route: ", this.route)
+            isReady = this.route.name != "" && this.route.stops.length > 0;
+        }
+        console.log("is Ready?", isReady, this.route)
+        return {
+            'disabled': !isReady
+        }
+    }
+
+    createRoute() {
+        if (this.route != undefined) {
             this.routesClient.Create(this.route.name)
             .then(newRoute => {
                 if(newRoute != null){
                     this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
                 }
             });
+            console.log("Created route", this.route)
+            alert("Ruta creada: " + this.route.name)
+            this.clearComponent()
         }
+    }
+
+    saveRoute() {
+        if (this.route != undefined) {
+            console.log("Saved route", this.route)
+            alert("Ruta guardada: " + this.route.name)
+            this.clearComponent()
+            this.closeRouteComponent()
+            // this.routesClient.Create(this.route.name)
+            // this.routesClient.SetName(this.route.name)
+            /* .then(newRoute => {
+                if(newRoute != null){
+                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
+                }
+            });*/
+        }
+    }
+
+    clearComponent(){
+        let newRoute = {
+            id: "",
+            name: "",
+            buses: [],
+            stops: [],
+            incidents: [],
+        }
+        this.route = newRoute
     }
 
     openStopComponent() {

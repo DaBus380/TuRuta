@@ -13,12 +13,17 @@ export default class AdminStopInfoComponent extends Vue {
     stop?: stopVM = this.stopDefault;
     stopClient: StopsClient = new StopsClient();
 
+    @Watch('stopDefault')
+    onStopDefaultChanged(val: string, oldVal: string) { 
+        this.stop = this.stopDefault
+    }
 
     get computedStopReady() {
         let isReady = false;
         if (this.stop != undefined) {
             isReady = this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0;
         }
+        console.log(isReady, this.stop)
         return {
             'disabled': !isReady
         }
@@ -30,6 +35,8 @@ export default class AdminStopInfoComponent extends Vue {
                 this.stopClient.Create(this.stop)
                     .then( newStop => {
                         this.$emit('close', newStop);
+                        console.log("Stop Created", stop);
+                        alert("Parada creada: " + newStop!.name)
                     })
             }
         }    
@@ -39,8 +46,11 @@ export default class AdminStopInfoComponent extends Vue {
         if (this.stop != undefined) {
             if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
                 this.stopClient.Create(this.stop)
-                    .then( () => {
-                        this.$emit('close');
+                    .then( (stop) => {
+                        this.$emit('close')
+                        console.log("Stop Created", stop)
+                        alert("Parada creada: " + stop!.name)
+                        this.clearComponent()
                     })
             }
         }
@@ -51,8 +61,14 @@ export default class AdminStopInfoComponent extends Vue {
             if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
                 // AQUI VA EL UPDATE
                 this.$emit('closeEdit')
+                alert("Parada guardada: " + this.stop.name)
             }
         }
+    }
+
+
+    clearComponent(){
+        this.$emit('close')
     }
 
     closeStopComponent(){

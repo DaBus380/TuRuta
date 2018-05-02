@@ -7,8 +7,8 @@
                 v-bind:isOptionalComponent="isStopCreateActive"
                 v-bind:isOptionalComponentEdit="isStopEditActive"
 
-                @closeEdit="toggleStopInfoComponent(1)"
-                @close="toggleStopInfoComponent(2)">
+                @closeEdit="toggleStopEditComponent"
+                @close="toggleStopCreateComponent">
             </admin-stop-info-component>
         </div>
 
@@ -20,7 +20,7 @@
                 v-bind:isButtonActive="!isStopCreateActive"
                 
                 @close="toggleRouteInfoComponent"
-                @open="toggleStopInfoComponent(2)">
+                @open="toggleStopCreateComponent">
             </admin-route-info-component>
         </div>
 
