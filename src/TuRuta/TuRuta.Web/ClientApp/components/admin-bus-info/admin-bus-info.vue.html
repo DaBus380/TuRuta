@@ -1,0 +1,34 @@
+<template>
+    <div v-if="bus !== undefined">
+        <div class="info-title">
+            <h1>Camión</h1>
+            <h2>Crear nueva camión</h2>
+        </div>
+        <div>
+            <div class="info-content">
+                <div class="form-content">
+                    <h3 class="blue">Información</h3>
+                    <div class="blue">
+                        <h4>Placas</h4>
+                        <input type="text" placeholder="Ejemplo: 721-463-G..." v-model:plate="bus[0]" value="plate"/><br>
+                        <h4>Ruta</h4>
+                        <p>Seleccione la ruta a la que pertenece el camión.</p>
+                        <search-component findBuses="true" placeholder="Ejemplo: 629..."></search-component><br>
+                        <br><br>
+                        
+                        <div v-if="isOptionalComponent">
+                            <button v-on:click="closeBusComponent">Cancelar</button>
+                            <button>Guardar camión</button>
+                        </div>
+                        <div v-else>
+                            <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                            <button>Añadir camión</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style src="./admin-bus-info.css"/>
+<script src="./admin-bus-info.ts"></script>

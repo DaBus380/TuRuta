@@ -1,5 +1,5 @@
 ﻿import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch} from 'vue-property-decorator'
 import { } from "@types/googlemaps"
 import PubNub from 'pubnub';
 
@@ -14,15 +14,25 @@ interface Message {
 export default class MapComponent extends Vue {
 
     // Data
-    pubnub: PubNub;
-    map: any = null;
+    pubnub?: PubNub;
+    map?: google.maps.Map = undefined;
     city: string = '';
     markers: google.maps.Marker[] = [];
+    poly: any = null;
     busesTable: { [id:string] : google.maps.Marker } = {};
+    stopMarker?: google.maps.Marker;
 
     // Properties
     @Prop() stops?: stopVM[];
     @Prop() buses?: busVM[];
+    @Prop() isMarkerActive?: boolean;
+
+    @Watch('isMarkerActive')
+    onIsMarkerActiveChanged(val: boolean, oldVal: boolean) { 
+        if (!val && this.stopMarker != undefined) {
+            this.stopMarker.setMap(null)
+        }
+    }
 
     // Private props
     private listener = {
@@ -34,11 +44,12 @@ export default class MapComponent extends Vue {
         message: this.messageReceived
     }
 
+
     // Lifecycle
     mounted() {
         this.initMap()
         if(this.stops != undefined && this.stops.length != 0) {
-            this.iniMarkers()
+            this.initMarkers()
         }
 
         if (this.buses != undefined && this.buses.length != 0) {
@@ -47,8 +58,10 @@ export default class MapComponent extends Vue {
     }
 
     beforeDestroy() {
-        this.pubnub.unsubscribeAll();
-        this.pubnub.removeListener(this.listener);
+        if(this.pubnub != undefined){
+            this.pubnub.unsubscribeAll();
+            this.pubnub.removeListener(this.listener);
+        }
     }
 
     // Methods
@@ -66,7 +79,7 @@ export default class MapComponent extends Vue {
                     busIds.push(bus.id);
                 });
 
-                this.pubnub.subscribe({
+                this.pubnub!.subscribe({
                     channels: busIds
                 });
             })
@@ -77,13 +90,20 @@ export default class MapComponent extends Vue {
         }
     }
 
+    contentString:string = "<p>hello</p>";
+
     createMarker(location: point, title: string, isBus: boolean): google.maps.Marker {
+        let contentInfo = new google.maps.InfoWindow({
+            content: this.contentString
+        });
+
         let latLon = new google.maps.LatLng(location.latitude, location.longitude);
         let marker = new google.maps.Marker({
             position: latLon,
             map: this.map,
             title: title
         });
+        marker.addListener("click", () => contentInfo.open(this.map, marker));
 
         if (isBus) {
             marker.setIcon({
@@ -91,7 +111,7 @@ export default class MapComponent extends Vue {
                 scale: 10
             });
         }
-
+    
         return marker;
     }
 
@@ -102,22 +122,38 @@ export default class MapComponent extends Vue {
             zoom: 14,
             center: latLon,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        this.map = new google.maps.Map(element, options)
+        };
+        this.map = new google.maps.Map(element, options);
+
+        this.map.addListener("click", this.addClickMarker)
     }
 
-    iniMarkers() {
+    addClickMarker(args: any){
+        if (this.$props.isMarkerActive) {
+            if(this.stopMarker != undefined){
+                this.stopMarker.setMap(null);
+            }
+            var latLon = args.latLng as google.maps.LatLng;
+            this.stopMarker = this.createMarker({latitude: latLon.lat(), longitude: latLon.lng()}, "", false);
+            this.$emit("addMarker", {latitude: latLon.lat(), longitude: latLon.lng()});
+        }
+    }
+
+    
+    initMarkers() {
         var newMarkers = new Array<google.maps.Marker>()
         if (this.stops != undefined && this.stops.length != 0) {
             this.stops.forEach(stop => {
                 let marker = this.createMarker(stop.location, stop.name, false);
+
                 newMarkers.push(marker);
-            })
-            this.markers = newMarkers
-            var centerPosition = Math.floor( this.markers.length / 2 )
-            this.map.setCenter(this.markers[centerPosition].getPosition());
+            });
+            this.markers = newMarkers;
+            var centerPosition = Math.floor(this.markers.length / 2);
+            this.map!.setCenter(this.markers[centerPosition].getPosition());
         }
     }
+
 
     fetchPubNub() {
         return new Promise((resolve, error) => fetch('/api/config/pubnub')

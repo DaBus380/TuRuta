@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="routes-info-container">
+        <div class="info-container first">
             <route-info-component v-if="isRouteLoaded" :name="route.name" :stops="route.stops"></route-info-component>
         </div>
-        <div class="route-map-container">
+        <div class="map-container big">
             <map-component v-if="isRouteLoaded" :stops="route.stops" :buses="route.buses" ></map-component>
         </div>
     </div>

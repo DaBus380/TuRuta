@@ -1,9 +1,5 @@
-.route-name {
-    margin-bottom: 30px;
-}
-.route-name h2 {
-    color: #cccccc;
-    margin: 0;
+ul.info-content {
+    padding-left: 20px;
 }
 .route-stops {
     padding-left: 7%;

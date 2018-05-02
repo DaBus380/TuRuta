@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Orleans;
 
 using TuRuta.Common;
 using TuRuta.Orleans.Interfaces;
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Common.ViewModels;
 
 namespace TuRuta.Web.Services
 {
@@ -47,5 +47,11 @@ namespace TuRuta.Web.Services
             var busGrain = _clusterClient.GetGrain<IBusGrain>(busId);
             return busGrain.SetPlates(plates);
         }
-    }
+
+		public Task<BusInfoVM> GetBus(Guid Id)
+		{
+			var bus = _clusterClient.GetGrain<IBusGrain>(Id);
+			return bus.GetInfo();
+		}
+	}
 }

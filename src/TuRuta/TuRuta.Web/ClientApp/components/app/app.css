@@ -3,10 +3,11 @@
     margin: 0 auto;
 }
 .main-container {
-    position: relative;
+    position: absolute;
     margin-top: 60px;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 60px);
+    overflow: hidden;
 }
 .simple-container {
     width: 100%;
@@ -24,10 +25,16 @@ h1, h3, h4, a{
     font-weight: 600;
 }
 h1 {
-    font-size: 35px;
+    font-size: 28px;
 }
 h2 {
-    font-size: 25px;
+    font-size: 22px;
+}
+h3 {
+    font-size: 20px;
+}
+h4 {
+    font-size: 18px;
 }
 a {
     transition: color 0.2s ease-in-out;
@@ -43,13 +50,23 @@ span.title-green{
 span.title-red{
     color: #d4145a;
 }
+button.disabled {
+    color: #b3b3b3 !important;
+    border: 1px solid #b3b3b3 !important;  
+    background-color: #fff !important; 
+    cursor: default !important;
+}
+button.disabled:hover {
+    color: #b3b3b3 !important;
+    border: 1px solid #b3b3b3 !important;  
+    background-color: #fff !important; 
+    cursor: default !important;
+}
+
 
 .search-container {
+    position: relative;
     text-align: center;
-}
-.search-container h1{
-    font-size: 40px;
-    margin-bottom: 20px;
 }
 .search-container p {
     font-size: 18px;
@@ -57,15 +74,45 @@ span.title-red{
     position: absolute;
     left: 0; bottom: 0; right: 0;
 }
-.search-container p a{
-    font-weight: 600;
-}
 .search-container input{
     font-weight: 100;
     text-align: center;
     border: 0;
     border-bottom: 1px solid #4d4d4d;
     outline: none;
+}
+.search-container .search-results {
+    position: absolute;
+    top: 25px;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+.search-container .search-results ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.search-container .search-results ul li{
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    margin-top: -1px;
+    font-weight: 200;
+}
+.search-container .search-results ul li span{
+    cursor: pointer;
+    color: #4d4d4d;
+}
+.search-container .search-results ul li button{
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    color: #d4145a;
+    font-weight: 600;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-size: 20px;
 }
 .main-header-container input:focus, textarea:focus {
     border: 0;
@@ -81,4 +128,213 @@ span.title-red{
 .search-container input::-ms-input-placeholder {
     color: #b3b3b3;
     font-style: italic;
+}
+.info-container {
+    position: absolute;
+    background-color: #fff;
+    width: 25%;
+    height: calc(100vh - 60px);
+    top: 0;
+    z-index: 1;
+    box-shadow: 0 -5px 15px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    overflow: scroll;
+    opacity: 1;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out; /* Safari */
+}
+.first.info-container {
+    left: 0;
+}
+.second.info-container {
+    left: 25%;
+}
+.third.info-container {
+    left: 50%;
+}
+.hide-container.info-container {
+    opacity: 0;
+    left: 0;
+}
+.info-container .info-title {
+    margin-bottom: 30px;
+}
+.info-title h2 {
+    color: #cccccc;
+    margin: 0;
+}
+.map-container {
+    position: absolute;
+    top: 0;
+    height: calc(100vh - 60px);
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out; /* Safari */
+}
+.full.map-container {
+    left: 0;
+    width: 100%;
+}
+.big.map-container {
+    left: 25%;
+    width: 75%;
+}
+.medium.map-container {
+    left: 50%;
+    width: 50%;
+}
+.small.map-container {
+    left: 75%;
+    width: 25%;
+}
+.map-wrapper{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.form-content div{
+    margin: 3rem 0 0;
+}
+.form-content .search-container{
+    margin: 0;
+}
+.form-content .search-container input{
+    text-align: left;
+}
+.form-content ol { 
+    counter-reset: item;
+    list-style-type: none;
+    padding-left: 0;
+}
+.form-content p {
+    font-weight: 200;
+}
+.form-content span {
+    color: #b3b3b3;
+}
+.form-content li { 
+    display: block;
+    width: 100%;
+    line-height: 2.5rem;
+    font-weight: 200;
+}
+.form-content li a {
+    position: absolute;
+    right: 100px;
+    font-weight: 600;
+}
+.form-content button{
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    padding: 5px 10px;
+    font-weight: 600;
+    background-color: #fff;
+    transition: all 0.6s ease-in-out;
+    -webkit-transition:  all 0.6s ease-in-out; /* Safari */
+}
+.form-content button.hide-container {
+    margin-left: -100%;
+}
+.form-content li:before { 
+    content: counter(item) "    "; 
+    counter-increment: item ;
+    font-weight: 600;
+    margin-right: 5px;
+}
+.form-content input {
+    width: 100%;
+    margin-bottom: 10px;
+    border: 0;
+    border-bottom: 1px solid #e4e4e4;
+    outline: none;
+    font-weight: 100;
+    letter-spacing: 0.4px;
+}
+.form-content input:focus, textarea:focus {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+.form-content input::placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.form-content input:-ms-input-placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.form-content input::-ms-input-placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.form-content a{
+    font-weight: 200;
+    cursor: pointer;
+}
+.form-content button:hover {
+    color: #fff;
+}
+.form-content h3 {
+    top: 120px;
+    width: calc(100% + 30px);
+    margin-left: -30px;
+    height: 50px;
+    padding-left: 30px;
+    line-height: 50px;
+    color: #fff;
+}
+/* Route Red */
+.dashboard-options .red a:hover,
+.form-content .red a:hover,
+.form-content .red li a{
+    color: #d4145a;
+}
+.form-content .red button{
+    color: #d4145a;
+    border: 1px solid #d4145a;
+}
+.form-content .red button:hover{
+    background-color: #d4145a;
+    color: #fff;
+}
+.form-content h3.red {
+    background-color: #d4145a;
+    color: #fff;
+}
+
+/* Stop Green */
+.dashboard-options .green a:hover,
+.form-content .green a:hover,
+.form-content .green li a{
+    color: #00a99d;
+}
+.form-content .green button{
+    color: #00a99d;
+    border: 1px solid #00a99d;
+}
+.form-content .green button:hover{
+    background-color: #00a99d;
+    color: #fff;
+}
+.form-content h3.green {
+    background-color: #00a99d;
+}
+
+/* Bus Blue */
+.dashboard-options .blue a:hover,
+.form-content .blue a:hover,
+.form-content .blue li a{
+    color: #4952bf;
+}
+.form-content .blue button{
+    color: #4952bf;
+    border: 1px solid #4952bf;
+}
+.form-content .blue button:hover{
+    background-color: #4952bf;
+    color: #fff;
+}
+.form-content h3.blue {
+    background-color: #4952bf;
 }

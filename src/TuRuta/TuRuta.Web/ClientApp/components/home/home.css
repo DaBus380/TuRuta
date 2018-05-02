@@ -19,3 +19,17 @@
     height: 60px;
     font-size: 40px;
 }
+.home-container .search-container .search-results {
+    top: 141px;
+    width: 40%;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+}
+.home-container .search-container .search-results {
+    background-color: #fff;
+}
+.home-container .search-container .search-results ul li {
+    font-size: 20px;
+    text-align: center; 
+}

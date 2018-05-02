@@ -4,12 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using TuRuta.Common.ViewModels;
 using TuRuta.Web.Services.Interfaces;
+using TuRuta.Common.Models;
 
 namespace TuRuta.Web.Services.Mocks
 {
     public class MockStopService : IStopService
     {
-        private StopVM Stop { get; } = new StopVM();
+        private StopVM Stop { get; } = new StopVM()
+        {
+            Name = "La Minerva",
+            Location = new Point {
+                Latitude = 20.680699,
+                Longitude = -103.430508
+            }
+        };
 
         public Task<StopVM> CreateStop(StopVM stopVM)
         {

@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="routes-title-container">
-            <search-component placeholder="Ejemplo: 629 B">
+        <div class="title-container all-routes-container">
+            <search-component  findRoutes="true" findStops="true" placeholder="buscar una ruta o parada">
                 <template slot="title">
-                    <h2>Seleccione o escriba una ruta </h2>
+                    <h2>Seleccionar una parada en el mapa o </h2>
                 </template>
             </search-component>
         </div>
-        <div class="all-routes-map-container">
+        <div class="map-container full">
             <map-component></map-component>
         </div>
     </div>
