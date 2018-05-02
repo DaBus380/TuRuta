@@ -3,6 +3,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import RoutesClient from '../../clients/RoutesClient';
 import StopsClient from '../../clients/StopsClient';
 import BusesClient from '../../clients/BusesClient';
+import Authentication from '../../authentication/Authentication';
 
 @Component
 export default class AdminDashboardComponent extends Vue {
@@ -43,6 +44,13 @@ export default class AdminDashboardComponent extends Vue {
 
     get computedStop() { return (this.isRouteEditActive || this.isBusEditActive || this.isStopEditActive || this.isStopCreateActive) }
 
+    beforeMount() {
+        /*
+        let authentication = new Authentication();
+        let user = authentication.initialize();
+        console.log(user!.userName);
+        */
+    }
     
     editResult(result: any){
         switch (result.type) {
