@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 @Component({
     components: {
         MenuComponent: require('../navmenu/navmenu.vue.html'),
-        AdminMenuComponent: require('../admin-navmenu/admin-navmenu.vue.html'),
+        AdminMenuComponent: Vue.component('admin-navmenu', require('../admin-navmenu/admin-navmenu.vue.html')),
         SearchComponent: Vue.component('search-component', require('../search/search.vue.html')),
         MapComponent: Vue.component('map-component', require('../map/map.vue.html')),
         

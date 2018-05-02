@@ -2,7 +2,7 @@ import AuthenticationContext, { AuthenticationContextOptions } from "adal-angula
 
 export default class Authentication {
     config: AuthenticationContextOptions = {
-        clientId: "",
+        clientId: "5cf607ab-1908-4000-95e9-cc207f020bf0",
         cacheLocation: "localStorage",
         postLogoutRedirectUri: window.location.origin,
         instance: "https://login.microsoftonline.com/",

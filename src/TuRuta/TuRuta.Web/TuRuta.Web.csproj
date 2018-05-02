@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\clients\BusesClient.ts" />
+    <None Remove="ClientApp\components\admin-navmenu\admin-navmenu.ts" />
     <None Remove="ClientApp\components\test\test.ts" />
     <None Remove="ClientApp\models\busInfoVM.ts" />
     <None Remove="ClientApp\models\busVM.ts" />
@@ -48,6 +49,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\clients\BusesClient.ts" />
     <TypeScriptCompile Include="ClientApp\clients\RoutesClient.ts" />
+    <TypeScriptCompile Include="ClientApp\components\admin-navmenu\admin-navmenu.ts" />
     <TypeScriptCompile Include="ClientApp\components\test\test.ts" />
     <TypeScriptCompile Include="ClientApp\models\busInfoVM.ts" />
     <TypeScriptCompile Include="ClientApp\models\busVM.ts" />

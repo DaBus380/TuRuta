@@ -45,11 +45,16 @@ export default class AdminDashboardComponent extends Vue {
     get computedStop() { return (this.isRouteEditActive || this.isBusEditActive || this.isStopEditActive || this.isStopCreateActive) }
 
     beforeMount() {
-        /*
+        //let user = authentication.initialize();
+        //console.log(user!.userName);
+    }
+
+    mounted() {
         let authentication = new Authentication();
         let user = authentication.initialize();
-        console.log(user!.userName);
-        */
+        if (authentication.isAuthenticated()) {
+            console.log("logedin")
+        }
     }
     
     editResult(result: any){
