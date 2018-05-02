@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Stop Blade -->
-        <div class="info-container" v-bind:class="computedStopActive">
+        <div v-if="stopResult !== null"  class="info-container" v-bind:class="computedStopActive">
             <admin-stop-info-component 
                 v-bind:stopDefault="stopResult"
                 v-bind:isOptionalComponent="isStopCreateActive"

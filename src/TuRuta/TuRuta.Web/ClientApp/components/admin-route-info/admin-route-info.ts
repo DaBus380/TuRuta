@@ -13,13 +13,14 @@ export default class AdminRouteInfoComponent extends Vue {
     route?: routeVM = this.routeDefault;
 
     createRoute(){
-        
-    }
-
-    setRouteStops(name: string) {
         if (this.route != undefined) {
-            console.log("NAME: ", name)
-            this.route.name = name
+            console.log("Route: ", this.route)
+            this.routesClient.Create(this.route.name)
+            .then(newRoute => {
+                if(newRoute != null){
+                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
+                }
+            });
         }
     }
 
@@ -29,7 +30,5 @@ export default class AdminRouteInfoComponent extends Vue {
 
     closeRouteComponent() {
         this.$emit('close')
-
-        // this.routesClient.
     }
 }
