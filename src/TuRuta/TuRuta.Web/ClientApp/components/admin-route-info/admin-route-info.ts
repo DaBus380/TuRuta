@@ -31,9 +31,6 @@ export default class AdminRouteInfoComponent extends Vue {
             this.routesClient.Create(this.route.name)
             .then(newRoute => {
                 if (newRoute != null) {
-                    console.log(this.route!.stops);
-                    console.log(this.route!.stops.map(r => r.id));
-
                     this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
                     alert("Ruta creada: " + this.route!.name)
                     this.clearComponent()
