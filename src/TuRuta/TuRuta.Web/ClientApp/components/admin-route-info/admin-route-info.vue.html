@@ -18,7 +18,7 @@
                     <h4>Ruta Actual</h4>
                     <ol>
                         <p v-if="route.stops.length < 1"><em>Ruta vacía</em></p>
-                        <li v-for="stop in route.stops">{{ stop.name }} <a>×</a></li>
+                        <li v-for="(stop, index) in route.stops">{{ stop.name }} <button v-on:click="deleteStop(index)" class="delete-li">×</button></li>
                     </ol>
                     <br>
                     
@@ -27,7 +27,7 @@
                     <button v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button>
                     <br><br>
                     <p>Buscar parada existente.</p>
-                    <search-component findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
+                    <search-component @resultClicked="addStopResult" v-bind:hasAuth="true" findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
                     
                     
                     <div v-if="isOptionalComponent">

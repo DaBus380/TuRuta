@@ -23,7 +23,6 @@ export default class AdminStopInfoComponent extends Vue {
         if (this.stop != undefined) {
             isReady = this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0;
         }
-        console.log(isReady, this.stop)
         return {
             'disabled': !isReady
         }
@@ -35,8 +34,6 @@ export default class AdminStopInfoComponent extends Vue {
                 this.stopClient.Create(this.stop)
                     .then( newStop => {
                         this.$emit('close', newStop);
-                        console.log("Stop Created", stop);
-                        alert("Parada creada: " + newStop!.name)
                     })
             }
         }    

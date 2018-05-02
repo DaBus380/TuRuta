@@ -21,11 +21,8 @@ export default class AdminRouteComponent extends Vue {
 
     // Methods
     toggleStopInfoComponent (stopResult: any) {
-        
         this.isStopPanelActive = !this.isStopPanelActive
-
         if (stopResult != undefined) {
-            console.log(stopResult)
             this.routeDefault.stops.push(stopResult)
             let emptyStop = {
                 name: "",

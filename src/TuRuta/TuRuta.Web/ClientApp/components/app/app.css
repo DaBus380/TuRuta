@@ -103,7 +103,7 @@ button.disabled:hover {
     cursor: pointer;
     color: #4d4d4d;
 }
-.search-container .search-results ul li button{
+.search-container .search-results ul li button {
     position: absolute;
     top: 3px;
     right: 10px;
@@ -283,6 +283,18 @@ button.disabled:hover {
     padding-left: 30px;
     line-height: 50px;
     color: #fff;
+}
+.form-content .red button.delete-li {
+    color: #d4145a !important;
+    font-weight: 600;
+    background: none !important;
+    border: 0;
+    cursor: pointer;
+    font-size: 20px;
+    position: absolute;
+    right: 100px;
+    font-weight: 600;
+    padding: 0;
 }
 /* Route Red */
 .dashboard-options .red a:hover,

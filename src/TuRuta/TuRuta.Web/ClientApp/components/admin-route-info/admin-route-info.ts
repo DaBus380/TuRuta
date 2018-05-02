@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import RoutesClient from '../../clients/RoutesClient';
+import StopsClient from '../../clients/StopsClient';
 
 @Component
 export default class AdminRouteInfoComponent extends Vue {
@@ -12,12 +13,14 @@ export default class AdminRouteInfoComponent extends Vue {
     routesClient = new RoutesClient();
     route?: routeVM = this.routeDefault;
 
+    stopsClient: StopsClient = new StopsClient();
+    stopResult: any = null
+
     get computedRouteReady() {
         let isReady = false;
         if (this.route != undefined) {
             isReady = this.route.name != "" && this.route.stops.length > 0;
         }
-        console.log("is Ready?", isReady, this.route)
         return {
             'disabled': !isReady
         }
@@ -31,7 +34,6 @@ export default class AdminRouteInfoComponent extends Vue {
                     this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
                 }
             });
-            console.log("Created route", this.route)
             alert("Ruta creada: " + this.route.name)
             this.clearComponent()
         }
@@ -39,17 +41,29 @@ export default class AdminRouteInfoComponent extends Vue {
 
     saveRoute() {
         if (this.route != undefined) {
-            console.log("Saved route", this.route)
             alert("Ruta guardada: " + this.route.name)
             this.clearComponent()
             this.closeRouteComponent()
-            // this.routesClient.Create(this.route.name)
-            // this.routesClient.SetName(this.route.name)
-            /* .then(newRoute => {
-                if(newRoute != null){
-                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
-                }
-            });*/
+        }
+    }
+
+    // NOT WORKING
+    addStopResult(stopResult: any){
+        if (stopResult != undefined) {
+            this.stopsClient.GetByName(stopResult.name)
+                .then( newStop => {
+                    if(newStop != null && this.route != undefined){
+                        this.route.stops.push(newStop)
+                    }
+                });
+        }
+    }
+
+    deleteStop(index: number){
+        if (this.route != undefined) {
+            if (index > -1) {
+                this.route.stops.splice(index, 1);
+            }
         }
     }
 
