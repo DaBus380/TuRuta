@@ -145,6 +145,7 @@ export default class MapComponent extends Vue {
     
     initMarkers() {
         this.polys.forEach(line => line.setMap(null));
+        this.polys = new Array<google.maps.Polyline>();
 
 
         var newMarkers = new Array<google.maps.Marker>()
