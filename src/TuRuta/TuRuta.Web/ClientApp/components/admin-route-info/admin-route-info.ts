@@ -29,13 +29,14 @@ export default class AdminRouteInfoComponent extends Vue {
     createRoute() {
         if (this.route != undefined) {
             this.routesClient.Create(this.route.name)
-            .then(newRoute => {
-                if(newRoute != null){
-                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
-                }
-            });
-            alert("Ruta creada: " + this.route.name)
-            this.clearComponent()
+                .then(newRoute => {
+                    if(newRoute != null && this.route != null){
+                        console.log(this.route)
+                        this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
+                        alert("Ruta creada: " + this.route.name)
+                        this.clearComponent()
+                    }
+                })
         }
     }
 
