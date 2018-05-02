@@ -8,9 +8,9 @@
             </search-component>
         </div>
         <div class="map-container full">
-            <map-component></map-component>
+            <map-component v-if="computedStops" v-bind:stops="stopResult"></map-component>
         </div>
     </div>
 </template>
-
+<script src="./all-routes.ts"></script>
 <style src="./all-routes.css" />
