@@ -31,9 +31,14 @@ export default class AdminRouteInfoComponent extends Vue {
             this.routesClient.Create(this.route.name)
             .then(newRoute => {
                 if (newRoute != null) {
-                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id));
-                    alert("Ruta creada: " + this.route!.name)
-                    this.clearComponent()
+                    this.routesClient.AddStops(newRoute.id, this.route!.stops.map(r => r.id))
+                        .then( (route) => {
+                            if (route != null) {
+                                alert("Ruta creada: " + route.name)
+                                console.log("CREADA", route)
+                                this.clearComponent()
+                            }
+                        });
                 }
             });
         }
@@ -41,9 +46,14 @@ export default class AdminRouteInfoComponent extends Vue {
 
     saveRoute() {
         if (this.route != undefined) {
-            alert("Ruta guardada: " + this.route.name)
-            this.clearComponent()
-            this.closeRouteComponent()
+            this.routesClient.Update(this.route)
+                .then( (route) => {
+                    if (route != null) {
+                        alert("Ruta guardada: " + route.name)
+                        console.log("GUARDADA", route)
+                        this.clearComponent()
+                    }
+                })
         }
     }
 

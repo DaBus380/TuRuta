@@ -56,9 +56,14 @@ export default class AdminStopInfoComponent extends Vue {
     saveStop() {
         if (this.stop != undefined) {
             if (this.stop.name != "" && this.stop.location.latitude != 0 && this.stop.location.longitude != 0) {
-                // AQUI VA EL UPDATE
-                this.$emit('closeEdit')
-                alert("Parada guardada: " + this.stop.name)
+                this.stopClient.UpdateStop(this.stop)
+                    .then( (stop) => {
+                        if (stop != null) {
+                            this.$emit('closeEdit')
+                            console.log("STOP GUARDADO", stop)
+                            alert("Parada guardada: " + stop.name)
+                        }
+                    })
             }
         }
     }
