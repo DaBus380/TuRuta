@@ -80,13 +80,7 @@ namespace TuRuta.Ingestor
             }
             else
             {
-                builder.AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configurator =>
-                {
-                    configurator.Configure(options =>
-                    {
-                        options.ConnectionString = connectionString;
-                    });
-                });
+                builder.AddSimpleMessageStreamProvider("StreamProvider");
             }
 
             return builder;

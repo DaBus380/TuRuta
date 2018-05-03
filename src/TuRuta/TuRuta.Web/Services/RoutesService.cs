@@ -85,10 +85,22 @@ namespace TuRuta.Web.Services
         public async Task<RouteVM> Update(RouteVM newRoute)
         {
             var route = _clusterClient.GetGrain<IRouteGrain>(newRoute.Id);
+            var name = _routeDB.FindByKey(newRoute.Id.ToString());
 
             await route.SetName(newRoute.Name);
             await route.ClearStops();
             await route.AddStops(newRoute.Stops.Select(stop => _clusterClient.GetGrain<IStopGrain>(stop.Id)).ToList());
+
+            var results = await name;
+            if(results.Count != 1)
+            {
+                return null;
+            }
+
+            if (!results.First().Equals(newRoute.Name))
+            {
+                await _routeDB.UpdateKey(newRoute.Id.ToString(), newRoute.Name);
+            }
 
             return await route.GetRouteVM();
         }

@@ -110,7 +110,10 @@ namespace TuRuta.Orleans.Grains
                 if (Paradas.Count != 0)
                 {
                     CurrentStop = Paradas.Dequeue();
-                    NextStop = Paradas.Dequeue();
+                    if(Paradas.Count != 0)
+                    {
+                        NextStop = Paradas.Dequeue();
+                    }
                 }
             }
 

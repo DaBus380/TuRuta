@@ -90,13 +90,7 @@ namespace TuRuta.Orleans
             {
                 builder
                     .UseAzureTableReminderService(connectionString)
-                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider", configuratior =>
-                    {
-                        configuratior.Configure(options =>
-                        {
-                            options.ConnectionString = connectionString;
-                        });
-                    })
+                    .AddSimpleMessageStreamProvider("StreamProvider")
                     .AddAzureTableGrainStorage("AzureTableStore", options => 
                     {
                         options.ConnectionString = connectionString;

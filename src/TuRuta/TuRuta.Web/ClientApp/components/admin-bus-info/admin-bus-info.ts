@@ -13,7 +13,8 @@ export default class AdminBusInfoComponent extends Vue {
     busesNoPlates: string[] = []
     busRoute: string = ""
 
-    busClient: BusesClient = new BusesClient()
+    busClient: BusesClient = new BusesClient();
+    routesClient: RoutesClient = new RoutesClient();
 
 
 
@@ -57,17 +58,19 @@ export default class AdminBusInfoComponent extends Vue {
     addBusInfo() {
         if (this.bus != undefined) {
             this.busClient.SetPlates(this.bus.id, this.bus.licensePlate)
-                .then( () => {
-                    console.log("Added plates to bus", this.bus)})
-                    this.busClient.SetRoute(this.bus.id, this.busRoute)
-                .then( () => {
-                    console.log("Added route to bus", this.busRoute)
-                    alert("Camion con placas: " + this.bus!.licensePlate + " añadido")
-                })
-                .then( () => {
-                    this.clearComponent()
-                    this.getBusesNotConfigured()
-                });
+            .then( () => {
+                console.log("Added plates to bus", this.bus)
+            })
+
+            var route = this.routesClient.Get(this.busRoute)
+            .then(route => {
+                console.log(route!.id);
+                this.busClient.SetRoute(this.bus!.id, route!.id);
+            })
+            .then( () => {
+                this.clearComponent()
+                this.getBusesNotConfigured()
+            });
         }
     }
 
