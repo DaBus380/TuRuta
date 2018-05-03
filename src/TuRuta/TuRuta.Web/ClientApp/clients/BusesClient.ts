@@ -9,6 +9,16 @@
         return Array<string>();
     }
 
+    async GetNoRoute() {
+        var response = await fetch("api/config/noconfig");
+        if (response.ok) {
+            var json = await response.json();
+            return json as string[];
+        }
+
+        return Array<string>();
+    }
+
     async FindBus(plates: string) {
         var response = await fetch('api/buses/find/' + plates);
         if (response.ok) {
