@@ -24,8 +24,8 @@
                     
                     <h4>Paradas</h4>
                     <p>Crear nueva parada.</p>
-                    <button v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button>
-                    <br><br>
+                    <button style="margin-bottom: 15px; margin-top: -3px" v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button>
+                    <br>
                     <p>Buscar parada existente.</p>
                     <search-component @resultClicked="addStopResult" v-bind:hasAuth="true" findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
                     
