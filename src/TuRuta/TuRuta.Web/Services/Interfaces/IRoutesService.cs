@@ -21,6 +21,6 @@ namespace TuRuta.Web.Services.Interfaces
 
         Task<RouteVM> AddStop(Guid id, Guid stop);
 
-        Task<RouteVM> Update(RouteVM newRoute)
+        Task<RouteVM> Update(RouteVM newRoute);
     }
 }
