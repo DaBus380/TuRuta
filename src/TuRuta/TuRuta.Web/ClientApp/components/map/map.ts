@@ -93,11 +93,18 @@ export default class MapComponent extends Vue {
         }
     }
 
-    contentString:string = "<p>hello</p>";
-
     createMarker(location: point, title: string, isBus: boolean): google.maps.Marker {
+        
+        var type = ""
+        if (isBus) {
+            type = "Camión"
+        }
+        else {
+            type = "Parada"
+        }
+
         let contentInfo = new google.maps.InfoWindow({
-            content: this.contentString
+            content: "<div style='height: 50px'><p><b>" + title +"</b><br>" + type + "</p></div>"
         });
 
         let latLon = new google.maps.LatLng(location.latitude, location.longitude);
