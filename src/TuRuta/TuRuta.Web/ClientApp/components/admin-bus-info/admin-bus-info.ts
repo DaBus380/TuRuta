@@ -10,13 +10,17 @@ export default class AdminBusInfoComponent extends Vue {
     @Prop() busDefault?: busVM
 
     bus?: busVM = this.busDefault
+    busesNoPlates: string[] = []
+    busRoute: string = ""
 
     busClient: BusesClient = new BusesClient()
+
+
 
     get computedBusReady() {
         let isReady = false;
         if (this.bus != undefined) {
-            isReady = this.checkLicenseFormat(this.bus.licensePlate);
+            isReady = this.bus.id != "" && this.busRoute != "" && this.checkLicenseFormat(this.bus.licensePlate);
         }
         console.log("is Ready?", isReady, this.bus)
         return {
@@ -24,17 +28,47 @@ export default class AdminBusInfoComponent extends Vue {
         }
     }
 
-    createBus() {
+    mounted() {
+        this.getBusesNotConfigured()
+    }
+
+    selectBus(id: string){
         if (this.bus != undefined) {
-            // this.busClient.SetPlates(this.bus)
-            console.log("Created bus", this.bus)
-            alert("Camion creado con placas: " + this.bus.licensePlate)
-            this.clearComponent()
+            this.bus.id = id
         }
     }
 
-    updated() {
-        // console.log(this.bus!.licensePlate)
+    addRouteResult(routeResult: any){
+        if (routeResult != undefined) {
+            console.log("Route: ", routeResult.name)
+            this.busRoute = routeResult.name
+        }
+    }
+
+    getBusesNotConfigured() {
+        this.busClient.GetNoPlates()
+            .then( (buses) => {
+                console.log("BUSES NO PLATES", buses)
+                this.busesNoPlates = buses
+            })
+    }
+
+
+    addBusInfo() {
+        if (this.bus != undefined) {
+            this.busClient.SetPlates(this.bus.id, this.bus.licensePlate)
+                .then( () => {
+                    console.log("Added plates to bus", this.bus)})
+                    this.busClient.SetRoute(this.bus.id, this.busRoute)
+                .then( () => {
+                    console.log("Added route to bus", this.busRoute)
+                    alert("Camion con placas: " + this.bus!.licensePlate + " añadido")
+                })
+                .then( () => {
+                    this.clearComponent()
+                    this.getBusesNotConfigured()
+                });
+        }
     }
 
     checkLicenseFormat(plate: string) {

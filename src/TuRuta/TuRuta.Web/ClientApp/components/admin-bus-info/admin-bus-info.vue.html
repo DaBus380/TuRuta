@@ -9,22 +9,45 @@
                 <div class="form-content">
                     <h3 class="blue">Información</h3>
                     <div class="blue">
-                        <h4>Placas</h4>
-                        <input 
-                            v-model.trim="bus.licensePlate" type="text"
-                            placeholder="Ejemplo: 721-463-G..."/><br>
-                        <h4>Ruta</h4>
-                        <p>Seleccione la ruta a la que pertenece el camión.</p>
-                        <search-component findRoutes="true" placeholder="Ejemplo: 629..."></search-component><br>
-                        <br><br>
-                        
-                        <div v-if="isOptionalComponent">
-                            <button v-on:click="closeBusComponent">Cancelar</button>
-                            <button v-bind:class="computedBusReady">Guardar camión</button>
-                        </div>
-                        <div v-else>
-                            <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
-                            <button v-bind:class="computedBusReady" v-on:click="createBus">Añadir camión</button>
+
+                        <h4>Camiones sin configurar</h4>
+                        <ol>
+                            <p v-if="busesNoPlates.length < 1"><em>No hay camiones disponibles</em></p>
+                            <li v-for="bus in busesNoPlates"
+                                v-on:click="selectBus(bus)"
+                                style="cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ bus }} 
+                            </li>
+                        </ol>
+                        <br>
+
+                        <div v-if="bus.id != ''">
+                            <p><em>Editando camión con id...</em> </p>
+                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600"> {{ bus.id }}</p>
+                            <br>
+    
+                            <h4>Placas</h4>
+                            <input 
+                                v-model.trim="bus.licensePlate" type="text"
+                                placeholder="Ejemplo: 721-463-G..."/><br>
+                            <h4>Ruta</h4>
+                            <p>Seleccione la ruta a la que pertenece el camión.</p>
+                            <search-component
+                                findRoutes="true"
+                                placeholder="Ejemplo: 629..."
+                                hasAuth="true"
+                                @resultClicked="addRouteResult">
+                            </search-component><br>
+                            <br>
+                            
+                            <div v-if="isOptionalComponent">
+                                <button v-on:click="closeBusComponent">Cancelar</button>
+                                <button v-bind:class="computedBusReady">Guardar camión</button>
+                            </div>
+                            <div v-else>
+                                <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                                <button v-bind:class="computedBusReady" v-on:click="addBusInfo">Configurar camión</button>
+                            </div>
                         </div>
                     </div>
                 </div>

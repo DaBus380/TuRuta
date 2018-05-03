@@ -105,6 +105,7 @@ export default class SearchComponent extends Vue {
     onResultClicked(result: any){
         this.searchResults = [];
         if (this.hasAuth) {
+            this.searchInput = result.name;
             this.$emit("resultClicked", result);
         }
         else {
@@ -123,7 +124,9 @@ export default class SearchComponent extends Vue {
     }
 
     getRoute(route: string) {
-        var path = route.toLowerCase().replace(/ /g,"-");
-        this.$router.push("route/" + path)
+        if (!this.hasAuth) {
+            var path = route.toLowerCase().replace(/ /g,"-");
+            this.$router.push("route/" + path)
+        }
     }
 }
