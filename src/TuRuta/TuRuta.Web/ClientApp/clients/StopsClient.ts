@@ -1,4 +1,22 @@
 ﻿export default class StopsClient {
+
+    async UpdateStop(newStop: stopVM) {
+        var response = await fetch("api/stops", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newStop)
+        });
+
+        if (response.ok) {
+            var json = await response.json();
+            return json as stopVM;
+        }
+
+        return null;
+    }
+
     async GetRoutes(id: string) {
         var response = await fetch('api/stops/getroutes/' + id);
         if (response.ok) {
