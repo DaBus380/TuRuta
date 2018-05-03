@@ -81,5 +81,16 @@ namespace TuRuta.Web.Services
             var route = _clusterClient.GetGrain<IRouteGrain>(id);
             return await route.GetRouteVM();
         }
+
+        public async Task<RouteVM> Update(RouteVM newRoute)
+        {
+            var route = _clusterClient.GetGrain<IRouteGrain>(newRoute.Id);
+
+            await route.SetName(newRoute.Name);
+            await route.ClearStops();
+            await route.AddStops(newRoute.Stops.Select(stop => _clusterClient.GetGrain<IStopGrain>(stop.Id)).ToList());
+
+            return await route.GetRouteVM();
+        }
     }
 }

@@ -119,5 +119,11 @@ namespace TuRuta.Orleans.Grains
                 Id = this.GetPrimaryKey(),
                 Name = State.Name
             });
+
+        public Task ClearStops()
+        {
+            State.Stops = new List<IStopGrain>();
+            return Task.CompletedTask;
+        }
     }
 }
