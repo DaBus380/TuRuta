@@ -13,5 +13,6 @@ namespace TuRuta.Web.Services.Interfaces
 		Task<List<string>> FindByStops(string hint);
 		Task<List<StopVM>> GetAllStops();
         Task<List<RouteVM>> GetRoutes(Guid id);
+        Task<StopVM> Update(StopVM stopVM);
     }
 }

@@ -68,5 +68,25 @@ namespace TuRuta.Web.Services
 
             return null;
 		}
-	}
+
+        public async Task<StopVM> Update(StopVM stopVM)
+        {
+            var stopNameCheck = _stopNameDb.FindByKey(stopVM.Id.ToString());
+            var stopGrain = _clusterClient.GetGrain<IStopGrain>(stopVM.Id);
+            await stopGrain.AddInfo(stopVM);
+
+            var results = await stopNameCheck;
+            if(results.Count != 1)
+            {
+                return null;
+            }
+
+            if (!results.First().Equals(stopVM.Name))
+            {
+                await _stopNameDb.UpdateKey(stopVM.Id.ToString(), stopVM.Name);
+            }
+
+            return await stopGrain.GetStopVM();
+        }
+    }
 }
