@@ -51,7 +51,7 @@ export default class AdminDashboardComponent extends Vue {
 
     mounted() {
         let authentication = new Authentication();
-        let user = authentication.initialize();
+        // let user = authentication.initialize();
         if (authentication.isAuthenticated()) {
             console.log("logedin")
         }
