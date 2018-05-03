@@ -18,27 +18,31 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpPost]
-        public Task<StopVM> Post([FromBody]StopVM stopVM)
-            => _stopService.CreateStop(stopVM);
+        public async Task<StopVM> Post([FromBody]StopVM stopVM)
+            => await _stopService.CreateStop(stopVM);
+
+        [HttpPatch]
+        public async Task<StopVM> Patch([FromBody]StopVM stopVM)
+            => await _stopService.Update(stopVM);
 
         [HttpGet]
-        public Task<List<StopVM>> Get()
-            => _stopService.GetAllStops();
+        public async Task<List<StopVM>> Get()
+            => await _stopService.GetAllStops();
 
         [HttpGet("{name}")]
-        public Task<StopVM> Get(string name)
-            => _stopService.GetStop(name);
+        public async Task<StopVM> Get(string name)
+            => await _stopService.GetStop(name);
 
         [HttpGet("[action]/{hint}")]
-        public Task<List<string>> Find(string hint)
-            => _stopService.FindByStops(hint);
+        public async Task<List<string>> Find(string hint)
+            => await _stopService.FindByStops(hint);
 
         [HttpGet("[action]/{id}")]
-        public Task<List<RouteVM>> GetRoutes(string id)
+        public async Task<List<RouteVM>> GetRoutes(string id)
         {
             if(Guid.TryParse(id, out var ID))
             {
-                return _stopService.GetRoutes(ID);
+                return await _stopService.GetRoutes(ID);
             }
 
             return null;

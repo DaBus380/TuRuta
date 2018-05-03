@@ -10,7 +10,7 @@ namespace TuRuta.Web.Services.Mocks
 {
     public class MockStopService : IStopService
     {
-        private StopVM Stop { get; } = new StopVM()
+        private StopVM Stop { get; set; } = new StopVM()
         {
             Name = "La Minerva",
             Location = new Point {
@@ -52,5 +52,11 @@ namespace TuRuta.Web.Services.Mocks
 
         public Task<StopVM> GetStop(string name)
             => Task.FromResult(Stop);
+
+        public Task<StopVM> Update(StopVM stopVM)
+        {
+            Stop = stopVM;
+            return Task.FromResult(Stop);
+        }
     }
 }

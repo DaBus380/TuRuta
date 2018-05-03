@@ -35,7 +35,7 @@ namespace TuRuta.Web.Controllers
             => await _routesService.Create(name);
 
         [HttpPatch]
-        public async Task<RouteVM> Update([FromBody]RouteVM newRoute)
+        public async Task<RouteVM> Patch([FromBody]RouteVM newRoute)
             => await _routesService.Update(newRoute);
 
         [HttpPost("[action]/{id}")]
