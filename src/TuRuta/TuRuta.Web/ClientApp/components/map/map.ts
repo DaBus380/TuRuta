@@ -129,7 +129,7 @@ export default class MapComponent extends Vue {
         let element = document.getElementById("mapDiv")
         let latLon = new google.maps.LatLng(20.6736, -103.344)
         let options = {
-            zoom: 14,
+            zoom: 13.4,
             center: latLon,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
