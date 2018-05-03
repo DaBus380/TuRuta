@@ -1,4 +1,22 @@
 ﻿export default class RoutesClient {
+
+    async Update(newRoute: routeVM) {
+        var response = await fetch("api/routes", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newRoute)
+        });
+        if (response.ok) {
+            var json = await response.json();
+            return json as routeVM;
+        }
+
+        return null;
+    }
+
+
     async AddStops(routeId: string, stopIds: string[]) {
         var response = await fetch('api/routes/addstops/' + routeId, {
             method: "POST",
