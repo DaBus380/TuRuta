@@ -10,7 +10,7 @@ namespace TuRuta.Web.Services.Mocks
 {
     public class MockRoutesService : IRoutesService
     {
-        private RouteVM MockRoute { get; } = new RouteVM() 
+        private RouteVM MockRoute { get; set; } = new RouteVM() 
         {   
             Name = "629",
 
@@ -97,5 +97,12 @@ namespace TuRuta.Web.Services.Mocks
 
         public Task<RouteVM> GetRoute(string name)
             => Task.FromResult(MockRoute);
+
+        public Task<RouteVM> Update(RouteVM newRoute)
+        {
+            MockRoute = newRoute;
+
+            return Task.FromResult(MockRoute);
+        }
     }
 }
