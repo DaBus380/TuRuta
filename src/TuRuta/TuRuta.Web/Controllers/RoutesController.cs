@@ -34,6 +34,10 @@ namespace TuRuta.Web.Controllers
         public async Task<RouteVM> Create(string name)
             => await _routesService.Create(name);
 
+        [HttpPatch]
+        public async Task<RouteVM> Update([FromBody]RouteVM newRoute)
+            => await _routesService.Update(newRoute);
+
         [HttpPost("[action]/{id}")]
         public async Task<RouteVM> AddStops(string id, [FromBody]List<Guid> stops)
         {

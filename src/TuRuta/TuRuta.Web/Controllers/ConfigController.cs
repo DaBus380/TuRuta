@@ -19,12 +19,12 @@ namespace TuRuta.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public Task<List<string>> NoConfig()
-            => _configService.GetNoConfig();
+        public async Task<List<string>> NoConfig()
+            => await _configService.GetNoConfig();
 
         [HttpGet("[action]/{macAddress}")]
-        public Task<BusConfigVM> BusConfig(string macAddress)
-            => _configService.GetConfig(macAddress);
+        public async Task<BusConfigVM> BusConfig(string macAddress)
+            => await _configService.GetConfig(macAddress);
 
         [HttpGet("[action]")]
         public async Task<PubnubConfig> PubNub()
