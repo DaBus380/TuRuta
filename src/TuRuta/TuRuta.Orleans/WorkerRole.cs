@@ -6,10 +6,14 @@ using Orleans.Runtime.Configuration;
 using Orleans.Hosting;
 using Orleans;
 using Orleans.Providers.Streams.AzureQueue;
-
-using TuRuta.Orleans.Grains;
-using TuRuta.Common.Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Orleans.Configuration;
+
+using TuRuta.Common;
+using TuRuta.Common.Logger;
+using TuRuta.Orleans.Grains;
+using TuRuta.Orleans.Grains.Services;
+using TuRuta.Orleans.Grains.Services.Interfaces;
 
 namespace TuRuta.Orleans
 {
@@ -51,16 +55,27 @@ namespace TuRuta.Orleans
         {
             var proxyPort = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansProxyEndpoint"].IPEndpoint.Port;
             var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["OrleansSiloEndpoint"].IPEndpoint;
-            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "-");
+            var deploymentId = RoleEnvironment.DeploymentId.Replace("(", "-").Replace(")", "");
             var isDevelopment = bool.Parse(RoleEnvironment.GetConfigurationSettingValue("IsDevelopment"));
             var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
 
             var builder = new SiloHostBuilder()
-                .Configure(config => config.ClusterId = "DaBus")
+                .Configure<ClusterOptions>(options =>
+                {
+                    options.ClusterId = Constants.ClusterId;
+                    options.ServiceId = "DaBus";
+                })
                 .ConfigureEndpoints(siloEndpoint.Address, siloEndpoint.Port, proxyPort)
                 .ConfigureLogging(logging => logging.AddAllTraceLoggers())
-                //.ConfigureApplicationParts(
-                //    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
+                .UseServiceProviderFactory(services =>
+                {
+                    services.AddSingleton<IDistanceCalculator, HavesineDistanceCalculator>();
+                    services.AddSingleton<IConfigClient, ConfigClient>();
+
+                    return services.BuildServiceProvider();
+                })
+                .ConfigureApplicationParts(
+                    parts => parts.AddApplicationPart(typeof(BusGrain).Assembly).WithReferences())
                 .UseAzureStorageClustering(options => options.ConnectionString = connectionString);
 
             if (isDevelopment)
@@ -75,9 +90,17 @@ namespace TuRuta.Orleans
             {
                 builder
                     .UseAzureTableReminderService(connectionString)
-                    .AddAzureQueueStreams<AzureQueueDataAdapterV2>("StreamProvider")
-                    .AddAzureTableGrainStorage("AzureTableStore", options => options.UseJson = true)
-                    .AddAzureTableGrainStorage("PubSubStore", options => options.UseJson = true);
+                    .AddSimpleMessageStreamProvider("StreamProvider")
+                    .AddAzureTableGrainStorage("AzureTableStore", options => 
+                    {
+                        options.ConnectionString = connectionString;
+                        options.UseJson = true;
+                    })
+                    .AddAzureTableGrainStorage("PubSubStore", options =>
+                    {
+                        options.ConnectionString = connectionString;
+                        options.UseJson = true;
+                    });
             }
 
             return builder;

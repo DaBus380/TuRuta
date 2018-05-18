@@ -1,0 +1,61 @@
+<template>
+    <div v-if="bus !== undefined">
+        <div class="info-title">
+            <h1>Camión</h1>
+            <h2>Crear nueva camión</h2>
+        </div>
+        <div>
+            <div class="info-content">
+                <div class="form-content">
+                    <h3 class="blue">Información</h3>
+                    <div class="blue">
+                        
+                        <div v-if="bus.id == ''">
+                            <h4>Camiones sin configurar</h4>
+                            <ol>
+                                <p v-if="busesNoPlates.length < 1"><em>No hay camiones disponibles</em></p>
+                                <li v-for="bus in busesNoPlates"
+                                    v-on:click="selectBus(bus)"
+                                    style="cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ bus }} 
+                                </li>
+                            </ol>
+                            <br><br>
+                            <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                        </div>
+
+                        <div v-else>
+                            <h4>Camión</h4>
+                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{ bus.id }}</p>
+                            <br>
+    
+                            <h4>Placas</h4>
+                            <p>Utilizar formato 000-000-A.</p>
+                            <input 
+                                v-model.trim="bus.licensePlate" type="text"
+                                placeholder="Ejemplo: 721-463-G..."/>
+                            <br><br>
+                            
+                            <h4>Ruta</h4>
+                            <p>Seleccione la ruta a la que pertenece el camión.</p>
+                            <search-component
+                                findRoutes="true"
+                                placeholder="Ejemplo: 629..."
+                                hasAuth="true"
+                                @resultClicked="addRouteResult">
+                            </search-component>
+                            <br>
+                            
+                            <div>
+                                <button v-on:click="clearComponent">Cancelar</button>
+                                <button v-bind:class="computedBusReady" v-on:click="addBusInfo">Configurar camión</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style src="./admin-bus-info.css"/>
+<script src="./admin-bus-info.ts"></script>

@@ -1,0 +1,21 @@
+<template>
+    <div>
+        <div>
+            <div class="info-container first">
+                <admin-stop-info-component 
+                    v-bind:stopDefault="stopDefault"
+                    v-bind:isOptionalComponent="false"
+                    @close="resetStop">
+                </admin-stop-info-component>
+            </div>
+            <div class="map-container big">
+                <map-component 
+                    v-bind:isMarkerActive="true"
+                    @addMarker="receivePosition">
+                </map-component>
+            </div>
+        </div>
+    </div>
+</template>
+<style src="./admin-stop.css"/>
+<script src="./admin-stop.ts"></script>

@@ -6,9 +6,8 @@ namespace TuRuta.Common.Models
 {
     public class Stop
     {
-		public double Latitude { get; set; }
-		public double Longitude { get; set; }
+        public Point Location { get; set; }
 		public string Name { get; set; }
-
+        public Guid Id { get; set; }
 	}
 }

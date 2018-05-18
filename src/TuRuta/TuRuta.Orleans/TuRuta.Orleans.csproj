@@ -111,55 +111,55 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Clustering.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Clustering.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Clustering.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Clustering.AzureStorage.2.0.0\lib\netstandard2.0\Orleans.Clustering.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.CodeGeneration, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.2.0.0-rc1\lib\netstandard2.0\Orleans.CodeGeneration.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.2.0.0\lib\netstandard2.0\Orleans.CodeGeneration.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.2.0.0\lib\netstandard2.0\Orleans.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Core.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.Abstractions.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.Abstractions.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.Abstractions.2.0.0\lib\netstandard2.0\Orleans.Core.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Core.Legacy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.Legacy.2.0.0-rc1\lib\netstandard2.0\Orleans.Core.Legacy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.Legacy.2.0.0\lib\netstandard2.0\Orleans.Core.Legacy.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Hosting.AzureCloudServices, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Hosting.AzureCloudServices.2.0.0-rc1\lib\netstandard2.0\Orleans.Hosting.AzureCloudServices.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Hosting.AzureCloudServices.2.0.0\lib\netstandard2.0\Orleans.Hosting.AzureCloudServices.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Persistence.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Persistence.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Persistence.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Persistence.AzureStorage.2.0.0\lib\netstandard2.0\Orleans.Persistence.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Reminders.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Reminders.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Reminders.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Reminders.AzureStorage.2.0.0\lib\netstandard2.0\Orleans.Reminders.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Runtime, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.2.0.0\lib\netstandard2.0\Orleans.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Runtime.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Runtime.Abstractions.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.Abstractions.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Runtime.Abstractions.2.0.0\lib\netstandard2.0\Orleans.Runtime.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Runtime.Legacy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Runtime.Legacy.2.0.0-rc1\lib\netstandard2.0\Orleans.Runtime.Legacy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Runtime.Legacy.2.0.0\lib\netstandard2.0\Orleans.Runtime.Legacy.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Statistics.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Orleans.Statistics.AzureStorage.2.0.0-beta3\lib\netstandard2.0\Orleans.Statistics.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.Streaming.AzureStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Streaming.AzureStorage.2.0.0-rc1\lib\netstandard2.0\Orleans.Streaming.AzureStorage.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Streaming.AzureStorage.2.0.0\lib\netstandard2.0\Orleans.Streaming.AzureStorage.dll</HintPath>
     </Reference>
     <Reference Include="Orleans.TelemetryConsumers.Counters, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansTelemetryConsumers.Counters.2.0.0-rc1\lib\net461\Orleans.TelemetryConsumers.Counters.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansTelemetryConsumers.Counters.2.0.0\lib\net461\Orleans.TelemetryConsumers.Counters.dll</HintPath>
     </Reference>
     <Reference Include="OrleansCounterControl, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.CounterControl.2.0.0-rc1\lib\net461\OrleansCounterControl.exe</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.CounterControl.2.0.0\lib\net461\OrleansCounterControl.exe</HintPath>
     </Reference>
     <Reference Include="OrleansHost, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Orleans.OrleansHost.1.5.3\lib\net461\OrleansHost.exe</HintPath>
     </Reference>
     <Reference Include="OrleansProviders, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.2.0.0-rc1\lib\netstandard2.0\OrleansProviders.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.2.0.0\lib\netstandard2.0\OrleansProviders.dll</HintPath>
     </Reference>
     <Reference Include="PubnubNetPlatform, Version=3.8.7.0, Culture=neutral, PublicKeyToken=dc66f52ce6619f44, processorArchitecture=MSIL">
       <HintPath>..\packages\PubnubNetPlatform.3.8.7.0\lib\net40\PubnubNetPlatform.dll</HintPath>
@@ -384,8 +384,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Orleans.OrleansHost.1.5.3\build\Microsoft.Orleans.OrleansHost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Orleans.OrleansHost.1.5.3\build\Microsoft.Orleans.OrleansHost.targets'))" />
     <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Orleans.CounterControl.2.0.0-rc1\build\Microsoft.Orleans.CounterControl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Orleans.CounterControl.2.0.0-rc1\build\Microsoft.Orleans.CounterControl.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Orleans.CounterControl.2.0.0\build\Microsoft.Orleans.CounterControl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Orleans.CounterControl.2.0.0\build\Microsoft.Orleans.CounterControl.targets'))" />
   </Target>
   <Import Project="..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />
-  <Import Project="..\packages\Microsoft.Orleans.CounterControl.2.0.0-rc1\build\Microsoft.Orleans.CounterControl.targets" Condition="Exists('..\packages\Microsoft.Orleans.CounterControl.2.0.0-rc1\build\Microsoft.Orleans.CounterControl.targets')" />
+  <Import Project="..\packages\Microsoft.Orleans.CounterControl.2.0.0\build\Microsoft.Orleans.CounterControl.targets" Condition="Exists('..\packages\Microsoft.Orleans.CounterControl.2.0.0\build\Microsoft.Orleans.CounterControl.targets')" />
 </Project>

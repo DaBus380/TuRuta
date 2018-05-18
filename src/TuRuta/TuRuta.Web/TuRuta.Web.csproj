@@ -8,10 +8,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\components\testmaps\**" />
+    <Content Remove="ClientApp\components\testmaps\**" />
+    <EmbeddedResource Remove="ClientApp\components\testmaps\**" />
+    <None Remove="ClientApp\components\testmaps\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\clients\BusesClient.ts" />
+    <None Remove="ClientApp\components\admin-navmenu\admin-navmenu.ts" />
+    <None Remove="ClientApp\components\test\test.ts" />
+    <None Remove="ClientApp\models\busInfoVM.ts" />
+    <None Remove="ClientApp\models\busVM.ts" />
+    <None Remove="ClientApp\models\incidentVM.ts" />
+    <None Remove="ClientApp\models\point.ts" />
+    <None Remove="ClientApp\models\routeVM.ts" />
+    <None Remove="ClientApp\models\stopVM.ts" />
+    <None Remove="ClientApp\RoutesClient.ts" />
+    <None Remove="ClientApp\StopsClient.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-rc1" />
-    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0-rc1" />
-    <PackageReference Include="Microsoft.Orleans.OrleansAzureUtils" Version="2.0.0-rc1" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.OrleansAzureUtils" Version="2.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +44,20 @@
   <ItemGroup>
     <ProjectReference Include="..\TuRuta.Common\TuRuta.Common.csproj" />
     <ProjectReference Include="..\TuRuta.Orleans.Interfaces\TuRuta.Orleans.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\clients\BusesClient.ts" />
+    <TypeScriptCompile Include="ClientApp\clients\RoutesClient.ts" />
+    <TypeScriptCompile Include="ClientApp\components\admin-navmenu\admin-navmenu.ts" />
+    <TypeScriptCompile Include="ClientApp\components\test\test.ts" />
+    <TypeScriptCompile Include="ClientApp\models\busInfoVM.ts" />
+    <TypeScriptCompile Include="ClientApp\models\busVM.ts" />
+    <TypeScriptCompile Include="ClientApp\models\incidentVM.ts" />
+    <TypeScriptCompile Include="ClientApp\models\point.ts" />
+    <TypeScriptCompile Include="ClientApp\models\routeVM.ts" />
+    <TypeScriptCompile Include="ClientApp\models\stopVM.ts" />
+    <TypeScriptCompile Include="ClientApp\clients\StopsClient.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

@@ -1,0 +1,23 @@
+<template>
+    <div class="main-nav admin-nav">
+        <div class="navbar">
+            <div class="navbar-header">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-1 col-xs-12">
+                    <a class="navbar-brand" href="/"><img src="../../img/logo-tuRuta.svg"></a>
+                </div>
+                <div class="col-lg-7"></div>
+                <div class="col-lg-1 navbar-options">
+                    <div><a href="/admin/dashboard">Dashboard</a></div>
+                </div>
+                <div class="col-lg-1 navbar-options">
+                        <div><button v-on:click="signout">Logout</button></div>
+                </div>
+                <div class="col-lg-1 navbar-options"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script src="./admin-navmenu.ts"></script>
+<style src="./admin-navmenu.css" />

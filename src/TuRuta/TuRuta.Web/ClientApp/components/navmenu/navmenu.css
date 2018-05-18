@@ -1,59 +1,59 @@
-.main-nav li .glyphicon {
-    margin-right: 10px;
-}
-
-/* Highlighting rules for nav menu items */
-.main-nav li a.router-link-active,
-.main-nav li a.router-link-active:hover,
-.main-nav li a.router-link-active:focus {
-    background-color: #41A9C7;
-    color: white;
-}
-
 /* Keep the nav menu independent of scrolling and on top of other items */
 .main-nav {
     position: fixed;
+    background-color: #00a99d;
+    width: 100%;
+    height: 60px;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 100000;
+    box-shadow: 0 -5px 15px 10px rgba(0,0,0,0.1);
+}
+.main-nav .navbar img{
+    width: 100%;
+    max-width: 70px;
+    margin: 0 auto;
+}
+.main-nav .navbar{
+    text-align: center;
+    border-radius: 0px;
+    border-width: 0px;
+    height: 100%;
+}
+.main-nav .navbar a{
+    height: 100%;
+    height: 60px;
+    padding: 20px 0;
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
+    text-transform: lowercase;
+    letter-spacing: 3px;
+    font-weight: 200;
+}
+.main-nav .navbar a.navbar-brand {
+    float: left;
+    text-align: left;
+}
+.main-nav .navbar a {
+    float: right;
+    text-align: right;
+}
+.main-nav .navbar-header {
+    float: none;
+}
+.main-nav .navbar a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-@media (min-width: 768px) {
-    /* On small screens, convert the nav menu to a vertical sidebar */
-    .main-nav {
-        height: 100%;
-        width: calc(25% - 20px);
-    }
-    .main-nav .navbar {
-        border-radius: 0px;
-        border-width: 0px;
-        height: 100%;
-    }
-    .main-nav .navbar-header {
-        float: none;
-    }
-    .main-nav .navbar-collapse {
-        border-top: 1px solid #444;
-        padding: 0px;
-    }
-    .main-nav .navbar ul {
-        float: none;
-    }
-    .main-nav .navbar li {
-        float: none;
-        font-size: 15px;
-        margin: 6px;
-    }
-    .main-nav .navbar li a {
-        padding: 10px 16px;
-        border-radius: 4px;
-    }
-    .main-nav .navbar a {
-        /* If a menu item's text is too long, truncate it */
-        width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+@media (max-width: 1200px) {
+
+}
+@media (max-width: 739px) {
+    .navbar-options {
+        display: none;
     }
 }

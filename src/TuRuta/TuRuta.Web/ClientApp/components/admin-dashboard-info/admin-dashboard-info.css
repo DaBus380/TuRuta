@@ -1,0 +1,61 @@
+.dashboard-options .dashboard-option {
+    margin: 3rem 0 5rem;
+}
+.dashboard-options ol { 
+    counter-reset: item;
+    list-style-type: none;
+    padding-left: 0;
+}
+.dashboard-options p {
+    font-weight: 200;
+    margin-bottom: 0;
+}
+.dashboard-options span {
+    color: #b3b3b3;
+}
+.dashboard-optionsli { 
+    display: block;
+    width: 100%;
+    line-height: 2.5rem;
+    font-weight: 200;
+}
+.dashboard-options li a {
+    position: absolute;
+    right: 100px;
+    font-weight: 600;
+}
+.dashboard-options input {
+    height: 25px;
+    width: 100%;
+    margin-bottom: 10px;
+    border: 0;
+    border-bottom: 1px solid #e4e4e4;
+    outline: none;
+    font-weight: 100;
+    letter-spacing: 0.4px;
+}
+.dashboard-options input:focus, textarea:focus {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+.dashboard-options input::placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.dashboard-options input:-ms-input-placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.dashboard-options input::-ms-input-placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+.dashboard-options a{
+    font-weight: 200;
+    cursor: pointer;
+}
+
+.dashboard-options .dashboard-option .search-container input{
+    text-align: left;
+}

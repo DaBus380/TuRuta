@@ -81,10 +81,13 @@ namespace TuRuta.Device
         private async void Geolocator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             var geoPoint = args.Position.Coordinate.Point.Position;
-            var positionUpdate = new PositionUpdate()
+            var positionUpdate = new RouteBusUpdate()
             {
-                Latitude = geoPoint.Latitude,
-                Longitude = geoPoint.Longitude,
+                Location = new Common.Models.Point
+                {
+                    Latitude = geoPoint.Latitude,
+                    Longitude = geoPoint.Longitude
+                },
                 Status = BusId != Guid.Empty ? BusStatus.Available : BusStatus.NotConfigured
             };
 
@@ -100,13 +103,13 @@ namespace TuRuta.Device
             }
         }
 
-        private Message MessageBuilder(PositionUpdate obj)
+        private Message MessageBuilder(RouteBusUpdate obj)
             => new Message(Serialize(obj))
             {
                 To = BusId.ToString()
             };
 
-        private byte[] Serialize(PositionUpdate obj)
+        private byte[] Serialize(RouteBusUpdate obj)
         {
             var json = JsonConvert.SerializeObject(obj);
             return Encoding.UTF32.GetBytes(json);

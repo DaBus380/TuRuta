@@ -1,0 +1,16 @@
+<template>
+    <div>
+        <div class="title-container all-routes-container">
+            <search-component  findRoutes="true" findStops="true" placeholder="buscar una ruta o parada">
+                <template slot="title">
+                    <h2>Seleccionar una parada en el mapa o </h2>
+                </template>
+            </search-component>
+        </div>
+        <div class="map-container full">
+            <map-component v-if="computedStops" v-bind:stops="stopResult"></map-component>
+        </div>
+    </div>
+</template>
+<script src="./all-routes.ts"></script>
+<style src="./all-routes.css" />

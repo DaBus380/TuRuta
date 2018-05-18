@@ -9,8 +9,8 @@ namespace TuRuta.Orleans.Grains.States
 	[Serializable]
     public class RouteState
     {
-		public List<Stop> Stops { get; set; }
+        public List<IStopGrain> Stops { get; set; } = new List<IStopGrain>();
 		public string Name { get; set; }
-		public List<IBusGrain> Buses { get; set; }
+        public List<IBusGrain> Buses { get; set; } = new List<IBusGrain>();
     }
 }

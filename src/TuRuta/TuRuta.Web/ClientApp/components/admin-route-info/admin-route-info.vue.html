@@ -1,0 +1,47 @@
+<template>
+    <div v-if="route !== undefined">
+        <div class="info-title">
+            <h1>Ruta</h1>
+            <h2>Crear nueva ruta</h2>
+        </div>
+        <div class="info-content">
+            <div class="form-content">
+                <h3 class="red">Información</h3> 
+                <div class="red">
+                    
+                    <h4>Nombre</h4>
+                    <input 
+                        v-model.trim="route.name" type="text"
+                        placeholder="Ejemplo: 629..."/>
+                    <br><br>
+                    
+                    <h4>Ruta Actual</h4>
+                    <ol>
+                        <p v-if="route.stops.length < 1"><em>Ruta vacía</em></p>
+                        <li v-for="(stop, index) in route.stops">{{ stop.name }} <button v-on:click="deleteStop(index)" class="delete-li">×</button></li>
+                    </ol>
+                    <br>
+                    
+                    <h4>Paradas</h4>
+                    <p>Crear nueva parada.</p>
+                    <button style="margin-bottom: 15px; margin-top: -3px" v-on:click="openStopComponent" v-bind:class="{ 'hide-container': !isButtonActive }">Agregar</button>
+                    <br>
+                    <p>Buscar parada existente.</p>
+                    <search-component @resultClicked="addStopResult" v-bind:hasAuth="true" findStops="true" placeholder="Ejemplo: La Minerva..."></search-component>
+                    
+                    
+                    <div v-if="isOptionalComponent">
+                        <button v-on:click="closeRouteComponent">Cancelar</button>
+                        <button v-bind:class="computedRouteReady" v-on:click="saveRoute">Guardar ruta</button>
+                    </div>
+                    <div v-else>
+                        <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                        <button v-bind:class="computedRouteReady" v-on:click="createRoute">Crear ruta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style src="./admin-route-info.css"/>
+<script src="./admin-route-info.ts"></script>

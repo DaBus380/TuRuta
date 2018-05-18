@@ -1,0 +1,49 @@
+<template>
+    <div v-if="stop !== null">
+        <div class="info-title">
+            <h1>Parada</h1>
+            <h2>Crear nueva parada</h2>
+        </div>
+        <div>
+            <div class="info-content">
+                <div class="form-content">
+                    <h3 class="green">Información</h3> 
+                    <div class="green">
+                        <h4>Nombre</h4>
+
+                        <input 
+                            v-model="stop.name" type="text"
+                            placeholder="Ejemplo: La Minverva..."/>
+                        <br>
+                        <h4>Localización</h4>
+                        <p>Seleccione la ubicación de la parada en el mapa.</p>
+                        
+                        <p><em>
+                            <span>Coordenadas: </span>
+                            <span id="latitud">{{ stop.location.latitude }}</span>
+                            <span>,</span>
+                            <span id="longitud">{{ stop.location.longitude }}</span>
+                        </em></p>
+                        <br><br>
+
+
+                        <div v-if="isOptionalComponent">
+                            <button v-on:click="closeStopComponent">Cancelar</button>
+                            <button v-bind:class="computedStopReady" v-on:click="addStop">Crear parada</button>
+                        </div>
+                        <div v-else-if="isOptionalComponentEdit">
+                            <button v-on:click="closeStopEditComponent">Cancelar</button>
+                            <button v-bind:class="computedStopReady" v-on:click="saveStop">Guardar</button>
+                        </div>
+                        <div v-else>
+                            <router-link to="/admin/dashboard"><button>Cancelar</button></router-link>
+                            <button v-bind:class="computedStopReady" v-on:click="createStop">Crear parada</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style src="./admin-stop-info.css"/>
+<script src="./admin-stop-info.ts"></script>
